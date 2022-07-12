@@ -7,7 +7,7 @@
     "RoomID": "room1",
     "peopleNum": 3,
     "requirements": "요구사항 없음",
-    "price": "30000",
+    "price": 30000,
     "state": "예약요청"
   },
   {
