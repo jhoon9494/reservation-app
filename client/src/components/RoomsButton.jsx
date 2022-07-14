@@ -41,8 +41,7 @@ const RoomsButton = () => {
       <RoomModal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        reserve={() => console.log('예약하기 클릭')}
-        roomdata={roomData}
+        roomData={roomData}
       />
     </>
   );
