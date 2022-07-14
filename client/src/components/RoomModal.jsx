@@ -5,6 +5,7 @@ import '../styles/modal.css';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import ChangeTitle from './ChangeTitle';
+import ChangeContent from './ChangeContent';
 
 export const RoomModal = ({ show, onHide, roomData }) => {
   const [currTitle, setCurrTitle] = useState('객실 설명');
@@ -21,9 +22,10 @@ export const RoomModal = ({ show, onHide, roomData }) => {
       <ImgContainer></ImgContainer>
       <ContentContainer>
         <ChangeTitle currTitle={currTitle} setCurrTitle={setCurrTitle} />
-        {/* TODO ChangeContent 컴포넌트 생성해서 본문 컴포넌트 별도 관리하기 */}
+        <ChangeContent currTitle={currTitle} />
       </ContentContainer>
       <BtnContainer>
+        {/* TODO 예약하기 버튼 클릭 시 pathname에 룸 명 넣어주고 예약페이지로 이동 후 해당페이지에서 객실별 booking api get으로 정보받아오기*/}
         <ReserveBtn>예약하기</ReserveBtn>
       </BtnContainer>
     </Modal>
@@ -49,7 +51,9 @@ const ContentContainer = styled.div`
   height: 260px;
   margin: 14px auto auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  border: 1px solid black;
+  align-items: center;
 `;
 
 const BtnContainer = styled.div`
