@@ -1,6 +1,6 @@
-import { Button } from "react-bootstrap";
-import styled from "styled-components";
-import baseStyle from "../styles/baseStyle";
+import { Button } from 'react-bootstrap';
+import styled from 'styled-components';
+import baseStyle from '../styles/baseStyle';
 
 const Home = () => {
   return (
