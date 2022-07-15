@@ -2,6 +2,7 @@
 import styled, { css } from 'styled-components';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 
 const AdminPage = () => {
   const [management, setManagement] = useState('user');
@@ -45,6 +46,24 @@ const AdminPage = () => {
     currentData = data.slice(indexOfFirst, indexOfLast);
     return currentData;
   };
+  const pageCount = (data) => {
+    const pageCounts = [];
+    for (let i = 1; i < data.length / dataPerPage + 1; i++) {
+      pageCounts.push(
+        <PageButton
+          key={i}
+          active={currentPage === i}
+          onClick={(e) => {
+            e.preventDefault();
+            setCurrentPage(i);
+          }}
+        >
+          {i}
+        </PageButton>
+      );
+    }
+    return pageCounts;
+  };
 
   return (
     <>
@@ -68,7 +87,7 @@ const AdminPage = () => {
               <UserBarSpan>회원탈퇴</UserBarSpan>
             </UserBar>
             <UserLists>
-              {userData.map((data) => {
+              {currentData(userData).map((data) => {
                 return (
                   <UserList key={data.ObjectId}>
                     <UserListSpan>{data.name}</UserListSpan>
@@ -79,6 +98,31 @@ const AdminPage = () => {
                 );
               })}
             </UserLists>
+
+            <PageWrap>
+              <ArrowButton
+                disabled={currentPage == 1}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentPage((current) => current - 1);
+                }}
+              >
+                <FiArrowLeft />
+              </ArrowButton>
+
+              {pageCount(userData)}
+              <ArrowButton
+                disabled={
+                  currentPage == Math.ceil(userData.length / dataPerPage)
+                }
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentPage((current) => current + 1);
+                }}
+              >
+                <FiArrowRight />
+              </ArrowButton>
+            </PageWrap>
           </UserDiv>
         ) : (
           <BookDiv>
@@ -111,6 +155,30 @@ const AdminPage = () => {
                 );
               })}
             </BookLists>
+            <PageWrap>
+              <ArrowButton
+                disabled={currentPage == 1}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentPage((current) => current - 1);
+                }}
+              >
+                <FiArrowLeft />
+              </ArrowButton>
+
+              {pageCount(bookData)}
+              <ArrowButton
+                disabled={
+                  currentPage == Math.ceil(bookData.length / dataPerPage)
+                }
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentPage((current) => current + 1);
+                }}
+              >
+                <FiArrowRight />
+              </ArrowButton>
+            </PageWrap>
           </BookDiv>
         )}
       </MainDiv>
@@ -354,4 +422,44 @@ const BookCancelBtn = styled.button`
   width: 50px;
   margin-left: 10px;
   background-color: yellow;
+`;
+
+const PageButton = styled.button`
+  font-size: 14px;
+  line-height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #5e5f61;
+  width: 22px;
+  height: 22px;
+  background-color: transparent;
+  border-radius: 4px;
+  border: none;
+  + button {
+    margin-left: 4px;
+  }
+  ${(props) =>
+    props.active &&
+    css`
+      background-color: #524fa1;
+      color: #f9fafc;
+    `}
+`;
+
+const PageWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+`;
+
+const ArrowButton = styled.button`
+  margin: ${(props) => (props.flip ? '0 0 0 16px !important' : '0 16px 0 0')};
+  border: none;
+  background-color: white;
+
+  > svg {
+    display: block;
+  }
 `;
