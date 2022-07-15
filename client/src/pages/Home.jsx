@@ -69,16 +69,19 @@ const Slider = styled.div`
 const BackgroundImage1 = styled.div`
   width: 100%;
   background-image: url('images/main1.png');
+  background-position: center;
 `;
 
 const BackgroundImage2 = styled.div`
   width: 100%;
   background-image: url('images/main2.png');
+  background-position: center;
 `;
 
 const BackgroundImage3 = styled.div`
   width: 100%;
   background-image: url('images/main3.png');
+  background-position: center;
 `;
 
 const HomeButtonWrap = styled.div`

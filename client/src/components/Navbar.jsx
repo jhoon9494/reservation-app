@@ -1,10 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Modal from '../components/Modal';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 
-const Navbar = (props) => {
-  const [user, setUser] = useState('');
+const Navbar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState('');
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const handleLoginClick = () => {
+    setLoginModalOpen(true);
+  };
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const handleRegisterClick = () => {
+    setRegisterModalOpen(true);
+  };
+
+  // 마이페이지
+  const handleMyPageClick = () => {
+    navigate('/mypage');
+  };
+  // 로그아웃
+  const handleLogoutClick = () => {
+    setUser('');
+  };
 
   useEffect(() => {
     // TODO: 로그인 여부 확인
@@ -16,12 +36,26 @@ const Navbar = (props) => {
   };
 
   return (
-    <NavigationBarWrap>
-      <NavigationBar>
-        <LogoWrap>
-          <Logo src="images/logo.png" alt="logo" onClick={handleLogoClick} />
-        </LogoWrap>
-        {props.home && (
+    <>
+      <Modal
+        open={loginModalOpen}
+        close={() => setLoginModalOpen(false)}
+        title="로그인"
+      >
+        <LoginForm />
+      </Modal>
+      <Modal
+        open={registerModalOpen}
+        close={() => setRegisterModalOpen(false)}
+        title="회원가입"
+      >
+        <RegisterForm />
+      </Modal>
+      <NavigationBarWrap>
+        <NavigationBar>
+          <LogoWrap>
+            <Logo src="images/logo.png" alt="logo" onClick={handleLogoClick} />
+          </LogoWrap>
           <NavigationMenuWrap>
             <NavigationMunu>
               <StyledLink to="/about">About</StyledLink>
@@ -33,19 +67,22 @@ const Navbar = (props) => {
               <StyledLink to="/reservation">Reservation</StyledLink>
             </NavigationMunu>
           </NavigationMenuWrap>
-        )}
-        <SignWrap>
-          {!user ? (
-            <Sign>Logout</Sign>
-          ) : (
-            <>
-              <Sign>Login</Sign>
-              <Sign>Register</Sign>
-            </>
-          )}
-        </SignWrap>
-      </NavigationBar>
-    </NavigationBarWrap>
+          <SignWrap>
+            {!user ? (
+              <>
+                <Sign onClick={handleMyPageClick}>MyPage</Sign>
+                <Sign onClick={handleLogoutClick}>Logout</Sign>
+              </>
+            ) : (
+              <>
+                <Sign onClick={handleLoginClick}>Login</Sign>
+                <Sign onClick={handleRegisterClick}>Register</Sign>
+              </>
+            )}
+          </SignWrap>
+        </NavigationBar>
+      </NavigationBarWrap>
+    </>
   );
 };
 
@@ -54,7 +91,6 @@ export default Navbar;
 const NavigationBarWrap = styled.div`
   width: 100%;
   height: 90px;
-  // background-color: white;
   border-bottom: 1px solid darkgray;
   display: flex;
   justify-content: center;
@@ -67,11 +103,11 @@ const NavigationBarWrap = styled.div`
 `;
 
 const NavigationBar = styled.nav`
-  width: 1200px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0 4rem;
 `;
 
 const LogoWrap = styled.div`
