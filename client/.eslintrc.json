@@ -19,6 +19,10 @@
   "plugins": ["react"],
   "rules": {
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
+<<<<<<< HEAD
     "react/prop-types": "off"
+=======
+    "react/prop-types": 0
+>>>>>>> f98f6988b96507b70c0c3abdc6373c66a436d2bb
   }
 }

@@ -119,7 +119,7 @@ const MyPage = () => {
           </SubmitButton>
         </Form>
       ) : (
-        '예약정보 조회가 들어갈 곳'
+        <div>'예약정보 조회가 들어갈 곳'</div>
       )}
     </div>
   );
