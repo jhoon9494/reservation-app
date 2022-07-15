@@ -119,7 +119,7 @@ const MyPage = () => {
           </SubmitButton>
         </Form>
       ) : (
-        <div>'예약정보 조회가 들어갈 곳'</div>
+        <div>예약정보 조회가 들어갈 곳</div>
       )}
     </div>
   );
@@ -185,7 +185,7 @@ const Form = styled.form`
     border-radius: 7px;
     margin-top: 30px;
 
-    &: disabled {
+    &:disabled {
       background: rgba(169, 167, 208, 0.7);
     }
   }
