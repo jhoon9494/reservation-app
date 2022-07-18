@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Admin from './pages/AdminPage';
 import MyPage from './pages/MyPage';
 import Site from './pages/Site';
+import Reservation from './pages/Reservation';
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/MyPage" element={<MyPage />} />
           <Route path="/site" element={<Site />} />
+          <Route path="/reservation/" element={<Reservation />} />
+          <Route path="/reservation/:roomID" element={<Reservation />} />
         </Routes>
       </BrowserRouter>
     </>
