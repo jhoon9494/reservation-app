@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Modal from '../components/Modal';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import baseStyle from '../styles/baseStyle';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Navbar = () => {
 
   useEffect(() => {
     // TODO: 로그인 여부 확인
-    setUser('엘리스');
+    setUser('');
   }, [user]);
 
   const handleLogoClick = () => {
@@ -37,18 +38,10 @@ const Navbar = () => {
 
   return (
     <>
-      <Modal
-        open={loginModalOpen}
-        close={() => setLoginModalOpen(false)}
-        title="로그인"
-      >
+      <Modal open={loginModalOpen} close={() => setLoginModalOpen(false)}>
         <LoginForm />
       </Modal>
-      <Modal
-        open={registerModalOpen}
-        close={() => setRegisterModalOpen(false)}
-        title="회원가입"
-      >
+      <Modal open={registerModalOpen} close={() => setRegisterModalOpen(false)}>
         <RegisterForm />
       </Modal>
       <NavigationBarWrap>
@@ -68,7 +61,7 @@ const Navbar = () => {
             </NavigationMunu>
           </NavigationMenuWrap>
           <SignWrap>
-            {!user ? (
+            {user ? (
               <>
                 <Sign onClick={handleMyPageClick}>MyPage</Sign>
                 <Sign onClick={handleLogoutClick}>Logout</Sign>
@@ -88,7 +81,7 @@ const Navbar = () => {
 
 export default Navbar;
 
-const NavigationBarWrap = styled.div`
+const NavigationBarWrap = styled.header`
   width: 100%;
   height: 90px;
   border-bottom: 1px solid darkgray;
@@ -97,9 +90,9 @@ const NavigationBarWrap = styled.div`
   align-items: center;
   position: sticky;
   top: 0;
-  color: white;
   font-weight: bold;
   z-index: 999;
+  background-color: white;
 `;
 
 const NavigationBar = styled.nav`
@@ -123,7 +116,10 @@ const Logo = styled.img`
 const NavigationMenuWrap = styled.ul`
   display: flex;
   margin: 0;
+  padding: 0;
   list-style: none;
+  justify-content: center;
+  align-items: center;
 `;
 
 const NavigationMunu = styled.li`
@@ -134,8 +130,9 @@ const NavigationMunu = styled.li`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
+  font-size: ${baseStyle.navbarFontSize};
+  color: ${baseStyle.navbarColor};
   transition: color 0.5s;
-  color: white;
 
   &:focus,
   &:hover,
@@ -147,7 +144,7 @@ const StyledLink = styled(Link)`
 
   &:hover {
     cursor: pointer;
-    color: black;
+    color: ${baseStyle.navbarHoverColor};
   }
 `;
 
@@ -160,11 +157,13 @@ const SignWrap = styled.ul`
 `;
 
 const Sign = styled.li`
+  font-size: ${baseStyle.navbarFontSize};
+  color: ${baseStyle.navbarColor};
   transition: color 0.5s;
 
   &:hover {
     cursor: pointer;
-    color: black;
+    color: ${baseStyle.navbarHoverColor};
   }
 
   & + & {
