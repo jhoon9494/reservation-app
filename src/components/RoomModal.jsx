@@ -1,40 +1,67 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import '../styles/modal.css';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
-import ChangeTitle from './ChangeTitle';
-import ChangeContent from './ChangeContent';
+import RoomTabs from './RoomTabs';
+import RoomDetailContent from './RoomDetailContent';
+import RoomReviews from './RoomReviews';
+import axios from 'axios';
 
 export const RoomModal = ({ show, onHide, roomData }) => {
-  const [currTitle, setCurrTitle] = useState('객실 설명');
+  const [currTab, setCurrTab] = useState('객실 설명');
+  const [roomContent, setRoomContent] = useState([]);
+  const [imgZoom, setImgZoom] = useState(false);
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate(`/site/${roomData}`);
-  };
+  useEffect(() => {
+    async function getData() {
+      // RoomsButton 컴포넌트에서 초기 roomData값은 empty string임.
+      // roomData에 값이 들어올때만 api 요청
+      if (roomData !== '') {
+        const res = await axios.get(
+          'http://localhost:3000/mock/roomsMock.json'
+        );
+        setRoomContent(res.data.filter((room) => room.name === roomData));
+      }
+    }
+    getData();
+  }, [roomData]);
 
   return (
     <Modal
       show={show}
       onHide={onHide}
       dialogClassName="my-modal"
-      aria-labelledby="example-custom-modal-styling-title"
+      aria-labelledby="roomTitle"
       centered
     >
-      <Header>{roomData}</Header>
+      <Header id="roomTitle">{roomData}</Header>
       {/* TODO 이미지 캐러셀로 슬라이드 구현 */}
-      <ImgContainer></ImgContainer>
+      <ImgContainer onClick={() => setImgZoom((prev) => !prev)}>
+        {/* roomContent의 초기값은 빈 배열이므로 인덱스를 통해 접근할 수 없음.
+        객실을 선택하여 roomData에 값이 들어가야만 인덱스를 통해 접근 할 수 있음.
+        값이 없을 경우 undefined를 반환하여 에러를 발생하지 않도록 옵셔널 체이닝(?.)을 사용 */}
+        <Image
+          src={roomContent[0]?.img_src}
+          alt={roomContent[0]?.name}
+          zoom={imgZoom}
+        />
+      </ImgContainer>
       <ContentContainer>
-        <ChangeTitle currTitle={currTitle} setCurrTitle={setCurrTitle} />
-        <ChangeContent currTitle={currTitle} roomData={roomData} />
+        <RoomTabs currTab={currTab} setCurrTab={setCurrTab} />
+        {currTab === '객실 설명' ? (
+          <RoomDetailContent roomData={roomContent} />
+        ) : (
+          <RoomReviews />
+        )}
       </ContentContainer>
 
-      {/* 버튼 클릭 시 pathParams에 객실ID 넣어주고 예약페이지로 이동
-        TODO 예약페이지에서 객실ID별로 booking api get으로 정보받아오기 */}
-      <ReserveBtn onClick={handleClick}>예약하기</ReserveBtn>
+      <ReserveBtn onClick={() => navigate(`/reservation/${roomData}`)}>
+        예약하기
+      </ReserveBtn>
     </Modal>
   );
 };
@@ -51,6 +78,16 @@ const ImgContainer = styled.div`
   height: 286px;
   margin: 21px auto auto;
   background-color: #0000003b;
+`;
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  ${(props) =>
+    props.zoom &&
+    css`
+      transform: scale(2.5);
+    `}
 `;
 
 const ContentContainer = styled.div`
