@@ -3,29 +3,69 @@ import styled, { css } from 'styled-components';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
+// 유저 리스트
+const ShowUserList = ({ data }) => {
+  return (
+    <UserList key={data.ObjectId}>
+      <UserListSpan>{data.name}</UserListSpan>
+      <UserListSpan>{data.email}</UserListSpan>
+      <UserListSpan>{data.phone}</UserListSpan>
+      <DeleteUserBtn>회원 탈퇴</DeleteUserBtn>
+    </UserList>
+  );
+};
+
+// 예약 리스트
+const ShowBookList = ({ data }) => {
+  return (
+    <BookList key={data.ObjectId}>
+      <BookListSpan>{data.name}</BookListSpan>
+      <BookListSpan>{data.phone}</BookListSpan>
+      <BookListSpan>{data.bookingDate}</BookListSpan>
+      <BookListSpan>{data.RoomID}</BookListSpan>
+      <BookListSpan>{data.peopleNum}명</BookListSpan>
+      <BookListSpan>
+        {data.state}{' '}
+        {data.state == '예약요청' ? (
+          <BookApproveBtn>예약 승인</BookApproveBtn>
+        ) : (
+          <BookCancelBtn>예약 취소</BookCancelBtn>
+        )}
+      </BookListSpan>
+    </BookList>
+  );
+};
+
+// 관리자 페이지
 const AdminPage = () => {
   const [management, setManagement] = useState('user');
   // console.log(management);
   const [userData, setUserData] = useState([]);
   const [bookData, setBookData] = useState([]);
-
+  const [searchingName, setSearchingName] = useState('');
+  const [filteredUserData, setFilteredUserData] = useState([]);
+  const [filteredBookData, setFilteredBookData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage, setDataPerPage] = useState(8);
+  const [pagePerCycle, setPagePerCycle] = useState(10);
 
   useEffect(() => {
     const userUrl = 'http://localhost:3000/mock/userMock.json';
     const bookUrl = 'http://localhost:3000/mock/bookingMock.json';
     // const userList = axios.get(userUrl);
-    const userList = fetch(userUrl, { method: 'GET' })
-      .then((res) => res.json())
-      .then((data) => setUserData(data))
-      .then(console.log(userData));
+    // async const func(){
 
-    const bookList = fetch(bookUrl, { method: 'GET' })
+    // }
+    fetch(userUrl, { method: 'GET' })
       .then((res) => res.json())
-      .then((data) => setBookData(data))
-      .then(console.log(bookData));
+      .then((data) => setUserData(data));
+
+    fetch(bookUrl, { method: 'GET' })
+      .then((res) => res.json())
+      .then((data) => setBookData(data));
   }, []);
 
   const userManage = (e) => {
@@ -36,6 +76,23 @@ const AdminPage = () => {
   const bookManage = (e) => {
     e.preventDefault();
     setManagement('book');
+  };
+
+  // 이름으로 찾기
+  const searchByName = (e) => {
+    e.preventDefault();
+    setCurrentPage(1);
+    const oldUserData = [...userData];
+    const newUserData = oldUserData.filter((data) => {
+      return data.name == searchingName;
+    });
+    setFilteredUserData(newUserData);
+
+    const oldBookData = [...bookData];
+    const newBookData = oldBookData.filter((data) => {
+      return data.name == searchingName;
+    });
+    setFilteredBookData(newBookData);
   };
 
   // pagination
@@ -67,16 +124,37 @@ const AdminPage = () => {
 
   return (
     <>
+      <Navbar />
       <MainDiv>
         <ManageBar>
           <UserManage onClick={(e) => userManage(e)}>
-            <ManageUserSpan management={management}>회원관리</ManageUserSpan>
+            <ManageUserSpan
+              management={management}
+              onClick={() => {
+                setSearchingName('');
+                setFilteredUserData('');
+              }}
+            >
+              회원관리
+            </ManageUserSpan>
           </UserManage>
           <BookManage onClick={(e) => bookManage(e)}>
-            <ManageBookSpan management={management}>예약관리</ManageBookSpan>
+            <ManageBookSpan
+              management={management}
+              onClick={() => {
+                setSearchingName('');
+                setFilteredBookData('');
+              }}
+            >
+              예약관리
+            </ManageBookSpan>
           </BookManage>
-          <NameInput placeholder="이름" />
-          <SearchButton>검색</SearchButton>
+          <NameInput
+            placeholder="이름"
+            value={searchingName}
+            onChange={(e) => setSearchingName(e.target.value)}
+          />
+          <SearchButton onClick={(e) => searchByName(e)}>검색</SearchButton>
         </ManageBar>
         {management == 'user' ? (
           <UserDiv>
@@ -87,16 +165,13 @@ const AdminPage = () => {
               <UserBarSpan>회원탈퇴</UserBarSpan>
             </UserBar>
             <UserLists>
-              {currentData(userData).map((data) => {
-                return (
-                  <UserList key={data.ObjectId}>
-                    <UserListSpan>{data.name}</UserListSpan>
-                    <UserListSpan>{data.email}</UserListSpan>
-                    <UserListSpan>{data.phone}</UserListSpan>
-                    <DeleteUserBtn>회원 탈퇴</DeleteUserBtn>
-                  </UserList>
-                );
-              })}
+              {filteredUserData == ''
+                ? currentData(userData).map((data) => {
+                    return <ShowUserList data={data} />;
+                  })
+                : currentData(filteredUserData).map((data) => {
+                    return <ShowUserList data={data} />;
+                  })}
             </UserLists>
 
             <PageWrap>
@@ -107,25 +182,33 @@ const AdminPage = () => {
                   setCurrentPage((current) => current - 1);
                 }}
               >
-                <FiArrowLeft />
+                <FiArrowLeft style={{ marginRight: '5px' }} /> 이전
               </ArrowButton>
 
-              {pageCount(userData)}
+              {filteredUserData == ''
+                ? pageCount(userData)
+                : pageCount(filteredUserData)}
+
               <ArrowButton
+                style={{ marginLeft: '15px' }}
                 disabled={
-                  currentPage == Math.ceil(userData.length / dataPerPage)
+                  filteredUserData == ''
+                    ? currentPage == Math.ceil(userData.length / dataPerPage)
+                    : currentPage ==
+                      Math.ceil(filteredUserData.length / dataPerPage)
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setCurrentPage((current) => current + 1);
                 }}
               >
-                <FiArrowRight />
+                다음
+                <FiArrowRight style={{ marginLeft: '5px' }} />
               </ArrowButton>
             </PageWrap>
           </UserDiv>
         ) : (
-          <BookDiv>
+          <BookWrap>
             <BookBar>
               <BookBarSpan>예약자</BookBarSpan>
               <BookBarSpan>연락처</BookBarSpan>
@@ -135,25 +218,13 @@ const AdminPage = () => {
               <BookBarSpan>예약 상태</BookBarSpan>
             </BookBar>
             <BookLists>
-              {bookData.map((data) => {
-                return (
-                  <BookList key={data.ObjectId}>
-                    <BookListSpan>{data.name}</BookListSpan>
-                    <BookListSpan>{data.phone}</BookListSpan>
-                    <BookListSpan>{data.bookingDate}</BookListSpan>
-                    <BookListSpan>{data.RoomID}</BookListSpan>
-                    <BookListSpan>{data.peopleNum}명</BookListSpan>
-                    <BookListSpan>
-                      {data.state}{' '}
-                      {data.state == '예약요청' ? (
-                        <BookApproveBtn>예약 승인</BookApproveBtn>
-                      ) : (
-                        <BookCancelBtn>예약 취소</BookCancelBtn>
-                      )}
-                    </BookListSpan>
-                  </BookList>
-                );
-              })}
+              {filteredBookData == ''
+                ? bookData.map((data) => {
+                    return <ShowBookList data={data} />;
+                  })
+                : filteredBookData.map((data) => {
+                    return <ShowBookList data={data} />;
+                  })}
             </BookLists>
             <PageWrap>
               <ArrowButton
@@ -163,25 +234,30 @@ const AdminPage = () => {
                   setCurrentPage((current) => current - 1);
                 }}
               >
-                <FiArrowLeft />
+                <FiArrowLeft /> 이전
               </ArrowButton>
 
               {pageCount(bookData)}
               <ArrowButton
+                style={{ marginLeft: '15px' }}
                 disabled={
-                  currentPage == Math.ceil(bookData.length / dataPerPage)
+                  filteredBookData == ''
+                    ? currentPage == Math.ceil(bookData.length / dataPerPage)
+                    : currentPage ==
+                      Math.ceil(filteredBookData.length / dataPerPage)
                 }
                 onClick={(e) => {
                   e.preventDefault();
                   setCurrentPage((current) => current + 1);
                 }}
               >
-                <FiArrowRight />
+                다음 <FiArrowRight />
               </ArrowButton>
             </PageWrap>
-          </BookDiv>
+          </BookWrap>
         )}
       </MainDiv>
+      <Footer />
     </>
   );
 };
@@ -193,15 +269,14 @@ const MainDiv = styled.div`
   // width: 1200px;
   // height: 100vh;
   // margin: auto;
+  margin-top: 30px;
 `;
 
 const ManageBar = styled.div`
   padding: 10px;
   width: 850px;
   height: 45px;
-  // position: absolute;
-  // left: 535px;
-  // top: 187px;
+
   margin: auto;
 
   display: flex;
@@ -286,10 +361,6 @@ const SearchButton = styled.button`
 const UserDiv = styled.div`
   width: 850px;
   height: 33px;
-  // position: absolute;
-
-  // left: 540px;
-  // top: 293px;
   margin: auto;
   margin-top: 50px;
 `;
@@ -344,14 +415,9 @@ const DeleteUserBtn = styled.button`
   margin-left: 80px;
 `;
 
-const BookDiv = styled.div`
+const BookWrap = styled.div`
   width: 850px;
   height: 33px;
-
-  // position: absolute;
-
-  // left: 540px;
-  // top: 293px;
   margin: auto;
   margin-top: 50px;
 `;
@@ -430,6 +496,7 @@ const PageButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 2px;
   color: #5e5f61;
   width: 22px;
   height: 22px;
@@ -458,7 +525,10 @@ const ArrowButton = styled.button`
   margin: ${(props) => (props.flip ? '0 0 0 16px !important' : '0 16px 0 0')};
   border: none;
   background-color: white;
-
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   > svg {
     display: block;
   }
