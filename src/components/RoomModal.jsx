@@ -33,7 +33,12 @@ export const RoomModal = ({ show, onHide, roomData }) => {
   return (
     <Modal
       show={show}
-      onHide={onHide}
+      onHide={() => {
+        onHide();
+        // 모달창을 종료하고 다시 켰을 때 모달창 내부 초기화
+        setCurrTab('객실 설명');
+        setImgZoom(false);
+      }}
       dialogClassName="my-modal"
       aria-labelledby="roomTitle"
       centered
@@ -55,7 +60,7 @@ export const RoomModal = ({ show, onHide, roomData }) => {
         {currTab === '객실 설명' ? (
           <RoomDetailContent roomData={roomContent} />
         ) : (
-          <RoomReviews />
+          <RoomReviews roomID={roomContent[0]?.objectID} />
         )}
       </ContentContainer>
 
@@ -83,10 +88,11 @@ const ImgContainer = styled.div`
 const Image = styled.img`
   width: 100%;
   height: 100%;
+  transition: all ease 500ms 0ms;
   ${(props) =>
     props.zoom &&
     css`
-      transform: scale(2.5);
+      transform: scale(2) translate(0, 50px);
     `}
 `;
 
@@ -96,7 +102,6 @@ const ContentContainer = styled.div`
   margin: 23px auto auto;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
   align-items: center;
 `;
 
