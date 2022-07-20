@@ -30,16 +30,26 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
             },
           }
         );
+
+        // FIXME api요청을 했을 때 예약된 객실이 없을 경우 여전히 빈 배열을 반환하여 객실을 선택할 수 없음.
+        // 객실 id와 연관없는 임의의 문자열을 배열에 넣어줘서 객실을 선택할 수 있도록 하였으나, 추후 수정 필요.
+        if (res.data.length == 0) {
+          setReservedRoomsData(['empty']);
+          return;
+        }
         setReservedRoomsData(res.data);
       }
     }
     getRooms();
+    // 날짜와 인원수를 변경할 경우 선택된 객실 초기화
+    setSelectedRoom(selectedID);
   }, [selectedDate, people]);
 
   const handleRoomDetail = (roomID) => {
     // 인원 수와 입, 퇴실 날짜를 선택하지 않았다면 api요청이 되지 않음
     // 그렇게 되면 reservedRoomsData값은 빈배열을 가지게 되므로
     // setSelectedRoom 및 setRoomInfo함수가 동작하지 않아서 선택되지 않음.
+    // 또한, 예약된 객실데이터에 포함된 객실일 경우 마찬가지로 아래 함수가 동작하지 않아서 선택되지 않음.
     reservedRoomsData.some((room) => room !== roomID) &&
       (() => {
         setSelectedRoom(roomID);
@@ -89,26 +99,11 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
             {/* 다를 경우 1. 예약된 객실데이터에 포함된 객실이면 X표시(선택불가) */}
             {/* 다를 경우 2. 예약된 객실데이터에 포함되지 않은 객실이면 O표시(선택가능)*/}
             {selectedRoom === caravan.id ? (
-              <BsCheckLg
-                style={{
-                  color: baseStyle.mainColor,
-                  transform: 'scale(3.0) translate(5px)',
-                }}
-              />
+              <CheckRoom />
             ) : reservedRoomsData.some((room) => room !== caravan.id) ? (
-              <VscCircleLargeOutline
-                style={{
-                  color: 'blue',
-                  transform: 'scale(4.0) translate(5px, 1px)',
-                }}
-              />
+              <SelectableCaravan />
             ) : (
-              <VscChromeClose
-                style={{
-                  color: 'red',
-                  transform: 'scale(4.0) translate(5px, 1px)',
-                }}
-              />
+              <NonSelectableCaravan />
             )}
           </Caravan>
         );
@@ -124,26 +119,11 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
             onClick={() => handleRoomDetail(tent.name)}
           >
             {selectedRoom === tent.name ? (
-              <BsCheckLg
-                style={{
-                  color: baseStyle.mainColor,
-                  transform: 'scale(2.5) translate(5px)',
-                }}
-              />
+              <CheckRoom />
             ) : reservedRoomsData.some((room) => room !== tent.name) ? (
-              <VscCircleLargeOutline
-                style={{
-                  color: 'blue',
-                  transform: 'scale(3.0) translate(5px, 3px)',
-                }}
-              />
+              <SelectableTentAndGlamp />
             ) : (
-              <VscChromeClose
-                style={{
-                  color: 'red',
-                  transform: 'scale(3.0) translate(5px, 3px)',
-                }}
-              />
+              <NonSelectableTentAndGlamp />
             )}
           </Tent>
         );
@@ -160,26 +140,11 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
             onClick={() => handleRoomDetail(glamp.name)}
           >
             {selectedRoom === glamp.name ? (
-              <BsCheckLg
-                style={{
-                  color: baseStyle.mainColor,
-                  transform: 'scale(3.0) translate(5px)',
-                }}
-              />
+              <CheckRoom />
             ) : reservedRoomsData.some((room) => room !== glamp.name) ? (
-              <VscCircleLargeOutline
-                style={{
-                  color: 'blue',
-                  transform: 'scale(3.0) translate(5px, 3px)',
-                }}
-              />
+              <SelectableTentAndGlamp />
             ) : (
-              <VscChromeClose
-                style={{
-                  color: 'red',
-                  transform: 'scale(3.0) translate(5px, 3px)',
-                }}
-              />
+              <NonSelectableTentAndGlamp />
             )}
           </Glamp>
         );
@@ -224,4 +189,29 @@ const Glamp = styled.div`
   :hover {
     cursor: pointer;
   }
+`;
+
+const CheckRoom = styled(BsCheckLg)`
+  color: ${baseStyle.mainColor};
+  transform: scale(3) translate(5px);
+`;
+
+const SelectableCaravan = styled(VscCircleLargeOutline)`
+  color: blue;
+  transform: scale(4) translate(5px, 1px);
+`;
+
+const NonSelectableCaravan = styled(VscChromeClose)`
+  color: red;
+  transform: scale(4) translate(5px, 1px);
+`;
+
+const SelectableTentAndGlamp = styled(VscCircleLargeOutline)`
+  color: blue;
+  transform: scale(3) translate(5px, 3px);
+`;
+
+const NonSelectableTentAndGlamp = styled(VscChromeClose)`
+  color: red;
+  transform: scale(3) translate(5px, 3px);
 `;

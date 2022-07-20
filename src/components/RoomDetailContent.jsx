@@ -4,9 +4,9 @@ const RoomDetailContent = ({ roomData }) => {
   return (
     <Container>
       <p>{roomData?.content}</p>
-      <p>최소 인원 : {roomData?.minPeople}인</p>
-      <p>최대 인원 : {roomData?.maxPeople}인</p>
-      <p>가격 : {roomData?.price.toLocaleString()}원</p>
+      <p>최소 인원 : {roomData.minPeople}인</p>
+      <p>최대 인원 : {roomData.maxPeople}인</p>
+      <p>가격 : {roomData.price?.toLocaleString()}원</p>
     </Container>
   );
 };

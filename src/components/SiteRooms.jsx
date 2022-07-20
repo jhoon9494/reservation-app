@@ -56,14 +56,7 @@ const RoomsButton = () => {
             left={caravan.left}
             onClick={() => handleRoomDetail(caravan.id)}
           >
-            {selectedRoom === caravan.id && (
-              <BsCheckLg
-                style={{
-                  color: baseStyle.mainColor,
-                  transform: 'scale(3.0) translate(5px)',
-                }}
-              />
-            )}
+            {selectedRoom === caravan.id && <CheckRoom />}
           </Caravan>
         );
       })}
@@ -76,14 +69,7 @@ const RoomsButton = () => {
             right={tent.right}
             onClick={() => handleRoomDetail(tent.name)}
           >
-            {selectedRoom === tent.name && (
-              <BsCheckLg
-                style={{
-                  color: baseStyle.mainColor,
-                  transform: 'scale(2.5) translate(5px)',
-                }}
-              />
-            )}
+            {selectedRoom === tent.name && <CheckRoom />}
           </Tent>
         );
       })}
@@ -96,14 +82,7 @@ const RoomsButton = () => {
             right={glamp.right}
             onClick={() => handleRoomDetail(glamp.name)}
           >
-            {selectedRoom === glamp.name && (
-              <BsCheckLg
-                style={{
-                  color: baseStyle.mainColor,
-                  transform: 'scale(3.0) translate(5px)',
-                }}
-              />
-            )}
+            {selectedRoom === glamp.name && <CheckRoom />}
           </Glamp>
         );
       })}
@@ -152,4 +131,9 @@ const Glamp = styled.div`
   :hover {
     cursor: pointer;
   }
+`;
+
+const CheckRoom = styled(BsCheckLg)`
+  color: ${baseStyle.mainColor};
+  transform: scale(3) translate(5px);
 `;

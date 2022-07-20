@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import '../styles/modal.css';
+import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import RoomTabs from './RoomTabs';
@@ -51,11 +52,13 @@ export const RoomModal = ({ show, onHide, roomID }) => {
         {/* roomContent의 초기값은 빈 배열이므로 인덱스를 통해 접근할 수 없음.
         객실을 선택하여 roomID에 값이 들어가야만 인덱스를 통해 접근 할 수 있음.
         값이 없을 경우 undefined를 반환하여 에러를 발생하지 않도록 옵셔널 체이닝(?.)을 사용 */}
+        <VscChevronLeft />
         <Image
           src={roomContent?.imgSrc}
           alt={roomContent?.name}
           zoom={imgZoom}
         />
+        <VscChevronRight />
       </ImgContainer>
       <ContentContainer>
         <RoomTabs currTab={currTab} setCurrTab={setCurrTab} />
@@ -81,6 +84,7 @@ const Header = styled.div`
 `;
 
 const ImgContainer = styled.div`
+  display: flex;
   width: 480px;
   height: 286px;
   margin: 21px auto auto;
@@ -88,9 +92,9 @@ const ImgContainer = styled.div`
 `;
 
 const Image = styled.img`
-  width: 100%;
+  width: 90%;
   height: 100%;
-  transition: all ease 500ms 0ms;
+  transition: all ease 250ms 0ms;
   ${(props) =>
     props.zoom &&
     css`
