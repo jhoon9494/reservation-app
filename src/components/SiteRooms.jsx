@@ -1,36 +1,29 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import { RoomModal } from './RoomModal';
 import { BsCheckLg } from 'react-icons/bs';
 
-// RoomsButton 컴포넌트는 Site, Reservation 두 컴포넌트에서 모두 사용
-const RoomsButton = ({ selectedID, setRoomInfo }) => {
+const RoomsButton = () => {
   const [modalShow, setModalShow] = useState(false);
-  // 둘러보기 페이지에서 예약페이지로 넘어간 경우
-  // 둘러보기 페이지에서 선택한 객실을 selected값으로 지정
-  const [selectedRoom, setSelectedRoom] = useState(
-    selectedID ? selectedID : ''
-  );
-  const location = useLocation();
+  const [selectedRoom, setSelectedRoom] = useState('');
 
-  const handleRoomDetail = (roomName) => {
+  const handleRoomDetail = (roomId) => {
     setModalShow(true);
 
-    // 객실 상세정보의 경우 객실명을 모달창에 상태로 전달한 후 모달창에서 api를 요청
-    setSelectedRoom(roomName);
-
-    // setRoomInfo props는 예약페이지에서만 전달하므로 별도 조건으로 묶음
-    location.pathname === '/reservation' && setRoomInfo(roomName);
+    // TODO 객실 상세정보의 경우 객실ID를 모달창에 상태로 전달한 후 모달창에서 api를 요청
+    setSelectedRoom(roomId);
   };
+
+  // FIXME
+  // 각 객실 별 정보 Db에 올려야할 듯
   const caravans = [
-    { top: 10, left: 32, name: 'C-101호' },
-    { top: 15.3, left: 40.6, name: 'C-102호' },
-    { top: 21.3, left: 50, name: 'C-103호' },
-    { top: 27.7, left: 29, name: 'C-104호' },
-    { top: 84, left: 28, name: 'C-105호' },
-    { top: 80, left: 39.4, name: 'C-106호' },
+    { top: 10, left: 32, name: 'C-101호', id: '62d5365e88ab7290bffbdb42' },
+    { top: 15.3, left: 40.6, name: 'C-102호', id: '62d58c76d04deeeeda401ff2' },
+    { top: 21.3, left: 50, name: 'C-103호', id: '3' },
+    { top: 27.7, left: 29, name: 'C-104호', id: '4' },
+    { top: 84, left: 28, name: 'C-105호', id: '5' },
+    { top: 80, left: 39.4, name: 'C-106호', id: '6' },
   ];
 
   const tents = [
@@ -61,9 +54,9 @@ const RoomsButton = ({ selectedID, setRoomInfo }) => {
             key={caravan.name}
             top={caravan.top}
             left={caravan.left}
-            onClick={() => handleRoomDetail(caravan.name)}
+            onClick={() => handleRoomDetail(caravan.id)}
           >
-            {selectedRoom === caravan.name && (
+            {selectedRoom === caravan.id && (
               <BsCheckLg
                 style={{
                   color: baseStyle.mainColor,
@@ -74,7 +67,6 @@ const RoomsButton = ({ selectedID, setRoomInfo }) => {
           </Caravan>
         );
       })}
-
       {/* 텐트 아이콘 */}
       {tents.map((tent) => {
         return (
@@ -95,7 +87,6 @@ const RoomsButton = ({ selectedID, setRoomInfo }) => {
           </Tent>
         );
       })}
-
       {/* 글램핑 아이콘 */}
       {glamps.map((glamp) => {
         return (
@@ -116,15 +107,11 @@ const RoomsButton = ({ selectedID, setRoomInfo }) => {
           </Glamp>
         );
       })}
-
-      {/* 둘러보기 페이지일때만 객실상세 모달창이 뜨도록 하기위함 */}
-      {location.pathname === '/site' && (
-        <RoomModal
-          show={modalShow}
-          onHide={() => setModalShow(false)}
-          roomData={selectedRoom}
-        />
-      )}
+      <RoomModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        roomID={selectedRoom}
+      />
     </>
   );
 };

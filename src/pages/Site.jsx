@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import RoomsButton from '../components/RoomsButton';
+import SiteRooms from '../components/SiteRooms';
 import Navbar from '../components/Navbar';
 
 const Site = () => {
@@ -7,8 +7,8 @@ const Site = () => {
     <>
       <Navbar />
       <Container>
-        <MapImg src="/campMapImg.png" alt="mapImg" />
-        <RoomsButton />
+        <MapImg src="/images/campMapImg.png" alt="mapImg" />
+        <SiteRooms />
       </Container>
     </>
   );

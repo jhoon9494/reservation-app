@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import CheckPeople from '../components/CheckPeople';
 import Navbar from '../components/Navbar';
 import DateRangePick from '../components/DateRangePick';
-import RoomsButton from '../components/RoomsButton';
+import ReservationRooms from '../components/ReservationRooms';
 import baseStyle from '../styles/baseStyle';
 
 const Reservation = () => {
@@ -17,7 +17,7 @@ const Reservation = () => {
     roomInfo: '',
   });
   const [people, setPeople] = useState(0);
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState({ startDate: '', endDate: '' });
   const [roomInfo, setRoomInfo] = useState(roomID ? roomID : '');
 
   useEffect(() => {
@@ -37,13 +37,18 @@ const Reservation = () => {
       <Navbar />
       <Container>
         <CheckPeople setPeople={setPeople} />
-        <DateRangePick setDate={setDate} />
+        <DateRangePick setDate={setDate} roomID={roomID} />
       </Container>
-      {/* 둘러보기 페이지에서 객실을 선택하고 온 경우 별도로 캠핑장 지도를 보여주지 않음. */}
+      {/* FIXME 둘러보기 페이지에서 객실을 선택하고 온 경우 별도로 캠핑장 지도를 보여주지 않음?? 회의해서 정하기 */}
       {!roomID && (
         <MapContainer>
-          <MapImg src="/campMapImg.png" alt="mapImg" />
-          <RoomsButton selectedID={roomID} setRoomInfo={setRoomInfo} />
+          <MapImg src="/images/campMapImg.png" alt="mapImg" />
+          <ReservationRooms
+            selectedID={roomID ? roomID : ''}
+            setRoomInfo={setRoomInfo}
+            selectedDate={date}
+            people={people}
+          />
         </MapContainer>
       )}
       <ReserveBtn onClick={handleReserve}>예약하기</ReserveBtn>

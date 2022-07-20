@@ -1,29 +1,40 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { DatePicker } from 'antd';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import moment from 'moment';
-
 const { RangePicker } = DatePicker;
-const format = 'YYYY.MM.DD';
-// 아래 배열에 예약된 날짜 상태 집어넣고 isBetween으로 확인해서 예약유무 달력에 표시
-const disabledDates = [
-  {
-    start: '2022.07.23',
-    end: '2022.07.24',
-  },
-  {
-    start: '2022.08.15',
-    end: '2022.08.19',
-  },
-];
 
-const DateRangePick = ({ setDate }) => {
+const DateRangePick = ({ setDate, roomID }) => {
+  const [reservedDates, setReservedDates] = useState([]);
+
+  useEffect(() => {
+    async function getReservedDates() {
+      if (roomID) {
+        // 둘러보기 페이지에서 객실을 선택하고 들어온 경우
+        // roomID를 통해 api호출 후 해당 객실의 예약된 날짜를 받아서 예약 불가능 표시
+        const res = await axios.get(
+          'http://localhost:5000/api/booking/byRoom',
+          {
+            params: { roomID: roomID },
+          }
+        );
+        if (res.data) {
+          // 해당 객실에 예약된 날짜가 있는 경우에만 실행
+          setReservedDates(res.data.map((date) => moment(date)));
+        }
+      }
+    }
+    getReservedDates();
+  }, [roomID]);
+
   const disabledDate = (current) => {
-    return disabledDates.some((date) =>
-      current.isBetween(
-        moment(date['start'], format).startOf('day'),
-        moment(date['end'], format).endOf('day')
-      )
-    );
+    return reservedDates.some((date) => {
+      return current.isBetween(
+        moment(date).startOf('day'),
+        moment(date).endOf('day')
+      );
+    });
   };
   const handleDate = (date, dateString) => {
     setDate({

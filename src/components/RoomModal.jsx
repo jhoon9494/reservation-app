@@ -10,7 +10,7 @@ import RoomDetailContent from './RoomDetailContent';
 import RoomReviews from './RoomReviews';
 import axios from 'axios';
 
-export const RoomModal = ({ show, onHide, roomData }) => {
+export const RoomModal = ({ show, onHide, roomID }) => {
   const [currTab, setCurrTab] = useState('객실 설명');
   const [roomContent, setRoomContent] = useState([]);
   const [imgZoom, setImgZoom] = useState(false);
@@ -18,17 +18,17 @@ export const RoomModal = ({ show, onHide, roomData }) => {
 
   useEffect(() => {
     async function getData() {
-      // RoomsButton 컴포넌트에서 초기 roomData값은 empty string임.
-      // roomData에 값이 들어올때만 api 요청
-      if (roomData !== '') {
+      // RoomsButton 컴포넌트에서 초기 roomID값은 empty string임.
+      // roomID에 값이 들어올때만 api 요청
+      if (roomID !== '') {
         const res = await axios.get(
           'http://localhost:3000/mock/roomsMock.json'
         );
-        setRoomContent(res.data.filter((room) => room.name === roomData));
+        setRoomContent(res.data.filter((room) => room.name === roomID));
       }
     }
     getData();
-  }, [roomData]);
+  }, [roomID]);
 
   return (
     <Modal
@@ -43,11 +43,11 @@ export const RoomModal = ({ show, onHide, roomData }) => {
       aria-labelledby="roomTitle"
       centered
     >
-      <Header id="roomTitle">{roomData}</Header>
+      <Header id="roomTitle">{roomContent[0]?.name}</Header>
       {/* TODO 이미지 캐러셀로 슬라이드 구현 */}
       <ImgContainer onClick={() => setImgZoom((prev) => !prev)}>
         {/* roomContent의 초기값은 빈 배열이므로 인덱스를 통해 접근할 수 없음.
-        객실을 선택하여 roomData에 값이 들어가야만 인덱스를 통해 접근 할 수 있음.
+        객실을 선택하여 roomID에 값이 들어가야만 인덱스를 통해 접근 할 수 있음.
         값이 없을 경우 undefined를 반환하여 에러를 발생하지 않도록 옵셔널 체이닝(?.)을 사용 */}
         <Image
           src={roomContent[0]?.img_src}
@@ -64,7 +64,7 @@ export const RoomModal = ({ show, onHide, roomData }) => {
         )}
       </ContentContainer>
 
-      <ReserveBtn onClick={() => navigate(`/reservation/${roomData}`)}>
+      <ReserveBtn onClick={() => navigate(`/reservation/${roomID}`)}>
         예약하기
       </ReserveBtn>
     </Modal>
