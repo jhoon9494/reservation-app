@@ -95,7 +95,6 @@ const MypageReservationCheck = (props) => {
         setModalShow={() => setModalShow(false)}
         modalSelect={modalSelect}
       />
-      {/* {modalShow ? <MypageModal /> : null} */}
       <div>페이징네이션</div>
     </ReservationCheckContainer>
   );

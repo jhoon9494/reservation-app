@@ -4,19 +4,31 @@ import baseStyle from '../styles/baseStyle';
 //components
 import Navbar from '../components/Navbar';
 import MypageReservationCheck from '../components/MypageReservationCheck';
-// import MypageModifyMemberInfo from '../components/MypageModifyMemberInfo';
+import MypageModal from '../components/MypageModal';
+import MypageModifyMemberInfo from '../components/MypageModifyMemberInfo';
 // import axios from 'axios';
 
 const MyPage = () => {
-  // const [getUser, setGetUser] = useState({});
+  const [getUser, setGetUser] = useState({});
   const [getBooking, setGetBooking] = useState([]);
 
+  const [checkPw, setCheckPw] = useState(false);
+
+  // modal 제어
+  const [modalShow, setModalShow] = useState(false);
+  // modal창에 넘길 값
+  const [modalSelect, setModalSelect] = useState({
+    option: '',
+    width: 0,
+    height: 0,
+    userPw: '',
+  });
   // tab제어
   const [currTab, setCurrTab] = useState('예약조회');
 
   useEffect(() => {
     console.log('useEffect');
-    // const urlUser = `../../mock/userMock.json`;
+    const urlUser = `../../mock/userMock.json`;
     const urlBookingList = `../../mock/bookingMock.json`;
     async function fetchBooking() {
       const res = await fetch(urlBookingList);
@@ -24,20 +36,31 @@ const MyPage = () => {
       // TODO: 해당 유저 아이디로 찾는 것 있어야함
       setGetBooking(() => [...getBookings]);
     }
-    // async function fetchUser() {
-    //   const res = await fetch(urlUser);
-    //   const getUsers = await res.json();
-    //   setGetUser(() => ({ ...getUsers[0] }));
-    // }
+    async function fetchUser() {
+      const res = await fetch(urlUser);
+      const getUsers = await res.json();
+      setGetUser(() => ({ ...getUsers[0] }));
+    }
 
     fetchBooking();
-    // fetchUser();
+    fetchUser();
   }, []);
 
   // tab
   const tabs = ['예약조회', '정보수정'];
   const handleClickTab = (tab) => {
     setCurrTab(tab);
+    const userPw = getUser.password;
+    if (tab === '정보수정') {
+      setModalSelect({
+        option: 'ModalCheckPassword',
+        width: 370,
+        height: 270,
+        userPw: userPw,
+      });
+      setModalShow(true);
+      console.log(userPw);
+    }
   };
 
   return (
@@ -56,14 +79,17 @@ const MyPage = () => {
           );
         })}
       </TabContainer>
-      {
-        currTab === '예약조회' ? (
-          <MypageReservationCheck getBooking={getBooking} />
-        ) : (
-          ''
-        )
-        // <MypageModifyMemberInfo />
-      }
+      {currTab === '예약조회' ? (
+        <MypageReservationCheck getBooking={getBooking} />
+      ) : currTab === '정보수정' && checkPw ? (
+        <MypageModifyMemberInfo getUser={getUser} />
+      ) : null}
+      <MypageModal
+        modalShow={modalShow}
+        setModalShow={() => setModalShow(false)}
+        modalSelect={modalSelect}
+        setCheckPw={setCheckPw}
+      />
     </Container>
   );
 };

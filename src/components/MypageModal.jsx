@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const MypageModal = (props) => {
@@ -5,11 +6,11 @@ const MypageModal = (props) => {
   // modalShow : modal창 true값으로 받고 창 뜸,
   // setModalShow : modal창 false로 만들고 닫기 위함
   // modalSelect : modal클릭한 종류, width,height, room값이 들어있음
-  const { modalShow, setModalShow, modalSelect } = props;
+  const { modalShow, setModalShow, modalSelect, setCheckPw } = props;
 
   // modal option값에 따라 창 다르게 띄워주기
   const viewContent = () => {
-    console.log('modalSelect :', props.modalSelect);
+    // console.log('modalSelect :', props.modalSelect);
     switch (modalSelect.option) {
       // 예약조회 창
       case 'ModalReservationCancellation':
@@ -35,6 +36,18 @@ const MypageModal = (props) => {
             <ContentModifiedReview setModalShow={setModalShow} />
           </ModalModifiedReview>
         );
+      // 정보수정 비번확인 창
+      case 'ModalCheckPassword':
+        return (
+          <ModalCheckPassword>
+            <ContentCheckPassword
+              userPw={modalSelect.userPw}
+              setModalShow={setModalShow}
+              setCheckPw={setCheckPw}
+            />
+          </ModalCheckPassword>
+        );
+
       default:
         break;
     }
@@ -134,7 +147,7 @@ const ModalReservationCancellation = styled.section`
 `;
 
 const ContentReservationCancellation = (props) => {
-  console.log(props);
+  // console.log(props);
   return (
     <>
       <h2>{props.room}를 예약 취소하겠습니까?</h2>
@@ -392,6 +405,73 @@ const ContentModifiedReview = (props) => {
           <button className="cancelBtn">확인</button>
         </div>
       </ModalModifiedReview>
+    </>
+  );
+};
+
+// 정보수정 비밀번호확인 창과 내용 제어
+const ModalCheckPassword = styled.section`
+padding: 25px;
+display: flex;
+flex-direction: column;
+align-items: center
+
+font-family: 'Noto Sans KR';
+font-weight: bold;
+font-size: 20px;
+line-height: 30px;
+text-align: center;
+
+& input {
+  margin: 50px auto 55px;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  width: 306px;
+  height: 38px;
+}
+
+.checkBtn {
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  
+  width: 142px;
+  height: 36px;
+  border-radius: 50px;
+  color: #ffffff;
+  background: #524fa1;
+  margin: auto;
+}
+`;
+
+const ContentCheckPassword = (props) => {
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  // 비번 검증
+  const checkedPw = () => {
+    if (confirmPassword === props.userPw) {
+      props.setCheckPw(true);
+      props.setModalShow(false);
+    } else {
+      alert('비밀번호가 틀렸습니다.');
+      props.setCheckPw(false);
+      props.setModalShow(false);
+    }
+  };
+
+  return (
+    <>
+      <h2>현재 비밀번호 확인</h2>
+      <input
+        type="password"
+        value={confirmPassword || ''}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        placeholder="비밀번호 입력하세요."
+      />
+      <button className="checkBtn" onClick={checkedPw}>
+        확인
+      </button>
     </>
   );
 };

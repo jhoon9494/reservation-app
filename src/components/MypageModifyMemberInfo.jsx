@@ -2,7 +2,9 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 
-const MypageModifyMemberInfo = () => {
+const MypageModifyMemberInfo = (props) => {
+  const getUser = props.getUser;
+  // console.log('getUser', getUser);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
@@ -14,9 +16,14 @@ const MypageModifyMemberInfo = () => {
       name: name,
       phone: phone,
     };
+
+    //비번이 공란일시 이전 비번을 업데이트 시켜줌
+    if (password === '') {
+      inputs.password = getUser.password;
+    }
+    console.log('회원정보를 업데이트함');
     console.log(inputs);
 
-    console.log('회원정보를 업데이트함');
     //await axios.post(serverURL, JSON.stringify(newObj))
   };
   const handleMembershipWithdrawalSubmit = (event) => {
