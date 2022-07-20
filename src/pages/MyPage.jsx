@@ -83,7 +83,7 @@ const MyPage = () => {
     setCurrTab(tab);
   };
 
-  //TODO: 탭을 나누고 각각 서로 필요한 부분을 호출해야됨
+  //TODO 탭을 나누고 각각 서로 필요한 부분을 호출해야됨
   const handleSubmit = (event) => {
     event.preventDefault();
     const inputs = {
@@ -272,7 +272,43 @@ const MyPage = () => {
                 ''
               )}
 
-              {reviewModifiedModal ? '' : ''}
+              {reviewModifiedModal ? (
+                <ModalModifiedReview>
+                  <h2>후기 수정을 작성하세요</h2>
+                  <div className="titleLine">
+                    <label>제목 :</label>
+                    <input
+                      type="text"
+                      placeholder=" [이전내용]제목을 입력해주세요."
+                    ></input>
+                    <select disabled>
+                      <option value="">점수 주기</option>
+                      <option value="5">5</option>
+                      <option value="4">4</option>
+                      <option value="3">3</option>
+                      <option value="2">2</option>
+                      <option value="1">1</option>
+                    </select>
+                  </div>
+                  <div className="contentsLine">
+                    <label>내용 :</label>
+                    <textarea
+                      type="textarea"
+                      placeholder=" [이전내용]내용을 입력해주세요."
+                      rows="4"
+                      maxLength="50"
+                    ></textarea>
+                  </div>
+                  <div className="btnLine">
+                    <button className="checkBtn" onClick={() => closeModal()}>
+                      취소
+                    </button>
+                    <button className="cancelBtn">확인</button>
+                  </div>
+                </ModalModifiedReview>
+              ) : (
+                ''
+              )}
             </ModalContainer>
           ) : null}
 
@@ -556,6 +592,89 @@ const ModalReservationCancellation = styled.section`
   }
 `;
 const ModalWriteReview = styled.section`
+  padding: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch
+
+  font-family: 'Noto Sans KR';
+  font-size: 14px;
+  line-height: 21px;
+
+  & h2 {
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 30px;
+    text-align: center;
+  }
+
+  & div {
+    display: flex;
+    margin-top: 38px;
+    align-items: center;
+    
+    &.titleLine{
+      & label {
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+    & select {
+      width: 144px;
+      height: 38px;
+      border: 1px solid #000000;
+      border-radius: 10px;
+    }
+    & input,
+    textarea {
+      margin-left:20px;
+      border: 1px solid #000000;
+      border-radius: 10px;
+    }
+
+    & input {
+      margin-right:22px;
+      width: 306px;
+      height: 38px;
+    }
+
+    &.contentsLine {
+      display:flex;
+      align-items: flex-start;
+    }
+    & textarea {
+      width: 468px;
+      height: 151px;
+    }
+
+    &.btnLine{
+      justify-content: center
+    }
+    & button {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 24px;
+      text-align: center;
+
+      width: 142px;
+      height: 36px;
+      border-radius: 50px;
+    }
+
+    .checkBtn {
+      color: #000000;
+      background-color: transparent;
+      border: 1px solid #f90303;
+    }
+    .cancelBtn {
+      color: #ffffff;
+      background: #524fa1;
+      margin-left: 46px;
+    }
+  }
+`;
+
+const ModalModifiedReview = styled.section`
   padding: 80px;
   display: flex;
   flex-direction: column;
