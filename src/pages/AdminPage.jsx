@@ -7,13 +7,34 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 // 유저 리스트
-const ShowUserList = ({ data }) => {
+const ShowUserList = ({ data, setDeleteUser }) => {
+  // 회원탈퇴 함수
+
+  async function withDrawal(e) {
+    e.preventDefault();
+
+    if (
+      window.confirm(`${data.name} 회원님의 정보를 정말로 삭제 하시겠습니까?`)
+    ) {
+      const withDrawal = await axios.delete(
+        'http://localhost:5000/api/admin/user',
+        {
+          data: {
+            userId: data._id,
+          },
+        }
+      );
+      alert(`${data.name} 회원님의 정보를 삭제 하였습니다.`);
+      setDeleteUser((current) => !current);
+    }
+  }
+
   return (
     <UserList key={data.ObjectId}>
       <UserListSpan>{data.name}</UserListSpan>
       <UserListSpan>{data.email}</UserListSpan>
-      <UserListSpan>{data.phone}</UserListSpan>
-      <DeleteUserBtn>회원 탈퇴</DeleteUserBtn>
+      <UserListSpan>{data.phoneNumber}</UserListSpan>
+      <DeleteUserBtn onClick={(e) => withDrawal(e)}>회원 탈퇴</DeleteUserBtn>
     </UserList>
   );
 };
@@ -23,16 +44,21 @@ const ShowBookList = ({ data }) => {
   return (
     <BookList key={data.ObjectId}>
       <BookListSpan>{data.name}</BookListSpan>
-      <BookListSpan>{data.phone}</BookListSpan>
-      <BookListSpan>{data.bookingDate}</BookListSpan>
-      <BookListSpan>{data.RoomID}</BookListSpan>
-      <BookListSpan>{data.peopleNum}명</BookListSpan>
+      <BookListSpan>{data.phoneNumber}</BookListSpan>
       <BookListSpan>
-        {data.state}{' '}
-        {data.state == '예약요청' ? (
+        {data.processDate[0].substring(0, 10)}{' '}
+        {data.processDate[data.processDate.length - 1].substring(0, 10)}
+      </BookListSpan>
+      <BookListSpan>{data.roomID.name}</BookListSpan>
+      <BookListSpan>{data.peopleNumber}명</BookListSpan>
+      <BookListSpan>
+        {data.status}{' '}
+        {data.status == '예약 요청' ? (
           <BookApproveBtn>예약 승인</BookApproveBtn>
-        ) : (
+        ) : data.status == '예약 완료' ? (
           <BookCancelBtn>예약 취소</BookCancelBtn>
+        ) : (
+          <BookCancelBtn disabled={true}>예약 취소됨</BookCancelBtn>
         )}
       </BookListSpan>
     </BookList>
@@ -42,31 +68,36 @@ const ShowBookList = ({ data }) => {
 // 관리자 페이지
 const AdminPage = () => {
   const [management, setManagement] = useState('user');
-  // console.log(management);
   const [userData, setUserData] = useState([]);
   const [bookData, setBookData] = useState([]);
   const [searchingName, setSearchingName] = useState('');
   const [filteredUserData, setFilteredUserData] = useState([]);
   const [filteredBookData, setFilteredBookData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataPerPage, setDataPerPage] = useState(8);
+  const [dataPerPage, setDataPerPage] = useState(6);
   const [pagePerCycle, setPagePerCycle] = useState(10);
+  const [deleteUser, setDeleteUser] = useState(false);
 
   useEffect(() => {
-    const userUrl = 'http://localhost:3000/mock/userMock.json';
-    const bookUrl = 'http://localhost:3000/mock/bookingMock.json';
-    // const userList = axios.get(userUrl);
-    // async const func(){
+    async function getUserList() {
+      const userData = await axios.get('http://localhost:5000/api/admin/user');
+      const userList = userData.data;
+      setUserData(userList);
+      // 필터링 된 유저데이터 초기화
+      setSearchingName('');
+      setFilteredUserData('');
+    }
+    getUserList();
+  }, [deleteUser]);
 
-    // }
-    fetch(userUrl, { method: 'GET' })
-      .then((res) => res.json())
-      .then((data) => setUserData(data));
-
-    fetch(bookUrl, { method: 'GET' })
-      .then((res) => res.json())
-      .then((data) => setBookData(data));
-  }, []);
+  useEffect(() => {
+    async function getBookList() {
+      const bookData = await axios.get('http://localhost:5000/api/admin/book');
+      const bookList = bookData.data;
+      setBookData(bookList);
+    }
+    getBookList();
+  }, [deleteUser]);
 
   const userManage = (e) => {
     e.preventDefault();
@@ -90,7 +121,7 @@ const AdminPage = () => {
 
     const oldBookData = [...bookData];
     const newBookData = oldBookData.filter((data) => {
-      return data.name == searchingName;
+      return data.userID.name == searchingName;
     });
     setFilteredBookData(newBookData);
   };
@@ -167,10 +198,20 @@ const AdminPage = () => {
             <UserLists>
               {filteredUserData == ''
                 ? currentData(userData).map((data) => {
-                    return <ShowUserList data={data} />;
+                    return (
+                      <ShowUserList
+                        data={data}
+                        setDeleteUser={() => setDeleteUser()}
+                      />
+                    );
                   })
                 : currentData(filteredUserData).map((data) => {
-                    return <ShowUserList data={data} />;
+                    return (
+                      <ShowUserList
+                        data={data}
+                        setDeleteUser={() => setDeleteUser()}
+                      />
+                    );
                   })}
             </UserLists>
 
@@ -219,10 +260,10 @@ const AdminPage = () => {
             </BookBar>
             <BookLists>
               {filteredBookData == ''
-                ? bookData.map((data) => {
+                ? currentData(bookData).map((data) => {
                     return <ShowBookList data={data} />;
                   })
-                : filteredBookData.map((data) => {
+                : currentData(filteredBookData).map((data) => {
                     return <ShowBookList data={data} />;
                   })}
             </BookLists>
@@ -237,7 +278,9 @@ const AdminPage = () => {
                 <FiArrowLeft /> 이전
               </ArrowButton>
 
-              {pageCount(bookData)}
+              {filteredBookData == ''
+                ? pageCount(bookData)
+                : pageCount(filteredBookData)}
               <ArrowButton
                 style={{ marginLeft: '15px' }}
                 disabled={
