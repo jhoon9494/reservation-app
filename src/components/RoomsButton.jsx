@@ -5,24 +5,24 @@ import baseStyle from '../styles/baseStyle';
 import { RoomModal } from './RoomModal';
 import { BsCheckLg } from 'react-icons/bs';
 
+// RoomsButton 컴포넌트는 Site, Reservation 두 컴포넌트에서 모두 사용
 const RoomsButton = ({ selectedID, setRoomInfo }) => {
   const [modalShow, setModalShow] = useState(false);
-  // 둘러보기 페이지에서 예약페이지로 넘어온 경우 선택된 객실을 selected값으로 지정
+  // 둘러보기 페이지에서 예약페이지로 넘어간 경우
+  // 둘러보기 페이지에서 선택한 객실을 selected값으로 지정
   const [selectedRoom, setSelectedRoom] = useState(
     selectedID ? selectedID : ''
   );
   const location = useLocation();
 
-  const handleRoomDetail = (data) => {
+  const handleRoomDetail = (roomName) => {
     setModalShow(true);
-    // TODO
-    // 객실을 클릭했을 경우 객실정보를 받아오기 위해 api 호출?
-    // 추후 객실 수정 등이 이루어질 수 있으므로, 디비에 저장하는게 맞을 듯
-    // 객실 수정할 수 있는 api를 만드는게 좋을 듯
 
-    setSelectedRoom(data);
-    // 둘러보기 페이지에서 접근했을 경우 setRoomInfo 함수가 없어서 별도 조건으로 묶음
-    location.pathname === '/reservation' && setRoomInfo(data);
+    // 객실 상세정보의 경우 객실명을 모달창에 상태로 전달한 후 모달창에서 api를 요청
+    setSelectedRoom(roomName);
+
+    // setRoomInfo props는 예약페이지에서만 전달하므로 별도 조건으로 묶음
+    location.pathname === '/reservation' && setRoomInfo(roomName);
   };
   const caravans = [
     { top: 10, left: 32, name: 'C-101호' },
@@ -54,7 +54,7 @@ const RoomsButton = ({ selectedID, setRoomInfo }) => {
   ];
   return (
     <>
-      {/* 카라반 좌표  */}
+      {/* 카라반 아이콘 */}
       {caravans.map((caravan) => {
         return (
           <Caravan
@@ -75,7 +75,7 @@ const RoomsButton = ({ selectedID, setRoomInfo }) => {
         );
       })}
 
-      {/* 텐트 좌표 */}
+      {/* 텐트 아이콘 */}
       {tents.map((tent) => {
         return (
           <Tent
@@ -96,8 +96,7 @@ const RoomsButton = ({ selectedID, setRoomInfo }) => {
         );
       })}
 
-      {/* 글램핑 좌표 */}
-
+      {/* 글램핑 아이콘 */}
       {glamps.map((glamp) => {
         return (
           <Glamp
