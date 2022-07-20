@@ -3,10 +3,10 @@ import styled from 'styled-components';
 const RoomDetailContent = ({ roomData }) => {
   return (
     <Container>
-      <p>{roomData[0]?.content}</p>
-      <p>최소 인원 : {roomData[0]?.min_people}인</p>
-      <p>최대 인원 : {roomData[0]?.max_people}인</p>
-      <p>가격 : {roomData[0]?.price.toLocaleString()}원</p>
+      <p>{roomData?.content}</p>
+      <p>최소 인원 : {roomData?.minPeople}인</p>
+      <p>최대 인원 : {roomData?.maxPeople}인</p>
+      <p>가격 : {roomData?.price.toLocaleString()}원</p>
     </Container>
   );
 };

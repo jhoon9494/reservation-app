@@ -11,7 +11,7 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
   // 둘러보기 페이지에서 접근 시 selectedRoom값이 자동 설정됨.
   // 예약페이지로 바로 접근 시 selectedRoom값은 공백
   const [selectedRoom, setSelectedRoom] = useState(selectedID);
-  const [roomsData, setRoomsData] = useState([]);
+  const [reservedRoomsData, setReservedRoomsData] = useState([]);
 
   useEffect(() => {
     async function getRooms() {
@@ -25,25 +25,26 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
               startDate: selectedDate.startDate,
               endDate: selectedDate.endDate,
               peopleNumber: people,
+              // FIXME  객실 정보 api를 모두 받아온 후 인원수 프론트단에서 처리하기
+              // TODO 객실 정보를 받아온 후 각 객실 버튼에 id값 할당해야 함.
             },
           }
-          // TODO 받아온 api 값이 선택 불가능한 객실인지 가능한 객실인지?
-          // 인원수에 따라 받아오는 결과가 다른데 왜그런지??
         );
-
-        console.log(res.data);
-
-        setRoomsData(['C-102호', 'T-201호', 'G-301호']);
+        setReservedRoomsData(res.data);
       }
     }
     getRooms();
   }, [selectedDate, people]);
 
-  const handleRoomDetail = (data) => {
-    // TODO
-    // 특정 날짜에 선택가능한 객실 목록을 받은 후, 해당 목록에 없는 객실은 setSelectedRoom 못하게 막기
-    setSelectedRoom(data);
-    setRoomInfo(data);
+  const handleRoomDetail = (roomID) => {
+    // 인원 수와 입, 퇴실 날짜를 선택하지 않았다면 api요청이 되지 않음
+    // 그렇게 되면 reservedRoomsData값은 빈배열을 가지게 되므로
+    // setSelectedRoom 및 setRoomInfo함수가 동작하지 않아서 선택되지 않음.
+    reservedRoomsData.some((room) => room !== roomID) &&
+      (() => {
+        setSelectedRoom(roomID);
+        setRoomInfo(roomID);
+      })();
   };
   const caravans = [
     { top: 10, left: 32, name: 'C-101호', id: '62d5365e88ab7290bffbdb42' },
@@ -84,16 +85,17 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
             left={caravan.left}
             onClick={() => handleRoomDetail(caravan.id)}
           >
-            {/* TODO 조건문 추가하여 특정 날짜에 객실 선택 가능 및 불가능 표시, 불가능할 경우 클릭 못하게 막기 */}
-            {selectedRoom === caravan.id && (
+            {/* 선택된 객실과 해당 객실의 id가 같을 경우 체크 표시 */}
+            {/* 다를 경우 1. 예약된 객실데이터에 포함된 객실이면 X표시(선택불가) */}
+            {/* 다를 경우 2. 예약된 객실데이터에 포함되지 않은 객실이면 O표시(선택가능)*/}
+            {selectedRoom === caravan.id ? (
               <BsCheckLg
                 style={{
                   color: baseStyle.mainColor,
                   transform: 'scale(3.0) translate(5px)',
                 }}
               />
-            )}
-            {roomsData.some((room) => room === caravan.name) ? (
+            ) : reservedRoomsData.some((room) => room !== caravan.id) ? (
               <VscCircleLargeOutline
                 style={{
                   color: 'blue',
@@ -121,15 +123,14 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
             right={tent.right}
             onClick={() => handleRoomDetail(tent.name)}
           >
-            {selectedRoom === tent.name && (
+            {selectedRoom === tent.name ? (
               <BsCheckLg
                 style={{
                   color: baseStyle.mainColor,
                   transform: 'scale(2.5) translate(5px)',
                 }}
               />
-            )}
-            {roomsData.some((room) => room === tent.name) ? (
+            ) : reservedRoomsData.some((room) => room !== tent.name) ? (
               <VscCircleLargeOutline
                 style={{
                   color: 'blue',
@@ -158,15 +159,14 @@ const RoomsButton = ({ selectedID, setRoomInfo, selectedDate, people }) => {
             right={glamp.right}
             onClick={() => handleRoomDetail(glamp.name)}
           >
-            {selectedRoom === glamp.name && (
+            {selectedRoom === glamp.name ? (
               <BsCheckLg
                 style={{
                   color: baseStyle.mainColor,
                   transform: 'scale(3.0) translate(5px)',
                 }}
               />
-            )}
-            {roomsData.some((room) => room === glamp.name) ? (
+            ) : reservedRoomsData.some((room) => room !== glamp.name) ? (
               <VscCircleLargeOutline
                 style={{
                   color: 'blue',
