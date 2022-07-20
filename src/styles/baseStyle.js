@@ -6,7 +6,9 @@ const baseStyle = {
   subTitleFontSize: '16px',
   contentFontSize: '14px',
   remarkFontSize: '12px',
-  navbarFontSize: '14px',
+  navbarFontSize: '16px',
+  navbarColor: 'rgba(73, 73, 73, 1)',
+  navbarHoverColor: 'rgba(82, 79, 161, 1)',
 };
 
 export default baseStyle;
