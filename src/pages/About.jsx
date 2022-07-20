@@ -10,9 +10,8 @@ const center = {
 
 const About = () => {
   const { isLoaded } = useJsApiLoader({
-    // TODO: dotenv
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyBPQLPJlyi5OKkE7ZVRnGIunLZPjtHOkUw',
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
   });
 
   return (
