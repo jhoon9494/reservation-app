@@ -1,53 +1,76 @@
-import baseStyle from '../styles/baseStyle';
 import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-// import axios from 'axios';
+import baseStyle from '../styles/baseStyle';
+import axios from 'axios';
+//components
+import Navbar from '../components/Navbar';
+import MypageReservationCheck from '../components/MypageReservationCheck';
+import MypageModal from '../components/MypageModal';
+import MypageModifyMemberInfo from '../components/MypageModifyMemberInfo';
 
 const MyPage = () => {
   const [getUser, setGetUser] = useState({});
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [currTab, setCurrTab] = useState('정보수정');
+  const [getBooking, setGetBooking] = useState([]);
 
-  const url = `../../mock/userMock.json`;
+  const [checkPw, setCheckPw] = useState(false);
+
+  // modal 제어
+  const [modalShow, setModalShow] = useState(false);
+  // modal창에 넘길 값
+  const [modalSelect, setModalSelect] = useState({
+    option: '',
+    width: 0,
+    height: 0,
+    userPw: '',
+  });
+  // tab제어
+  const [currTab, setCurrTab] = useState('예약조회');
 
   useEffect(() => {
     console.log('useEffect');
-    async function fetchUser() {
-      const res = await fetch(url);
-      const getUsers = await res.json();
-      setGetUser(() => ({ ...getUsers[0] }));
+    const urlUser = `http://localhost:5000/api/user`;
+    const urlBookingList = `../../mock/bookingMock.json`;
+    async function fetchBooking() {
+      const res = await fetch(urlBookingList);
+      const getBookings = await res.json();
+
+      setGetBooking(() => [...getBookings]);
     }
+    async function fetchUser() {
+      try {
+        // const token =
+        //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQxOTRhYjE1ZWJlMDg2YmIzZWQxOGQiLCJyb2xlIjoidXNlciIsImlhdCI6MTY1ODM4ODY1Nn0.4ETF84HQFNOTB7Grq0v6VJFt6oaYM0Cc8oCVJAfwIXA';
+        const token = sessionStorage.getItem('token');
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+        const res = await axios.get(urlUser, config);
+        const getUsers = await res.data;
+        setGetUser(() => ({ ...getUsers }));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    fetchBooking();
     fetchUser();
   }, []);
 
-  const tabs = ['정보수정', '예약조회'];
+  // tab
+  const tabs = ['예약조회', '정보수정'];
   const handleClickTab = (tab) => {
     setCurrTab(tab);
+    if (tab === '정보수정') {
+      setModalSelect({
+        option: 'ModalCheckPassword',
+        width: 370,
+        height: 270,
+      });
+      setModalShow(true);
+    }
   };
 
-  //TODO: 탭을 나누고 각각 서로 필요한 부분을 호출해야됨
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const inputs = {
-      password: password,
-      name: name,
-      phone: phone,
-    };
-    console.log(inputs);
-
-    console.log('회원정보를 업데이트함');
-    //await axios.post(serverURL, JSON.stringify(newObj))
-  };
-  const handleMembershipWithdrawalSubmit = (event) => {
-    event.preventDefault();
-    console.log(event);
-    console.log('회원탈퇴 클릭시 api에 요청해서 회원 삭제');
-  };
   return (
-    <div>
+    <Container>
+      <Navbar />
       <TabContainer>
         {tabs.map((tab, i) => {
           return (
@@ -61,71 +84,28 @@ const MyPage = () => {
           );
         })}
       </TabContainer>
-      {currTab === '정보수정' ? (
-        <Form onSubmit={handleSubmit}>
-          <label>이메일</label>
-          <input
-            name="email"
-            type="email"
-            placeholder={getUser.email}
-            disabled
-          />
-          <div></div>
-          <label>신규비밀번호</label>
-          <input
-            name="password"
-            type="password"
-            value={password || ''}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <div>
-            {password.length + 1 <= 4 && password.length > 0
-              ? '비밀번호를 4자리 이상 입력해야합니다.'
-              : ''}
-          </div>
-          <label>신규비밀번호 확인</label>
-          <input
-            name="confirmPassword"
-            type="password"
-            value={confirmPassword || ''}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            disabled={password.length + 1 <= 4}
-          ></input>
-          <div>
-            {password === confirmPassword ? '' : '비밀번호가 일치해야합니다'}
-          </div>
-          <label>이름</label>
-          <input
-            name="name"
-            type="text"
-            placeholder={getUser.name}
-            value={name || ''}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <label>전화번호</label>
-          <input
-            name="phone"
-            type="text"
-            placeholder={getUser.phone}
-            value={phone || ''}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-
-          <WithdrawalButton onClick={handleMembershipWithdrawalSubmit}>
-            회원탈퇴
-          </WithdrawalButton>
-          <SubmitButton type="submit" disabled={password !== confirmPassword}>
-            확인
-          </SubmitButton>
-        </Form>
-      ) : (
-        <div>예약정보 조회가 들어갈 곳</div>
-      )}
-    </div>
+      {currTab === '예약조회' ? (
+        <MypageReservationCheck getBooking={getBooking} />
+      ) : currTab === '정보수정' && checkPw ? (
+        <MypageModifyMemberInfo getUser={getUser} />
+      ) : null}
+      <MypageModal
+        modalShow={modalShow}
+        setModalShow={() => setModalShow(false)}
+        modalSelect={modalSelect}
+        setCheckPw={setCheckPw}
+      />
+    </Container>
   );
 };
 
 export default MyPage;
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: relative;
+`;
 
 const TabContainer = styled.div`
   display: flex;
@@ -139,14 +119,16 @@ const EactTab = styled.p`
   font-size: ${baseStyle.titleFontSize};
   line-height: 30px;
   color: #000;
-  padding: 16px 34px;
+  padding: 16px 14px;
+  margin-left: 20px;
+  margin-right: 20px;
   margin-bottom: 0;
   cursor: pointer;
   position: relative;
   + p:before {
     content: '';
     position: absolute;
-    left: -0px;
+    left: -20px;
     padding: 20px 34px 20px 0;
     border-left: 1px solid #000;
   }
@@ -157,77 +139,5 @@ const EactTab = styled.p`
       font-weight: bold;
       background: rgba(230, 230, 230, 0.0001);
       border-bottom: 5px solid #524fa1;
-      // box-shadow: inset 0px -4px 0px #524fa1;
     `}
-`;
-
-const Form = styled.form`
-  margin: 90px auto;
-  width: 540px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-
-  & label {
-    display: inline-block;
-    width: 140px;
-    font-weight: 400;
-    font-size: ${baseStyle.subTitleFontSize};
-    line-height: 24px;
-    margin-top: 30px;
-  }
-
-  & input {
-    width: 400px;
-    height: 30px;
-    border: 1px solid #000000;
-    border-radius: 7px;
-    margin-top: 30px;
-
-    &:disabled {
-      background: rgba(169, 167, 208, 0.7);
-    }
-  }
-  & div {
-    visibility: visible;
-    width: 100%;
-    color: #ff0000;
-    padding-left: 140px;
-    vertical-align: center;
-  }
-  & button {
-    margin-top: 160px;
-  }
-`;
-
-const WithdrawalButton = styled.button`
-  width: 142px;
-  height: 36px;
-  background: transparent;
-  border: 3px solid #ff0000;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: ${baseStyle.subTitleFontSize};
-  line-height: 24px;
-  text-align: center;
-  color: ${baseStyle.mainColor};
-`;
-
-const SubmitButton = styled.button`
-  width: 142px;
-  height: 36px;
-  background: ${baseStyle.mainColor};
-  border: 1px solid ${baseStyle.mainColor};
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: ${baseStyle.subTitleFontSize};
-  line-height: 24px;
-  text-align: center;
-  color: #ffffff;
-
-  &:disabled {
-    background: ${baseStyle.disableColor};
-    border: 1px solid ${baseStyle.disableColor};
-  }
 `;
