@@ -2,68 +2,11 @@
 import styled, { css } from 'styled-components';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
+
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-
-// 유저 리스트
-const ShowUserList = ({ data, setDeleteUser }) => {
-  // 회원탈퇴 함수
-
-  async function withDrawal(e) {
-    e.preventDefault();
-
-    if (
-      window.confirm(`${data.name} 회원님의 정보를 정말로 삭제 하시겠습니까?`)
-    ) {
-      const withDrawal = await axios.delete(
-        'http://localhost:5000/api/admin/user',
-        {
-          data: {
-            userId: data._id,
-          },
-        }
-      );
-      alert(`${data.name} 회원님의 정보를 삭제 하였습니다.`);
-      setDeleteUser((current) => !current);
-    }
-  }
-
-  return (
-    <UserList key={data.ObjectId}>
-      <UserListSpan>{data.name}</UserListSpan>
-      <UserListSpan>{data.email}</UserListSpan>
-      <UserListSpan>{data.phoneNumber}</UserListSpan>
-      <DeleteUserBtn onClick={(e) => withDrawal(e)}>회원 탈퇴</DeleteUserBtn>
-    </UserList>
-  );
-};
-
-// 예약 리스트
-const ShowBookList = ({ data }) => {
-  return (
-    <BookList key={data.ObjectId}>
-      <BookListSpan>{data.name}</BookListSpan>
-      <BookListSpan>{data.phoneNumber}</BookListSpan>
-      <BookListSpan>
-        {data.processDate[0].substring(0, 10)}{' '}
-        {data.processDate[data.processDate.length - 1].substring(0, 10)}
-      </BookListSpan>
-      <BookListSpan>{data.roomID.name}</BookListSpan>
-      <BookListSpan>{data.peopleNumber}명</BookListSpan>
-      <BookListSpan>
-        {data.status}{' '}
-        {data.status == '예약 요청' ? (
-          <BookApproveBtn>예약 승인</BookApproveBtn>
-        ) : data.status == '예약 완료' ? (
-          <BookCancelBtn>예약 취소</BookCancelBtn>
-        ) : (
-          <BookCancelBtn disabled={true}>예약 취소됨</BookCancelBtn>
-        )}
-      </BookListSpan>
-    </BookList>
-  );
-};
+import { AdminUserPage } from '../components/AdminUserPage';
+import { AdminBookPage } from '../components/AdminBookPage';
 
 // 관리자 페이지
 const AdminPage = () => {
@@ -75,8 +18,9 @@ const AdminPage = () => {
   const [filteredBookData, setFilteredBookData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage, setDataPerPage] = useState(6);
-  const [pagePerCycle, setPagePerCycle] = useState(10);
+
   const [deleteUser, setDeleteUser] = useState(false);
+  const [changeBookStatus, setChangeBookStatus] = useState(false);
 
   useEffect(() => {
     async function getUserList() {
@@ -97,7 +41,7 @@ const AdminPage = () => {
       setBookData(bookList);
     }
     getBookList();
-  }, [deleteUser]);
+  }, [changeBookStatus]);
 
   const userManage = (e) => {
     e.preventDefault();
@@ -156,150 +100,65 @@ const AdminPage = () => {
   return (
     <>
       <Navbar />
-      <MainDiv>
-        <ManageBar>
-          <UserManage onClick={(e) => userManage(e)}>
-            <ManageUserSpan
-              management={management}
-              onClick={() => {
-                setSearchingName('');
-                setFilteredUserData('');
-              }}
-            >
-              회원관리
-            </ManageUserSpan>
-          </UserManage>
-          <BookManage onClick={(e) => bookManage(e)}>
-            <ManageBookSpan
-              management={management}
-              onClick={() => {
-                setSearchingName('');
-                setFilteredBookData('');
-              }}
-            >
-              예약관리
-            </ManageBookSpan>
-          </BookManage>
-          <NameInput
-            placeholder="이름"
-            value={searchingName}
-            onChange={(e) => setSearchingName(e.target.value)}
-          />
-          <SearchButton onClick={(e) => searchByName(e)}>검색</SearchButton>
-        </ManageBar>
-        {management == 'user' ? (
-          <UserDiv>
-            <UserBar>
-              <UserBarSpan>이름</UserBarSpan>
-              <UserBarSpan>E-Mail</UserBarSpan>
-              <UserBarSpan>전화번호</UserBarSpan>
-              <UserBarSpan>회원탈퇴</UserBarSpan>
-            </UserBar>
-            <UserLists>
-              {filteredUserData == ''
-                ? currentData(userData).map((data) => {
-                    return (
-                      <ShowUserList
-                        data={data}
-                        setDeleteUser={() => setDeleteUser()}
-                      />
-                    );
-                  })
-                : currentData(filteredUserData).map((data) => {
-                    return (
-                      <ShowUserList
-                        data={data}
-                        setDeleteUser={() => setDeleteUser()}
-                      />
-                    );
-                  })}
-            </UserLists>
-
-            <PageWrap>
-              <ArrowButton
-                disabled={currentPage == 1}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage((current) => current - 1);
+      <Container>
+        <Body>
+          <ManageBar>
+            <UserManage onClick={(e) => userManage(e)}>
+              <ManageUserSpan
+                management={management}
+                onClick={() => {
+                  setSearchingName('');
+                  setFilteredUserData('');
+                  setCurrentPage(1);
                 }}
               >
-                <FiArrowLeft style={{ marginRight: '5px' }} /> 이전
-              </ArrowButton>
-
-              {filteredUserData == ''
-                ? pageCount(userData)
-                : pageCount(filteredUserData)}
-
-              <ArrowButton
-                style={{ marginLeft: '15px' }}
-                disabled={
-                  filteredUserData == ''
-                    ? currentPage == Math.ceil(userData.length / dataPerPage)
-                    : currentPage ==
-                      Math.ceil(filteredUserData.length / dataPerPage)
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage((current) => current + 1);
+                회원관리
+              </ManageUserSpan>
+            </UserManage>
+            <BookManage onClick={(e) => bookManage(e)}>
+              <ManageBookSpan
+                management={management}
+                onClick={() => {
+                  setSearchingName('');
+                  setFilteredBookData('');
+                  setCurrentPage(1);
                 }}
               >
-                다음
-                <FiArrowRight style={{ marginLeft: '5px' }} />
-              </ArrowButton>
-            </PageWrap>
-          </UserDiv>
-        ) : (
-          <BookWrap>
-            <BookBar>
-              <BookBarSpan>예약자</BookBarSpan>
-              <BookBarSpan>연락처</BookBarSpan>
-              <BookBarSpan>예약 기간</BookBarSpan>
-              <BookBarSpan>객실명</BookBarSpan>
-              <BookBarSpan>인원</BookBarSpan>
-              <BookBarSpan>예약 상태</BookBarSpan>
-            </BookBar>
-            <BookLists>
-              {filteredBookData == ''
-                ? currentData(bookData).map((data) => {
-                    return <ShowBookList data={data} />;
-                  })
-                : currentData(filteredBookData).map((data) => {
-                    return <ShowBookList data={data} />;
-                  })}
-            </BookLists>
-            <PageWrap>
-              <ArrowButton
-                disabled={currentPage == 1}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage((current) => current - 1);
-                }}
-              >
-                <FiArrowLeft /> 이전
-              </ArrowButton>
-
-              {filteredBookData == ''
-                ? pageCount(bookData)
-                : pageCount(filteredBookData)}
-              <ArrowButton
-                style={{ marginLeft: '15px' }}
-                disabled={
-                  filteredBookData == ''
-                    ? currentPage == Math.ceil(bookData.length / dataPerPage)
-                    : currentPage ==
-                      Math.ceil(filteredBookData.length / dataPerPage)
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentPage((current) => current + 1);
-                }}
-              >
-                다음 <FiArrowRight />
-              </ArrowButton>
-            </PageWrap>
-          </BookWrap>
-        )}
-      </MainDiv>
+                예약관리
+              </ManageBookSpan>
+            </BookManage>
+            <NameInput
+              placeholder="이름"
+              value={searchingName}
+              onChange={(e) => setSearchingName(e.target.value)}
+            />
+            <SearchButton onClick={(e) => searchByName(e)}>검색</SearchButton>
+          </ManageBar>
+          {management == 'user' ? (
+            <AdminUserPage
+              filteredUserData={filteredUserData}
+              setDeleteUser={setDeleteUser}
+              setCurrentPage={setCurrentPage}
+              pageCount={pageCount}
+              userData={userData}
+              currentData={currentData}
+              currentPage={currentPage}
+              dataPerPage={dataPerPage}
+            />
+          ) : (
+            <AdminBookPage
+              filteredBookData={filteredBookData}
+              setChangeBookStatus={setChangeBookStatus}
+              setCurrentPage={setCurrentPage}
+              pageCount={pageCount}
+              bookData={bookData}
+              currentPage={currentPage}
+              dataPerPage={dataPerPage}
+              currentData={currentData}
+            />
+          )}
+        </Body>
+      </Container>
       <Footer />
     </>
   );
@@ -307,12 +166,11 @@ const AdminPage = () => {
 
 export default AdminPage;
 
-const MainDiv = styled.div`
-  // background-color: #eeeeee;
-  // width: 1200px;
-  // height: 100vh;
-  // margin: auto;
+const Container = styled.main`
   margin-top: 30px;
+`;
+const Body = styled.div`
+  height: 67.2vh;
 `;
 
 const ManageBar = styled.div`
@@ -401,138 +259,6 @@ const SearchButton = styled.button`
   margin-left: 10px;
 `;
 
-const UserDiv = styled.div`
-  width: 850px;
-  height: 33px;
-  margin: auto;
-  margin-top: 50px;
-`;
-
-const UserBar = styled.div`
-  border-bottom: 1px solid #595959;
-  display: flex;
-`;
-
-const UserBarSpan = styled.span`
-  font-family: 'Noto Sans KR';
-  font-style: normal;
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 23px;
-  margin: auto;
-  padding: 10px 0;
-`;
-
-const UserLists = styled.div`
-  height: 400px;
-`;
-const UserList = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px 0 10px 65px;
-  border-bottom: 1px solid black;
-`;
-
-const UserListSpan = styled.span`
-  font-family: 'Noto Sans KR';
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 20px;
-  display: flex;
-  justify-content: center;
-  width: 65px;
-  & + & {
-    margin-left: 50px;
-    width: 230px;
-  }
-  & + & + & {
-    margin-left: 0px;
-    width: 200px;
-  }
-`;
-const DeleteUserBtn = styled.button`
-  width: 100px;
-  height: 30px;
-  border: 1px solid #ff0000;
-  margin-left: 80px;
-`;
-
-const BookWrap = styled.div`
-  width: 850px;
-  height: 33px;
-  margin: auto;
-  margin-top: 50px;
-`;
-
-const BookBar = styled.div`
-  border-bottom: 1px solid #595959;
-  display: flex;
-`;
-
-const BookBarSpan = styled.span`
-  font-family: 'Noto Sans KR';
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 23px;
-  margin: auto;
-  padding: 10px 0;
-`;
-
-const BookLists = styled.div`
-  height: 400px;
-`;
-
-const BookListSpan = styled.span`
-  font-family: 'Noto Sans KR';
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  & + & {
-    margin-left: 45px;
-
-    width: 230px;
-  }
-  & + & + & {
-    margin-left: 30px;
-
-    width: 200px;
-  }
-  & + & + & + & {
-    margin-left: 25px;
-    width: 200px;
-  }
-  & + & + & + & + & {
-    margin-left: 15px;
-    margin-right: 15px;
-    width: 200px;
-  }
-`;
-
-const BookList = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px 0 10px 45px;
-  border-bottom: 1px solid black;
-`;
-
-const BookApproveBtn = styled.button`
-  width: 50px;
-  margin-left: 10px;
-`;
-
-const BookCancelBtn = styled.button`
-  width: 50px;
-  margin-left: 10px;
-  background-color: yellow;
-`;
-
 const PageButton = styled.button`
   font-size: 14px;
   line-height: 22px;
@@ -555,24 +281,4 @@ const PageButton = styled.button`
       background-color: #524fa1;
       color: #f9fafc;
     `}
-`;
-
-const PageWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
-`;
-
-const ArrowButton = styled.button`
-  margin: ${(props) => (props.flip ? '0 0 0 16px !important' : '0 16px 0 0')};
-  border: none;
-  background-color: white;
-  font-size: 13px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  > svg {
-    display: block;
-  }
 `;
