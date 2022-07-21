@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
+import { caravans, tents, glamps } from '../styles/roomsCoordinate';
 import { BsCheckLg } from 'react-icons/bs';
 import { VscChromeClose } from 'react-icons/vsc';
 import { VscCircleLargeOutline } from 'react-icons/vsc';
@@ -9,11 +10,22 @@ import axios from 'axios';
 const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
   // 둘러보기 페이지에서 접근 시 selectedRoom값이 자동 설정됨.
   // 예약페이지로 바로 접근 시 selectedRoom값은 공백
+  const [allRooms, setAllRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState('');
   const [reservedRoomsData, setReservedRoomsData] = useState([]);
 
+  // 전체 객실 정보 받아오기
   useEffect(() => {
-    async function getRooms() {
+    async function getAllRooms() {
+      const res = await axios.get('http://localhost:5000/api/room');
+      setAllRooms(res.data);
+    }
+    getAllRooms();
+  }, []);
+
+  // 예약 불가능한 객실id 받아오기
+  useEffect(() => {
+    async function getReservedRooms() {
       // 입실, 퇴실, 인원 수를 설정해야 api 요청 가능
       // 둘러보기에서 예약페이지로 넘어올 경우 현재 컴포넌트를 사용하지 않는 로직때문에 api 호출하지 않음.
       if (people && selectedDate?.startDate && selectedDate?.endDate) {
@@ -23,131 +35,86 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
             params: {
               startDate: selectedDate.startDate,
               endDate: selectedDate.endDate,
-              peopleNumber: people,
               // FIXME  객실 정보 api를 모두 받아온 후 인원수 프론트단에서 처리하기
-              // TODO 객실 정보를 받아온 후 각 객실 버튼에 id값 할당해야 함.
+              peopleNumber: people,
             },
           }
         );
-
-        // FIXME api요청을 했을 때 예약된 객실이 없을 경우 여전히 빈 배열을 반환하여 객실을 선택할 수 없음.
-        // 객실 id와 연관없는 임의의 문자열을 배열에 넣어줘서 객실을 선택할 수 있도록 하였으나, 추후 수정 필요.
-        if (res.data.length == 0) {
-          setReservedRoomsData(['empty']);
-          return;
-        }
         setReservedRoomsData(res.data);
       }
     }
-    getRooms();
-    // 날짜와 인원수를 변경할 경우 선택된 객실 초기화
+    getReservedRooms();
+    // 날짜와 인원 수를 변경할 경우 선택된 객실 초기화
     setSelectedRoom('');
     setRoomInfo('');
   }, [selectedDate, people]);
 
-  const handleRoomDetail = (roomID) => {
-    // 인원 수와 입, 퇴실 날짜를 선택하지 않았다면 api요청이 되지 않음
-    // 그렇게 되면 reservedRoomsData값은 빈배열을 가지게 되므로
-    // setSelectedRoom 및 setRoomInfo함수가 동작하지 않아서 선택되지 않음.
-    // 또한, 예약된 객실데이터에 포함된 객실일 경우 마찬가지로 아래 함수가 동작하지 않아서 선택되지 않음.
-    reservedRoomsData.some((room) => room !== roomID) &&
-      (() => {
-        setSelectedRoom(roomID);
-        setRoomInfo(roomID);
-      })();
+  const handleSelectRoom = (roomID) => {
+    if (reservedRoomsData.includes(roomID)) return;
+    setSelectedRoom(roomID);
+    setRoomInfo(roomID);
   };
 
-  const caravans = [
-    { top: 10, left: 32, name: 'C-101호', id: '62d8c299b2bc1fe681636cba' },
-    { top: 15.3, left: 40.6, name: 'C-102호', id: '62d8c2d0b2bc1fe681636cbd' },
-    { top: 21.3, left: 50, name: 'C-103호', id: '62d8c2d4b2bc1fe681636cc0' },
-    { top: 27.7, left: 29, name: 'C-104호', id: '62d8c2d7b2bc1fe681636cc3' },
-    { top: 84, left: 28, name: 'C-105호', id: '62d8c2e0b2bc1fe681636cc6' },
-    { top: 80, left: 39.4, name: 'C-106호', id: '62d8c2e4b2bc1fe681636cc9' },
-  ];
-
-  const tents = [
-    { top: 33.5, right: 42.5, name: 'T-201호', id: '62d8c3abb2bc1fe681636ccc' },
-    { top: 33.3, right: 36.7, name: 'T-202호', id: '62d8c3aeb2bc1fe681636ccf' },
-    { top: 32.8, right: 30.6, name: 'T-203호', id: '62d8c3b4b2bc1fe681636cd2' },
-    { top: 32.5, right: 25, name: 'T-204호', id: '62d8c3b7b2bc1fe681636cd5' },
-    { top: 45, right: 39.5, name: 'T-205호', id: '62d8c3bab2bc1fe681636cd8' },
-    { top: 45, right: 34, name: 'T-206호', id: '62d8c3bdb2bc1fe681636cdb' },
-    { top: 44.9, right: 27.6, name: 'T-207호', id: '62d8c3c2b2bc1fe681636cde' },
-  ];
-
-  const glamps = [
-    { top: 55, right: 42, name: 'G-301호', id: '62d8c496b2bc1fe681636ce1' },
-    { top: 55.5, right: 35, name: 'G-302호', id: '62d8c49ab2bc1fe681636ce4' },
-    { top: 56, right: 29, name: 'G-303호', id: '62d8c49db2bc1fe681636ce7' },
-    { top: 66.5, right: 44, name: 'G-304호', id: '62d8c4a0b2bc1fe681636cea' },
-    { top: 66.8, right: 37.8, name: 'G-305호', id: '62d8c4a4b2bc1fe681636ced' },
-    { top: 68.3, right: 31.3, name: 'G-306호', id: '62d8c4a7b2bc1fe681636cf0' },
-    { top: 69.4, right: 25.1, name: 'G-307호', id: '62d8c4aab2bc1fe681636cf3' },
-  ];
   return (
     <>
-      {/* 카라반 좌표  */}
-      {caravans.map((caravan) => {
-        return (
-          <Caravan
-            key={caravan.name}
-            top={caravan.top}
-            left={caravan.left}
-            onClick={() => handleRoomDetail(caravan.id)}
-          >
-            {/* 선택된 객실과 해당 객실의 id가 같을 경우 체크 표시 */}
-            {/* 다를 경우 1. 예약된 객실데이터에 포함된 객실이면 X표시(선택불가) */}
-            {/* 다를 경우 2. 예약된 객실데이터에 포함되지 않은 객실이면 O표시(선택가능)*/}
-            {selectedRoom === caravan.id ? (
-              <CheckRoom />
-            ) : reservedRoomsData.some((room) => room !== caravan.id) ? (
-              <SelectableCaravan />
-            ) : (
-              <NonSelectableCaravan />
-            )}
-          </Caravan>
-        );
-      })}
-
-      {/* 텐트 좌표 */}
-      {tents.map((tent) => {
-        return (
-          <Tent
-            key={tent.name}
-            top={tent.top}
-            right={tent.right}
-            onClick={() => handleRoomDetail(tent.id)}
-          >
-            {selectedRoom === tent.id ? (
-              <CheckRoom />
-            ) : reservedRoomsData.some((room) => room !== tent.id) ? (
-              <SelectableTentAndGlamp />
-            ) : (
-              <NonSelectableTentAndGlamp />
-            )}
-          </Tent>
-        );
-      })}
-
-      {/* 글램핑 좌표 */}
-      {glamps.map((glamp) => {
-        return (
-          <Glamp
-            key={glamp.name}
-            top={glamp.top}
-            right={glamp.right}
-            onClick={() => handleRoomDetail(glamp.id)}
-          >
-            {selectedRoom === glamp.id ? (
-              <CheckRoom />
-            ) : reservedRoomsData.some((room) => room !== glamp.id) ? (
-              <SelectableTentAndGlamp />
-            ) : (
-              <NonSelectableTentAndGlamp />
-            )}
-          </Glamp>
-        );
+      {allRooms.map((room) => {
+        // 카라반 위치
+        if (room.name[0] === 'C') {
+          return (
+            <Caravan
+              key={room.name}
+              top={caravans[room.name].top}
+              left={caravans[room.name].left}
+              onClick={() => handleSelectRoom(room._id)}
+            >
+              {selectedRoom === room._id ? (
+                <CheckRoom />
+              ) : reservedRoomsData.includes(room._id) ? (
+                <NonSelectableCaravan />
+              ) : (
+                <SelectableCaravan />
+              )}
+            </Caravan>
+          );
+        }
+        // 텐트장 위치
+        if (room.name[0] === 'T') {
+          return (
+            <Tent
+              key={room.name}
+              top={tents[room.name].top}
+              right={tents[room.name].right}
+              onClick={() => handleSelectRoom(room._id)}
+            >
+              {selectedRoom === room._id ? (
+                <CheckRoom />
+              ) : reservedRoomsData.includes(room._id) ? (
+                <NonSelectableTentAndGlamp />
+              ) : (
+                <SelectableTentAndGlamp />
+              )}
+            </Tent>
+          );
+        }
+        // 글램핑장 위치
+        if (room.name[0] === 'G') {
+          return (
+            <Glamp
+              key={room.name}
+              top={glamps[room.name].top}
+              right={glamps[room.name].right}
+              onClick={() => handleSelectRoom(room._id)}
+            >
+              {selectedRoom === room._id ? (
+                <CheckRoom />
+              ) : reservedRoomsData.includes(room._id) ? (
+                <NonSelectableTentAndGlamp />
+              ) : (
+                <SelectableTentAndGlamp />
+              )}
+            </Glamp>
+          );
+        }
       })}
     </>
   );

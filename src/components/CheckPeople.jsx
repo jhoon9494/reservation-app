@@ -26,7 +26,7 @@ const CheckPeople = ({ setPeople }) => {
           <MenuItem value={3}>3인</MenuItem>
           <MenuItem value={4}>4인</MenuItem>
           <MenuItem value={5}>5인</MenuItem>
-          {/* <MenuItem value={6}>6인</MenuItem> */}
+          <MenuItem value={6}>6인</MenuItem>
         </Select>
       </FormControl>
     </div>
