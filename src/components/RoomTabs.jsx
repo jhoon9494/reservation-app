@@ -1,18 +1,18 @@
 import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 
-const ChangeTitle = ({ currTitle, setCurrTitle }) => {
-  const titles = ['객실 설명', '후기'];
+const RoomDetailTabs = ({ currTab, setCurrTab }) => {
+  const tabs = ['객실 설명', '후기'];
   return (
     <Container>
-      {titles.map((title, idx) => {
+      {tabs.map((tab, idx) => {
         return (
           <Title
-            key={`${title}-${idx}`}
-            active={currTitle === title}
-            onClick={() => setCurrTitle(title)}
+            key={`${tab}-${idx}`}
+            active={currTab === tab}
+            onClick={() => setCurrTab(tab)}
           >
-            {title}
+            {tab}
           </Title>
         );
       })}
@@ -20,7 +20,7 @@ const ChangeTitle = ({ currTitle, setCurrTitle }) => {
   );
 };
 
-export default ChangeTitle;
+export default RoomDetailTabs;
 
 const Container = styled.div`
   width: 300px;

@@ -1,40 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import '../styles/modal.css';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
-import ChangeTitle from './ChangeTitle';
-import ChangeContent from './ChangeContent';
+import RoomTabs from './RoomTabs';
+import RoomImageSlider from './RoomImageSlider';
+import RoomDetailContent from './RoomDetailContent';
+import RoomReviews from './RoomReviews';
+import axios from 'axios';
 
-export const RoomModal = ({ show, onHide, roomData }) => {
-  const [currTitle, setCurrTitle] = useState('객실 설명');
+export const RoomModal = ({ show, onHide, roomID }) => {
+  const [currTab, setCurrTab] = useState('객실 설명');
+  const [roomContent, setRoomContent] = useState({});
+
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate(`/site/${roomData}`);
-  };
+  useEffect(() => {
+    async function getData() {
+      // RoomsButton 컴포넌트에서 초기 roomID값은 empty string임.
+      // roomID에 값이 들어올때만 api 요청
+      if (roomID !== '') {
+        const res = await axios.get(`http://localhost:5000/api/room/${roomID}`);
+        setRoomContent(res.data);
+      }
+    }
+    getData();
+  }, [roomID]);
 
   return (
     <Modal
       show={show}
-      onHide={onHide}
+      onHide={() => {
+        onHide();
+        // 모달창을 종료하고 다시 켰을 때 모달창 내부 초기화
+        setCurrTab('객실 설명');
+      }}
       dialogClassName="my-modal"
-      aria-labelledby="example-custom-modal-styling-title"
+      aria-labelledby="roomTitle"
       centered
     >
-      <Header>{roomData}</Header>
-      {/* TODO 이미지 캐러셀로 슬라이드 구현 */}
-      <ImgContainer></ImgContainer>
+      <Header id="roomTitle">{roomContent.name}</Header>
+      <RoomImageSlider roomContent={roomContent} />
       <ContentContainer>
-        <ChangeTitle currTitle={currTitle} setCurrTitle={setCurrTitle} />
-        <ChangeContent currTitle={currTitle} roomData={roomData} />
+        <RoomTabs currTab={currTab} setCurrTab={setCurrTab} />
+        {currTab === '객실 설명' ? (
+          <RoomDetailContent roomData={roomContent} />
+        ) : (
+          <RoomReviews roomID={roomContent._id} />
+        )}
       </ContentContainer>
 
-      {/* 버튼 클릭 시 pathParams에 객실ID 넣어주고 예약페이지로 이동
-        TODO 예약페이지에서 객실ID별로 booking api get으로 정보받아오기 */}
-      <ReserveBtn onClick={handleClick}>예약하기</ReserveBtn>
+      <ReserveBtn onClick={() => navigate(`/reservation/${roomID}`)}>
+        예약하기
+      </ReserveBtn>
     </Modal>
   );
 };
@@ -46,20 +66,12 @@ const Header = styled.div`
   text-align: center;
 `;
 
-const ImgContainer = styled.div`
-  width: 480px;
-  height: 286px;
-  margin: 21px auto auto;
-  background-color: #0000003b;
-`;
-
 const ContentContainer = styled.div`
   width: 570px;
   height: 388px;
   margin: 23px auto auto;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
   align-items: center;
 `;
 
