@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const MypageModal = (props) => {
   // console.log(props);
@@ -41,7 +42,6 @@ const MypageModal = (props) => {
         return (
           <ModalCheckPassword>
             <ContentCheckPassword
-              userPw={modalSelect.userPw}
               setModalShow={setModalShow}
               setCheckPw={setCheckPw}
             />
@@ -272,7 +272,7 @@ const ContentWriteReview = (props) => {
           type="textarea"
           placeholder=" 내용을 입력해주세요."
           rows="4"
-          maxLength="50"
+          maxLength="100"
         ></textarea>
       </div>
       <div className="btnLine">
@@ -450,14 +450,27 @@ const ContentCheckPassword = (props) => {
 
   // 비번 검증
   const checkedPw = () => {
-    if (confirmPassword === props.userPw) {
-      props.setCheckPw(true);
-      props.setModalShow(false);
-    } else {
-      alert('비밀번호가 틀렸습니다.');
-      props.setCheckPw(false);
-      props.setModalShow(false);
+    async function confirmUserPw(confirmPassword) {
+      try {
+        const confirmUrl = `http://localhost:5000/api/confirmPW?password=${confirmPassword}`;
+        const token = sessionStorage.getItem('token');
+        // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQxOTRhYjE1ZWJlMDg2YmIzZWQxOGQiLCJyb2xlIjoidXNlciIsImlhdCI6MTY1ODM4ODY1Nn0.4ETF84HQFNOTB7Grq0v6VJFt6oaYM0Cc8oCVJAfwIXA';
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+        const res = await axios.get(confirmUrl, config);
+        return res;
+      } catch (e) {
+        props.setCheckPw(false);
+        props.setModalShow(false);
+        alert('비밀번호가 틀렸습니다.');
+        console.log(e);
+      }
     }
+    confirmUserPw(confirmPassword);
+
+    // true = confirmUserPw(confirmPassword)
+    // 비번 검증에 따라 모달창 바로 닫힘
+    props.setCheckPw(true);
+    props.setModalShow(false);
   };
 
   return (

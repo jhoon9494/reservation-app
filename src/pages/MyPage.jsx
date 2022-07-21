@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
+import axios from 'axios';
 //components
 import Navbar from '../components/Navbar';
 import MypageReservationCheck from '../components/MypageReservationCheck';
 import MypageModal from '../components/MypageModal';
 import MypageModifyMemberInfo from '../components/MypageModifyMemberInfo';
-// import axios from 'axios';
 
 const MyPage = () => {
   const [getUser, setGetUser] = useState({});
@@ -28,18 +28,26 @@ const MyPage = () => {
 
   useEffect(() => {
     console.log('useEffect');
-    const urlUser = `../../mock/userMock.json`;
+    const urlUser = `http://localhost:5000/api/user`;
     const urlBookingList = `../../mock/bookingMock.json`;
     async function fetchBooking() {
       const res = await fetch(urlBookingList);
       const getBookings = await res.json();
-      // TODO: 해당 유저 아이디로 찾는 것 있어야함
+
       setGetBooking(() => [...getBookings]);
     }
     async function fetchUser() {
-      const res = await fetch(urlUser);
-      const getUsers = await res.json();
-      setGetUser(() => ({ ...getUsers[0] }));
+      try {
+        // const token =
+        //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQxOTRhYjE1ZWJlMDg2YmIzZWQxOGQiLCJyb2xlIjoidXNlciIsImlhdCI6MTY1ODM4ODY1Nn0.4ETF84HQFNOTB7Grq0v6VJFt6oaYM0Cc8oCVJAfwIXA';
+        const token = sessionStorage.getItem('token');
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+        const res = await axios.get(urlUser, config);
+        const getUsers = await res.data;
+        setGetUser(() => ({ ...getUsers }));
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     fetchBooking();
@@ -50,16 +58,13 @@ const MyPage = () => {
   const tabs = ['예약조회', '정보수정'];
   const handleClickTab = (tab) => {
     setCurrTab(tab);
-    const userPw = getUser.password;
     if (tab === '정보수정') {
       setModalSelect({
         option: 'ModalCheckPassword',
         width: 370,
         height: 270,
-        userPw: userPw,
       });
       setModalShow(true);
-      console.log(userPw);
     }
   };
 

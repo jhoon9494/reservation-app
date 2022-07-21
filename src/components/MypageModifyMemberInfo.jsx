@@ -7,20 +7,19 @@ const MypageModifyMemberInfo = (props) => {
   // console.log('getUser', getUser);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState(getUser.name);
+  const [phoneNumber, setPhoneNumber] = useState(getUser.phoneNumber);
   const handleSubmit = (event) => {
     event.preventDefault();
     const inputs = {
       password: password,
       name: name,
-      phone: phone,
+      phoneNumber: phoneNumber,
     };
 
     //비번이 공란일시 이전 비번을 업데이트 시켜줌
-    if (password === '') {
-      inputs.password = getUser.password;
-    }
+    if (password === '') inputs.password = getUser.password;
+
     console.log('회원정보를 업데이트함');
     console.log(inputs);
 
@@ -40,7 +39,6 @@ const MypageModifyMemberInfo = (props) => {
       <input
         name="password"
         type="password"
-        value={password || ''}
         onChange={(e) => setPassword(e.target.value)}
       />
       <div>
@@ -52,7 +50,6 @@ const MypageModifyMemberInfo = (props) => {
       <input
         name="confirmPassword"
         type="password"
-        value={confirmPassword || ''}
         onChange={(e) => setConfirmPassword(e.target.value)}
         disabled={password.length + 1 <= 4}
       ></input>
@@ -69,11 +66,11 @@ const MypageModifyMemberInfo = (props) => {
       />
       <label>전화번호</label>
       <input
-        name="phone"
+        name="phoneNumber"
         type="text"
-        placeholder={getUser.phone}
-        value={phone || ''}
-        onChange={(e) => setPhone(e.target.value)}
+        placeholder={getUser.phoneNumber}
+        value={phoneNumber || ''}
+        onChange={(e) => setPhoneNumber(e.target.value)}
       />
 
       <WithdrawalButton onClick={handleMembershipWithdrawalSubmit}>
