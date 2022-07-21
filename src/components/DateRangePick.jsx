@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DatePicker } from 'antd';
-import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+import 'antd/dist/antd.min.css';
 import moment from 'moment';
 const { RangePicker } = DatePicker;
 

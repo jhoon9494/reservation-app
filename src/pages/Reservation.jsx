@@ -44,13 +44,14 @@ const Reservation = () => {
         <MapContainer>
           <MapImg src="/images/campMapImg.png" alt="mapImg" />
           <ReservationRooms
-            selectedID={roomID ? roomID : ''}
             setRoomInfo={setRoomInfo}
             selectedDate={date}
             people={people}
           />
         </MapContainer>
       )}
+      {/* TODO 결제 페이지로 넘어가기 전 api요청,
+          => api요청 시 find해서 이미 예약된 객실이라고 뜬다면 예약하지 못하도록 막기, 선택된 결과가 없다면 그대로 결제 진행 */}
       <ReserveBtn onClick={handleReserve}>예약하기</ReserveBtn>
     </>
   );
