@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import CheckPeople from '../components/CheckPeople';
@@ -7,30 +7,31 @@ import Navbar from '../components/Navbar';
 import DateRangePick from '../components/DateRangePick';
 import ReservationRooms from '../components/ReservationRooms';
 import baseStyle from '../styles/baseStyle';
+import axios from 'axios';
 
 const Reservation = () => {
   let { roomID } = useParams();
-  const [data, setData] = useState({
-    people: 0,
-    startDate: 0,
-    endDate: 0,
-    roomInfo: '',
-  });
+
   const [people, setPeople] = useState(0);
   const [date, setDate] = useState({ startDate: '', endDate: '' });
   const [roomInfo, setRoomInfo] = useState(roomID ? roomID : '');
 
-  useEffect(() => {
-    setData({
-      people: people,
-      startDate: date.startDate,
-      endDate: date.endDate,
-      roomInfo: roomInfo,
-    });
-  }, [people, date, roomInfo]);
+  const handleReserve = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/booking/confirm', {
+        params: {
+          startDate: JSON.stringify(date.startDate),
+          endDate: JSON.stringify(date.endDate),
+          roomID: JSON.stringify(roomInfo),
+        },
+      });
 
-  const handleReserve = () => {
-    console.log(data);
+      if (res.status === 200) {
+        console.log('중복된 예약이 없습니다.');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <>
@@ -50,8 +51,6 @@ const Reservation = () => {
           />
         </MapContainer>
       )}
-      {/* TODO 결제 페이지로 넘어가기 전 api요청,
-          => api요청 시 find해서 이미 예약된 객실이라고 뜬다면 예약하지 못하도록 막기, 선택된 결과가 없다면 그대로 결제 진행 */}
       <ReserveBtn onClick={handleReserve}>예약하기</ReserveBtn>
     </>
   );
