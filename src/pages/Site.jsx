@@ -1,12 +1,16 @@
 import styled from 'styled-components';
-import RoomsButton from '../components/RoomsButton';
+import SiteRooms from '../components/SiteRooms';
+import Navbar from '../components/Navbar';
 
 const Site = () => {
   return (
-    <Container>
-      <MapImg src="/campMapImg.png" alt="mapImg" />
-      <RoomsButton />
-    </Container>
+    <>
+      <Navbar />
+      <Container>
+        <MapImg src="/images/campMapImg.png" alt="mapImg" />
+        <SiteRooms />
+      </Container>
+    </>
   );
 };
 
@@ -22,4 +26,5 @@ const Container = styled.div`
 const MapImg = styled.img`
   width: 100%;
   height: 100%;
+  opacity: 0.7;
 `;
