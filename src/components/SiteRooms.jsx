@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import { caravans, tents, glamps } from '../styles/roomsCoordinate';
-import { RoomModal } from './RoomModal';
+import { RoomDetail } from './RoomDetail';
+import Modal from './Modal';
 import { BsCheckLg } from 'react-icons/bs';
 import axios from 'axios';
 
@@ -65,11 +66,9 @@ const RoomsButton = () => {
           );
         }
       })}
-      <RoomModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        roomID={selectedRoom}
-      />
+      <Modal open={modalShow} close={() => setModalShow(false)}>
+        <RoomDetail roomID={selectedRoom} />
+      </Modal>
     </>
   );
 };

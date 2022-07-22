@@ -10,8 +10,7 @@ import baseStyle from '../styles/baseStyle';
 import axios from 'axios';
 
 const Reservation = () => {
-  let { roomID } = useParams();
-
+  let { roomID, peopleNumber, roomName } = useParams();
   const [people, setPeople] = useState(0);
   const [date, setDate] = useState({ startDate: '', endDate: '' });
   const [roomInfo, setRoomInfo] = useState(roomID ? roomID : '');
@@ -26,21 +25,31 @@ const Reservation = () => {
         },
       });
 
+      //TODO 포스트맨으로 요청시 해당 객실에 예약이 있음에도 message:OK로 처리됩니다..수정 중
       if (res.status === 200) {
         console.log('중복된 예약이 없습니다.');
       }
     } catch (e) {
-      console.log(e);
+      if (e.response.status === 403) {
+        alert('로그인한 유저만 예약할 수 있습니다');
+      }
     }
   };
   return (
     <>
       <Navbar />
       <Container>
-        <CheckPeople setPeople={setPeople} />
+        <CheckPeople
+          setPeople={setPeople}
+          peopleNumber={peopleNumber ? peopleNumber : 6}
+        />
         <DateRangePick setDate={setDate} roomID={roomID} />
       </Container>
-      {/* FIXME 둘러보기 페이지에서 객실을 선택하고 온 경우 별도로 캠핑장 지도를 보여주지 않음?? 회의해서 정하기 */}
+      {roomID && (
+        <SelectedRoomName>
+          <h6>선택하신 객실은 : {roomName} 입니다.</h6>
+        </SelectedRoomName>
+      )}
       {!roomID && (
         <MapContainer>
           <MapImg src="/images/campMapImg.png" alt="mapImg" />
@@ -83,4 +92,12 @@ const ReserveBtn = styled(Button)`
   background-color: ${baseStyle.mainColor};
   width: 140px;
   margin: 50px auto 38px;
+`;
+
+const SelectedRoomName = styled.div`
+  height: 100px;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

@@ -4,12 +4,20 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-const CheckPeople = ({ setPeople }) => {
+const CheckPeople = ({ setPeople, peopleNumber }) => {
   const [number, setNumber] = useState('');
 
   const handleChange = (e) => {
     setNumber(e.target.value);
     setPeople(e.target.value);
+  };
+
+  const makeArray = () => {
+    const people = [];
+    for (let i = 2; i <= peopleNumber; i++) {
+      people.push(i);
+    }
+    return people;
   };
   return (
     <div>
@@ -22,11 +30,13 @@ const CheckPeople = ({ setPeople }) => {
           label="peopleNumber"
           onChange={handleChange}
         >
-          <MenuItem value={2}>2인</MenuItem>
-          <MenuItem value={3}>3인</MenuItem>
-          <MenuItem value={4}>4인</MenuItem>
-          <MenuItem value={5}>5인</MenuItem>
-          <MenuItem value={6}>6인</MenuItem>
+          {makeArray().map((peopleNum) => {
+            return (
+              <MenuItem key={`인원수-${peopleNum}`} value={peopleNum}>
+                {peopleNum}인
+              </MenuItem>
+            );
+          })}
         </Select>
       </FormControl>
     </div>

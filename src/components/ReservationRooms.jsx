@@ -35,7 +35,6 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
             params: {
               startDate: selectedDate.startDate,
               endDate: selectedDate.endDate,
-              // FIXME  객실 정보 api를 모두 받아온 후 인원수 프론트단에서 처리하기
               peopleNumber: people,
             },
           }
@@ -164,21 +163,29 @@ const CheckRoom = styled(BsCheckLg)`
 `;
 
 const SelectableCaravan = styled(VscCircleLargeOutline)`
-  color: blue;
+  color: #0000ffa0;
   transform: scale(4) translate(5px, 1px);
 `;
 
 const NonSelectableCaravan = styled(VscChromeClose)`
-  color: red;
+  color: #ff0000a0;
   transform: scale(4) translate(5px, 1px);
+
+  :hover {
+    cursor: not-allowed;
+  }
 `;
 
 const SelectableTentAndGlamp = styled(VscCircleLargeOutline)`
-  color: blue;
+  color: #0000ffa0;
   transform: scale(3) translate(5px, 3px);
 `;
 
 const NonSelectableTentAndGlamp = styled(VscChromeClose)`
-  color: red;
+  color: #ff0000a0;
   transform: scale(3) translate(5px, 3px);
+
+  :hover {
+    cursor: not-allowed;
+  }
 `;
