@@ -29,12 +29,16 @@ const MyPage = () => {
   useEffect(() => {
     console.log('useEffect');
     const urlUser = `http://localhost:5000/api/user`;
-    const urlBookingList = `../../mock/bookingMock.json`;
+    const urlBookingList = `http://localhost:5000/api/booking/user`;
     async function fetchBooking() {
-      const res = await fetch(urlBookingList);
-      const getBookings = await res.json();
-
-      setGetBooking(() => [...getBookings]);
+      const token = sessionStorage.getItem('token');
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const res = await axios.get(urlBookingList, config, {
+        perPage: 1,
+        page: 1,
+      });
+      setGetBooking(res.data.bookingInfos);
+      // setGetBooking(() => [...getBookings]);
     }
     async function fetchUser() {
       try {

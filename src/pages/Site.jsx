@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import SiteRooms from '../components/SiteRooms';
 import Navbar from '../components/Navbar';
-
+import Footer from '../components/Footer';
 const Site = () => {
   return (
     <>
@@ -10,6 +10,7 @@ const Site = () => {
         <MapImg src="/images/campMapImg.png" alt="mapImg" />
         <SiteRooms />
       </Container>
+      <Footer />
     </>
   );
 };
