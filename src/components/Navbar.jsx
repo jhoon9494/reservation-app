@@ -8,7 +8,7 @@ import baseStyle from '../styles/baseStyle';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState('');
+  const [isLogin, setIsLogin] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const handleLoginClick = () => {
     setLoginModalOpen(true);
@@ -24,13 +24,16 @@ const Navbar = () => {
   };
   // 로그아웃
   const handleLogoutClick = () => {
-    setUser('');
+    sessionStorage.clear();
+    setIsLogin(false);
+    alert('로그아웃 되었습니다.');
   };
 
   useEffect(() => {
-    // TODO: 로그인 여부 확인
-    setUser('');
-  }, [user]);
+    if (sessionStorage.getItem('token') !== null) {
+      setIsLogin(true);
+    }
+  });
 
   const handleLogoClick = () => {
     navigate('/');
@@ -39,10 +42,10 @@ const Navbar = () => {
   return (
     <>
       <Modal open={loginModalOpen} close={() => setLoginModalOpen(false)}>
-        <LoginForm />
+        <LoginForm close={() => setLoginModalOpen(false)} />
       </Modal>
       <Modal open={registerModalOpen} close={() => setRegisterModalOpen(false)}>
-        <RegisterForm />
+        <RegisterForm close={() => setRegisterModalOpen(false)} />
       </Modal>
       <NavigationBarWrap>
         <NavigationBar>
@@ -61,7 +64,7 @@ const Navbar = () => {
             </NavigationMunu>
           </NavigationMenuWrap>
           <SignWrap>
-            {user ? (
+            {isLogin ? (
               <>
                 <Sign onClick={handleMyPageClick}>MyPage</Sign>
                 <Sign onClick={handleLogoutClick}>Logout</Sign>

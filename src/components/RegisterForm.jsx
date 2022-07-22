@@ -1,17 +1,22 @@
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
+import axios from 'axios';
 
-const RegisterForm = () => {
+const RegisterForm = (props) => {
+  const { close } = props;
+
+  const [error, setError] = useState('');
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
       passwordConfirm: '',
       name: '',
-      phone: '',
+      phoneNumber: '',
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -29,15 +34,29 @@ const RegisterForm = () => {
         .required('이름을 입력해주세요.')
         .min(2, '이름은 최소 2자, 최대 10자로 입력해주세요')
         .max(10, '이름은 최소 2자, 최대 10자로 입력해주세요'),
-      phone: Yup.string()
+      phoneNumber: Yup.string()
         .required('휴대폰 번호를 입력해주세요.')
         .matches(
           /^[0-9]{3}-[0-9]{4}-[0-9]{4}/,
           '하이픈을 포함하여 13자로 입력해주세요.'
         ),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      try {
+        setError('');
+        const { email, password, name, phoneNumber } = values;
+        await axios.post('http://localhost:5000/api/register', {
+          email,
+          password,
+          name,
+          phoneNumber,
+        });
+
+        alert('회원가입이 완료되었습니다. 로그인 해주세요.');
+        close();
+      } catch (error) {
+        setError(error.response.data.reason);
+      }
     },
   });
 
@@ -49,17 +68,27 @@ const RegisterForm = () => {
         id="email"
         type="text"
         placeholder="이메일"
-        {...formik.getFieldProps('email')}
+        onChange={(value) => {
+          if (error) {
+            setError('');
+          }
+          formik.handleChange(value);
+        }}
+        onBlur={formik.handleBlur}
+        value={formik.values.email}
       />
       {formik.touched.email && formik.errors.email ? (
         <InputErrorMessage>{formik.errors.email}</InputErrorMessage>
       ) : null}
+      {error ? <ErrorMessage>{error}</ErrorMessage> : null}
       <InputLabel htmlFor="password">비밀번호</InputLabel>
       <Input
         name="password"
         type="password"
         placeholder="비밀번호"
-        {...formik.getFieldProps('password')}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.password}
       />
       {formik.touched.password && formik.errors.password ? (
         <InputErrorMessage>{formik.errors.password}</InputErrorMessage>
@@ -69,7 +98,9 @@ const RegisterForm = () => {
         name="passwordConfirm"
         type="password"
         placeholder="비밀번호 확인"
-        {...formik.getFieldProps('passwordConfirm')}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.passwordConfirm}
       />
       {formik.touched.passwordConfirm && formik.errors.passwordConfirm ? (
         <InputErrorMessage>{formik.errors.passwordConfirm}</InputErrorMessage>
@@ -79,21 +110,25 @@ const RegisterForm = () => {
         name="name"
         type="text"
         placeholder="이름"
-        {...formik.getFieldProps('name')}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.name}
       />
       {formik.touched.name && formik.errors.name ? (
         <InputErrorMessage>{formik.errors.name}</InputErrorMessage>
       ) : null}
-      <InputLabel htmlFor="phone">휴대폰 번호</InputLabel>
+      <InputLabel htmlFor="phoneNumber">휴대폰 번호</InputLabel>
       <Input
-        name="phone"
+        name="phoneNumber"
         type="text"
         placeholder="휴대폰 번호"
         maxLength={13}
-        {...formik.getFieldProps('phone')}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.phoneNumber}
       />
-      {formik.touched.phone && formik.errors.phone ? (
-        <InputErrorMessage>{formik.errors.phone}</InputErrorMessage>
+      {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+        <InputErrorMessage>{formik.errors.phoneNumber}</InputErrorMessage>
       ) : null}
       <SubmitButton type="submit">회원가입</SubmitButton>
     </ModalForm>
@@ -130,6 +165,12 @@ const Input = styled.input`
 `;
 
 const InputErrorMessage = styled.div`
+  margin: 0.25rem;
+  font-size: 0.8rem;
+  color: red;
+`;
+
+const ErrorMessage = styled.div`
   margin: 0.25rem;
   font-size: 0.8rem;
   color: red;
