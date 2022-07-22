@@ -59,6 +59,7 @@ const SliderContainer = styled.div`
   height: 350px;
   display: flex;
   overflow: hidden;
+  border-radius: 10px;
 `;
 
 const ImageContainer = styled.div`

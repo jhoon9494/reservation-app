@@ -16,11 +16,19 @@ const MypageReservationCheck = (props) => {
     room: '',
   });
 
+  // '예약 상태'에 따라 '예약 취소' 버튼을 활성화 시킨다
+  const checkingStatus = (status) => {
+    if (status === '예약 취소' || status === '예약 완료') {
+      return false;
+    }
+    return true;
+  };
+
   const handlButton = (e) => {
     const text = e.target.innerText;
     switch (text) {
-      case '예약취소':
-        console.log('예약취소');
+      case '예약 취소':
+        console.log('예약 취소');
         // console.log(e.target.dataset.room);
         setModalSelect({
           option: 'ModalReservationCancellation',
@@ -30,8 +38,8 @@ const MypageReservationCheck = (props) => {
         });
         setModalShow(true);
         break;
-      case '후기작성':
-        console.log('후기작성');
+      case '후기 작성':
+        console.log('후기 작성');
         setModalSelect({
           option: 'ModalWriteReview',
           width: 700,
@@ -39,17 +47,19 @@ const MypageReservationCheck = (props) => {
         });
         setModalShow(true);
         break;
-      case '후기수정':
-        console.log('후기수정');
+      case '후기 수정':
+        console.log('후기 수정');
         setModalSelect({
           option: 'ModalModifiedReview',
           width: 700,
           height: 500,
+          // booking: bookingId,
         });
+
         setModalShow(true);
         break;
       default:
-        console.log('버튼클릭');
+        console.log('버튼 클릭');
     }
   };
 
@@ -72,19 +82,28 @@ const MypageReservationCheck = (props) => {
       <BookListsUl>
         {getBooking.map((list, i) => {
           return (
-            <BookListLi key={`${list.objectID}-${i}`}>
-              <BookListSpan>{list.bookingDate}</BookListSpan>
-              <BookListSpan>{list.RoomID}</BookListSpan>
-              <BookListSpan>{list.peopleNum}</BookListSpan>
+            <BookListLi key={`${list._id}-${i}`}>
+              <BookListSpan>{`${list.startDate.substring(
+                0,
+                10
+              )} ~ ${list.endDate.substring(0, 10)}`}</BookListSpan>
+              <BookListSpan>{list.roomID.name}</BookListSpan>
+              <BookListSpan>{list.peopleNumber}</BookListSpan>
               <BookListSpan>{list.price}</BookListSpan>
-              <BookListSpan>{list.state}</BookListSpan>
+              <BookListSpan>{list.status}</BookListSpan>
               <BookListSpan>
-                <BookStateBtn onClick={handlButton} data-room={list.RoomID}>
-                  예약취소
+                <BookStateBtn
+                  onClick={handlButton}
+                  data-roomID={list.roomID}
+                  disabled={checkingStatus(list.status)}
+                >
+                  예약 취소
                 </BookStateBtn>
               </BookListSpan>
               <BookListSpan onClick={handlButton}>
-                <ReviewWriteBtn>후기작성</ReviewWriteBtn>
+                <ReviewWriteBtn onClick={handlButton}>
+                  {list.isReviewed ? '후기 작성' : '후기 수정'}
+                </ReviewWriteBtn>
               </BookListSpan>
             </BookListLi>
           );
