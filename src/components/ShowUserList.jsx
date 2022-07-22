@@ -31,9 +31,12 @@ export const ShowUserList = ({ data, setDeleteUser }) => {
 };
 
 const UserList = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px 0 10px 65px;
+  // display: flex;
+  // align-items: center;
+  // padding: 10px 0 10px 65px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
   border-bottom: 1px solid black;
 `;
 
@@ -47,7 +50,7 @@ const UserListSpan = styled.span`
   justify-content: center;
   width: 65px;
   & + & {
-    margin-left: 50px;
+    // margin-left: 50px;
     width: 230px;
   }
   & + & + & {
@@ -59,5 +62,7 @@ const DeleteUserBtn = styled.button`
   width: 100px;
   height: 30px;
   border: 1px solid #ff0000;
-  margin-left: 80px;
+  display: flex;
+  justify-content: center;
+  // margin-left: 80px;
 `;
