@@ -150,7 +150,7 @@ const ContentReservationCancellation = (props) => {
   // console.log(props);
   return (
     <>
-      <h2>{props.room}를 예약 취소하겠습니까?</h2>
+      <h2>{props.roomID.name}를 예약 취소하겠습니까?</h2>
       <h3>환불규정</h3>
       <p>환불규정은 시즌과 상관없이 동일하게 적용됩니다.</p>
       <p>1일 전 취소 : 0% 환불</p>
