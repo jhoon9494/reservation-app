@@ -21,17 +21,61 @@ const RoomReviews = ({ roomID }) => {
     getDefaultReview();
   }, [currPage]);
 
+  const makePagination = () => {
+    let startIndex = parseInt(currPage / 10);
+    // currPage가 10의 배수인 경우에 버튼을 누르자마자 다음 페이지로 넘어가는 것을 방지하기 위함
+    if (startIndex === currPage / 10) {
+      startIndex -= 1;
+    }
+    const page = [];
+    for (let i = startIndex * 10; i < (startIndex + 1) * 10; i++) {
+      if (i === totalPage) break;
+      page.push(i);
+    }
+    return page;
+  };
   return (
     <>
       {reviews.length > 0 ? (
         <Container>
+          <ButtonContainer>
+            <LeftArrow
+              onClick={() =>
+                setCurrPage((curr) => {
+                  if (curr > 1) return curr - 1;
+                  else return 1;
+                })
+              }
+            />
+            {makePagination().map((idx) => {
+              return (
+                <PageNationBtn
+                  key={`pagination-${idx}`}
+                  onClick={() => {
+                    setCurrPage(idx + 1);
+                  }}
+                  active={Number(currPage) === Number(idx + 1)}
+                >
+                  {idx + 1}
+                </PageNationBtn>
+              );
+            })}
+            <RigthArrow
+              onClick={() =>
+                setCurrPage((curr) => {
+                  if (curr < totalPage) return curr + 1;
+                  else return totalPage;
+                })
+              }
+            />
+          </ButtonContainer>
           {reviews.map((data, idx) => {
             return (
               <ReviewContainer key={`${data.objectId} - ${idx}`}>
                 <p>
                   <span>예약자명</span>
                   <br />
-                  {/* FIXME data에서 유저명을 찾으면 userID값이 나옴. 아마 포스트맨으로 직접 id값을 넣어서 그런게 아닌지.. 아니면 populate가 안된건가....모르겠네ㅎ.. */}
+                  {/* FIXME 유저명 찾도록 백엔드 코드 바뀌면 변경하기 */}
                   김아무개
                 </p>
                 <p>
@@ -48,39 +92,6 @@ const RoomReviews = ({ roomID }) => {
               </ReviewContainer>
             );
           })}
-          {/* FIXME 페이지네이션 대충 구현했음. 다른 코드 참고해서 수정하기 */}
-
-          <ButtonContainer>
-            <LeftArrow
-              onClick={() =>
-                setCurrPage((curr) => {
-                  if (curr > 1) return curr - 1;
-                  else return 1;
-                })
-              }
-            />
-            {Array(10 * parseInt(totalPage / 10) + (totalPage % 10))
-              .fill()
-              .map((data, idx) => {
-                return (
-                  <PageNationBtn
-                    key={`pagination-${idx}`}
-                    onClick={() => setCurrPage(idx + 1)}
-                    active={Number(currPage) === Number(idx + 1)}
-                  >
-                    {idx + 1}
-                  </PageNationBtn>
-                );
-              })}
-            <RigthArrow
-              onClick={() =>
-                setCurrPage((curr) => {
-                  if (curr < totalPage) return curr + 1;
-                  else return totalPage;
-                })
-              }
-            />
-          </ButtonContainer>
         </Container>
       ) : (
         <NonReview>
@@ -95,7 +106,7 @@ export default RoomReviews;
 
 const Container = styled.div`
   width: 100%;
-  padding: 20px;
+  padding: 20px 0;
   overflow-y: auto;
 `;
 
@@ -108,9 +119,10 @@ const ReviewContainer = styled.div`
   padding: 12px 11px;
   border-radius: 5px;
   box-shadow: 3px 3px 10px lightgray;
-  margin: 0 auto 10px;
+  margin: 0 auto 15px;
+
   & > p {
-    flex-basis: 70px;
+    flex-basis: 50px;
   }
 
   & > p:last-child {
@@ -123,24 +135,19 @@ const ReviewContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  margin-top: 30px;
+  margin-bottom: 30px;
   display: flex;
   justify-content: center;
-  position: relative;
 `;
 
 const LeftArrow = styled(VscChevronLeft)`
-  transform: scale(2);
-  position: absolute;
-  top: 8px;
-  left: 8%;
+  width: 30px;
+  height: 30px;
 `;
 
 const RigthArrow = styled(VscChevronRight)`
-  transform: scale(2);
-  position: absolute;
-  top: 8px;
-  right: 8%;
+  width: 30px;
+  height: 30px;
 `;
 
 const PageNationBtn = styled.button`
