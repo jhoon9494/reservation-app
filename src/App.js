@@ -18,7 +18,10 @@ function App() {
           <Route path="/site" element={<Site />} />
           <Route path="/about" element={<About />} />
           <Route path="/reservation/" element={<Reservation />} />
-          <Route path="/reservation/:roomID" element={<Reservation />} />
+          <Route
+            path="/reservation/:roomID/:roomName/:peopleNumber"
+            element={<Reservation />}
+          />
         </Routes>
       </BrowserRouter>
     </>

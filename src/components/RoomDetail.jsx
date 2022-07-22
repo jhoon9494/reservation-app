@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import '../styles/modal.css';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
@@ -11,7 +10,7 @@ import RoomDetailContent from './RoomDetailContent';
 import RoomReviews from './RoomReviews';
 import axios from 'axios';
 
-export const RoomModal = ({ show, onHide, roomID }) => {
+export const RoomDetail = ({ roomID }) => {
   const [currTab, setCurrTab] = useState('객실 설명');
   const [roomContent, setRoomContent] = useState({});
 
@@ -30,17 +29,7 @@ export const RoomModal = ({ show, onHide, roomID }) => {
   }, [roomID]);
 
   return (
-    <Modal
-      show={show}
-      onHide={() => {
-        onHide();
-        // 모달창을 종료하고 다시 켰을 때 모달창 내부 초기화
-        setCurrTab('객실 설명');
-      }}
-      dialogClassName="my-modal"
-      aria-labelledby="roomTitle"
-      centered
-    >
+    <div style={{ width: '750px' }}>
       <Header id="roomTitle">{roomContent.name}</Header>
       <RoomImageSlider roomContent={roomContent} />
       <ContentContainer>
@@ -52,10 +41,16 @@ export const RoomModal = ({ show, onHide, roomID }) => {
         )}
       </ContentContainer>
 
-      <ReserveBtn onClick={() => navigate(`/reservation/${roomID}`)}>
+      <ReserveBtn
+        onClick={() =>
+          navigate(
+            `/reservation/${roomID}/${roomContent.name}/${roomContent.maxPeople}`
+          )
+        }
+      >
         예약하기
       </ReserveBtn>
-    </Modal>
+    </div>
   );
 };
 
