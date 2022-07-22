@@ -68,19 +68,22 @@ const Slider = styled.div`
 
 const BackgroundImage1 = styled.div`
   width: 100%;
-  background-image: url('images/main1.png');
+  background-image: url('images/main1.jpg');
+  background-size: cover;
   background-position: center;
 `;
 
 const BackgroundImage2 = styled.div`
   width: 100%;
-  background-image: url('images/main2.png');
+  background-image: url('images/main2.jpg');
+  background-size: cover;
   background-position: center;
 `;
 
 const BackgroundImage3 = styled.div`
   width: 100%;
-  background-image: url('images/main3.png');
+  background-image: url('images/main3.jpg');
+  background-size: cover;
   background-position: center;
 `;
 
@@ -98,9 +101,10 @@ const HomeButton = styled(Button)`
   width: 200px;
   padding: 8px 28px;
   background-color: ${baseStyle.mainColor};
+  border: 1px solid ${baseStyle.mainColor};
 
   &:hover {
     background-color: ${baseStyle.mainHoverColor};
-    border: 1px solid white;
+    border: 1px solid ${baseStyle.mainHoverColor};
   }
 `;
