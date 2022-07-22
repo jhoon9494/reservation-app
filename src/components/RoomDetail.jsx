@@ -44,7 +44,7 @@ export const RoomDetail = ({ roomID }) => {
       <ReserveBtn
         onClick={() =>
           navigate(
-            `/reservation/${roomID}/${roomContent.name}/${roomContent.maxPeople}`
+            `/reservation/${roomID}?roomData=${roomContent.name}&roomPeople=${roomContent.maxPeople}`
           )
         }
       >
@@ -62,7 +62,7 @@ const Header = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  width: 570px;
+  width: 650px;
   height: 388px;
   margin: 23px auto auto;
   display: flex;

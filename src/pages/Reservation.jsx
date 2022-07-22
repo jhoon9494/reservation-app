@@ -4,13 +4,18 @@ import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import CheckPeople from '../components/CheckPeople';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import DateRangePick from '../components/DateRangePick';
 import ReservationRooms from '../components/ReservationRooms';
 import baseStyle from '../styles/baseStyle';
 import axios from 'axios';
 
 const Reservation = () => {
-  let { roomID, peopleNumber, roomName } = useParams();
+  const params = new URLSearchParams(window.location.search);
+  let { roomID } = useParams();
+  let peopleNumber = params.get('roomPeople');
+  let roomName = params.get('roomData');
+
   const [people, setPeople] = useState(0);
   const [date, setDate] = useState({ startDate: '', endDate: '' });
   const [roomInfo, setRoomInfo] = useState(roomID ? roomID : '');
@@ -38,7 +43,7 @@ const Reservation = () => {
   return (
     <>
       <Navbar />
-      <Container>
+      <Container roomID={roomID}>
         <CheckPeople
           setPeople={setPeople}
           peopleNumber={peopleNumber ? peopleNumber : 6}
@@ -61,6 +66,7 @@ const Reservation = () => {
         </MapContainer>
       )}
       <ReserveBtn onClick={handleReserve}>예약하기</ReserveBtn>
+      <Footer />
     </>
   );
 };
@@ -71,7 +77,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-around;
   width: 932px;
-  margin: 157px auto auto;
+  margin: ${(props) => (props.roomID ? '157px auto auto' : '60px auto auto')};
 `;
 
 const MapContainer = styled.div`
