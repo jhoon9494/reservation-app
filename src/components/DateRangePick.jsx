@@ -7,8 +7,9 @@ const { RangePicker } = DatePicker;
 
 const DateRangePick = ({ setDate, roomID }) => {
   const [reservedDates, setReservedDates] = useState([]);
-
   useEffect(() => {
+    // 예약 불가능한 날짜 데이터를 받기 전 배열 초기화
+    setReservedDates([]);
     async function getReservedDates() {
       if (roomID) {
         // 둘러보기 페이지에서 객실을 선택하고 들어온 경우
