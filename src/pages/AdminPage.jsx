@@ -65,7 +65,7 @@ const AdminPage = () => {
 
     const oldBookData = [...bookData];
     const newBookData = oldBookData.filter((data) => {
-      return data.userID.name == searchingName;
+      return data.name == searchingName;
     });
     setFilteredBookData(newBookData);
   };
