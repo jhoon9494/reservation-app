@@ -6,6 +6,7 @@ import Mypage from './pages/Mypage';
 import Site from './pages/Site';
 import About from './pages/About';
 import Reservation from './pages/Reservation';
+import FindAccount from './pages/FindAccount';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/reservation/" element={<Reservation />} />
           <Route path="/reservation/:roomID" element={<Reservation />} />
+          <Route path="/findAccount" element={<FindAccount />} />
         </Routes>
       </BrowserRouter>
     </>
