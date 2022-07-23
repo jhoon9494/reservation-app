@@ -1,9 +1,7 @@
-/* eslint-disable */
-
 import styled from 'styled-components';
 import axios from 'axios';
 // 예약 리스트
-export const ShowBookList = ({ data, setChangeBookStatus }) => {
+export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
   // 예약 승인 함수
   async function bookApprove(e) {
     e.preventDefault();
@@ -48,33 +46,10 @@ export const ShowBookList = ({ data, setChangeBookStatus }) => {
       <BookListSpan>{data.roomID.name}</BookListSpan>
       <BookListSpan>{data.peopleNumber}명</BookListSpan>
       <BookListSpan>
-        {data.status}{' '}
-        {data.status == '예약 요청' ? (
-          <>
-            <BookApproveBtn onClick={(e) => bookApprove(e)}>
-              예약 승인
-            </BookApproveBtn>
-            <BookCancelBtn onClick={(e) => bookCancel(e)}>
-              예약 취소
-            </BookCancelBtn>
-          </>
-        ) : data.status == '예약 완료' ? (
-          <>
-            <BookApproveBtn disabled={true}>예약 승인</BookApproveBtn>
-            <BookCancelBtn onClick={(e) => bookCancel(e)}>
-              예약 취소
-            </BookCancelBtn>
-          </>
-        ) : data.status == '예약 취소 요청' ? (
-          <>
-            <BookApproveBtn disabled={true}>예약 승인</BookApproveBtn>
-            <BookCancelBtn onClick={(e) => bookCancel(e)}>
-              예약 취소
-            </BookCancelBtn>
-          </>
-        ) : (
-          <BookCancelBtn disabled={true}>예약 취소됨</BookCancelBtn>
-        )}
+        <BookApproveBtn onClick={(e) => bookApprove(e)}>
+          예약 승인
+        </BookApproveBtn>
+        <BookCancelBtn onClick={(e) => bookCancel(e)}>예약 취소</BookCancelBtn>
       </BookListSpan>
     </BookList>
   );
