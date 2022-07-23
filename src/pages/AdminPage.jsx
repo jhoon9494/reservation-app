@@ -13,34 +13,49 @@ const AdminPage = () => {
   const [management, setManagement] = useState('user');
   const [userData, setUserData] = useState([]);
   const [bookData, setBookData] = useState([]);
+  const [bookRequestsData, setBookRequestsData] = useState([]);
   const [searchingName, setSearchingName] = useState('');
   const [filteredUserData, setFilteredUserData] = useState([]);
   const [filteredBookData, setFilteredBookData] = useState([]);
+  const [filteredBookRequestsData, setFilteredBookRequestsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage, setDataPerPage] = useState(6);
 
   const [deleteUser, setDeleteUser] = useState(false);
   const [changeBookStatus, setChangeBookStatus] = useState(false);
 
+  // 첫 유저 데이터
   useEffect(() => {
     async function getUserList() {
       const userData = await axios.get('http://localhost:5000/api/admin/user');
       const userList = userData.data;
       setUserData(userList);
       // 필터링 된 유저데이터 초기화
-      setSearchingName('');
-      setFilteredUserData('');
+      // setSearchingName('');
+      // setFilteredUserData('');
     }
     getUserList();
   }, [deleteUser]);
 
+  // 첫 예약 데이터
   useEffect(() => {
     async function getBookList() {
-      const bookData = await axios.get('http://localhost:5000/api/admin/book');
+      const bookData = await axios.get(
+        'http://localhost:5000/api/admin/bookExceptRequests'
+      );
       const bookList = bookData.data;
       setBookData(bookList);
     }
     getBookList();
+
+    async function getBookRequestsList() {
+      const bookRequestsData = await axios.get(
+        'http://localhost:5000/api/admin/bookRequests'
+      );
+      const bookRequestsList = bookRequestsData.data;
+      setBookRequestsData(bookRequestsList);
+    }
+    getBookRequestsList();
   }, [changeBookStatus]);
 
   const userManage = (e) => {
@@ -55,19 +70,35 @@ const AdminPage = () => {
 
   // 이름으로 찾기
   const searchByName = (e) => {
-    e.preventDefault();
-    setCurrentPage(1);
-    const oldUserData = [...userData];
-    const newUserData = oldUserData.filter((data) => {
-      return data.name == searchingName;
-    });
-    setFilteredUserData(newUserData);
+    if (management == 'user') {
+      // 유저 데이터
+      async function findUsersByName() {
+        const userData = await axios.get(
+          'http://localhost:5000/api/admin/userByName',
+          {
+            params: { name: searchingName },
+          }
+        );
+        const userList = userData.data;
+        setFilteredUserData(userList);
+      }
+      findUsersByName();
+      setCurrentPage(1);
+    } else {
+      // 예약 데이터
+      const oldBookData = [...bookData];
+      const newBookData = oldBookData.filter((data) => {
+        return data.name == searchingName;
+      });
+      setFilteredBookData(newBookData);
 
-    const oldBookData = [...bookData];
-    const newBookData = oldBookData.filter((data) => {
-      return data.name == searchingName;
-    });
-    setFilteredBookData(newBookData);
+      const oldBookRequestsData = [...bookRequestsData];
+      const newBookRequestsData = oldBookRequestsData.filter((data) => {
+        return data.name == searchingName;
+      });
+      setFilteredBookRequestsData(newBookRequestsData);
+      setCurrentPage(1);
+    }
   };
 
   // pagination
@@ -121,6 +152,7 @@ const AdminPage = () => {
                 onClick={() => {
                   setSearchingName('');
                   setFilteredBookData('');
+                  setFilteredBookRequestsData('');
                   setCurrentPage(1);
                 }}
               >
@@ -148,13 +180,18 @@ const AdminPage = () => {
           ) : (
             <AdminBookPage
               filteredBookData={filteredBookData}
+              filteredBookRequestsData={filteredBookRequestsData}
+              setFilteredBookData={setFilteredBookData}
+              setFilteredBookRequestsData={setFilteredBookRequestsData}
               setChangeBookStatus={setChangeBookStatus}
               setCurrentPage={setCurrentPage}
               pageCount={pageCount}
               bookData={bookData}
+              bookRequestsData={bookRequestsData}
               currentPage={currentPage}
               dataPerPage={dataPerPage}
               currentData={currentData}
+              setSearchingName={setSearchingName}
             />
           )}
         </Body>

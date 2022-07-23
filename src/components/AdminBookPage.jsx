@@ -1,26 +1,34 @@
-import { ShowBookList } from '../components/ShowBookList';
+import { ShowBookRequests } from '../components/ShowBookRequests';
+import { ShowBookExceptRequests } from './ShowBookExceptRequests';
 import styled from 'styled-components';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { useState } from 'react';
 
 export const AdminBookPage = ({
   filteredBookData,
+  filteredBookRequestsData,
+  setFilteredBookData,
+  setFilteredBookRequestsData,
   setChangeBookStatus,
   setCurrentPage,
   pageCount,
   bookData,
+  bookRequestsData,
   currentPage,
   dataPerPage,
   currentData,
+  setSearchingName,
 }) => {
   const [bookMenu, setBookmenu] = useState('approve');
 
   const changeApproveMenu = (e) => {
     e.preventDefault();
+    setCurrentPage(1);
     setBookmenu('approve');
   };
   const changeManageMenu = (e) => {
     e.preventDefault();
+    setCurrentPage(1);
     setBookmenu('manage');
   };
 
@@ -28,10 +36,28 @@ export const AdminBookPage = ({
     <BookWrap>
       <BookManageBar>
         <BookApprove onClick={(e) => changeApproveMenu(e)}>
-          <ApproveSpan bookMenu={bookMenu}>예약 조회</ApproveSpan>
+          <ApproveSpan
+            bookMenu={bookMenu}
+            onClick={() => {
+              setSearchingName('');
+              setFilteredBookData('');
+              setFilteredBookRequestsData('');
+            }}
+          >
+            예약 요청 관리
+          </ApproveSpan>
         </BookApprove>
         <BookManage onClick={(e) => changeManageMenu(e)}>
-          <ManageSpan bookMenu={bookMenu}>예약 관리</ManageSpan>
+          <ManageSpan
+            bookMenu={bookMenu}
+            onClick={() => {
+              setSearchingName('');
+              setFilteredBookData('');
+              setFilteredBookRequestsData('');
+            }}
+          >
+            예약 조회
+          </ManageSpan>
         </BookManage>
       </BookManageBar>
 
@@ -43,27 +69,52 @@ export const AdminBookPage = ({
         <BookBarSpan>인원</BookBarSpan>
         <BookBarSpan>예약 상태</BookBarSpan>
       </BookBar>
-      <BookLists>
-        {filteredBookData == ''
-          ? currentData(bookData).map((data, index) => {
-              return (
-                <ShowBookList
-                  key={index}
-                  data={data}
-                  setChangeBookStatus={setChangeBookStatus}
-                />
-              );
-            })
-          : currentData(filteredBookData).map((data, index) => {
-              return (
-                <ShowBookList
-                  key={index}
-                  data={data}
-                  setChangeBookStatus={setChangeBookStatus}
-                />
-              );
-            })}
-      </BookLists>
+      {bookMenu == 'approve' ? (
+        <BookLists>
+          {filteredBookRequestsData == ''
+            ? currentData(bookRequestsData).map((data, index) => {
+                return (
+                  <ShowBookRequests
+                    key={index}
+                    data={data}
+                    setChangeBookStatus={setChangeBookStatus}
+                  />
+                );
+              })
+            : currentData(filteredBookRequestsData).map((data, index) => {
+                return (
+                  <ShowBookRequests
+                    key={index}
+                    data={data}
+                    setChangeBookStatus={setChangeBookStatus}
+                  />
+                );
+              })}
+        </BookLists>
+      ) : (
+        <BookLists>
+          {filteredBookData == ''
+            ? currentData(bookData).map((data, index) => {
+                return (
+                  <ShowBookExceptRequests
+                    key={index}
+                    data={data}
+                    setChangeBookStatus={setChangeBookStatus}
+                  />
+                );
+              })
+            : currentData(filteredBookData).map((data, index) => {
+                return (
+                  <ShowBookExceptRequests
+                    key={index}
+                    data={data}
+                    setChangeBookStatus={setChangeBookStatus}
+                  />
+                );
+              })}
+        </BookLists>
+      )}
+
       <PageWrap>
         <ArrowButton
           disabled={currentPage == 1}
@@ -75,13 +126,23 @@ export const AdminBookPage = ({
           <FiArrowLeft /> 이전
         </ArrowButton>
 
-        {filteredBookData == ''
+        {bookMenu == 'approve'
+          ? filteredBookRequestsData == ''
+            ? pageCount(bookRequestsData)
+            : pageCount(filteredBookRequestsData)
+          : filteredBookData == ''
           ? pageCount(bookData)
           : pageCount(filteredBookData)}
         <ArrowButton
           style={{ marginLeft: '15px' }}
           disabled={
-            filteredBookData == ''
+            bookMenu == 'approve'
+              ? filteredBookRequestsData == ''
+                ? currentPage ==
+                  Math.ceil(bookRequestsData.length / dataPerPage)
+                : currentPage ==
+                  Math.ceil(filteredBookRequestsData.length / dataPerPage)
+              : filteredBookData == ''
               ? currentPage == Math.ceil(bookData.length / dataPerPage)
               : currentPage == Math.ceil(filteredBookData.length / dataPerPage)
           }
