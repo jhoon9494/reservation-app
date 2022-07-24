@@ -15,8 +15,12 @@ const RoomsButton = () => {
   // 전체 객실 정보 받아오기
   useEffect(() => {
     async function getAllRooms() {
-      const res = await axios.get('http://localhost:5000/api/room');
-      setAllRooms(res.data);
+      try {
+        const res = await axios.get('http://localhost:5000/api/room');
+        setAllRooms(res.data);
+      } catch (e) {
+        alert('객실정보를 받아올 수 없습니다.');
+      }
     }
     getAllRooms();
   }, []);

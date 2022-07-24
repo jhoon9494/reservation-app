@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-const CheckPeople = ({ setPeople, peopleNumber }) => {
+const CheckPeople = ({ setPeople, maxPeopleNumber }) => {
   const [number, setNumber] = useState('');
 
   const handleChange = (e) => {
@@ -14,7 +14,7 @@ const CheckPeople = ({ setPeople, peopleNumber }) => {
 
   const makeArray = () => {
     const people = [];
-    for (let i = 2; i <= peopleNumber; i++) {
+    for (let i = 2; i <= maxPeopleNumber; i++) {
       people.push(i);
     }
     return people;

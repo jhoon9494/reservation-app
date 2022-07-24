@@ -18,11 +18,15 @@ export const RoomDetail = ({ roomID }) => {
 
   useEffect(() => {
     async function getData() {
-      // RoomsButton 컴포넌트에서 초기 roomID값은 empty string임.
-      // roomID에 값이 들어올때만 api 요청
       if (roomID !== '') {
-        const res = await axios.get(`http://localhost:5000/api/room/${roomID}`);
-        setRoomContent(res.data);
+        try {
+          const res = await axios.get(
+            `http://localhost:5000/api/room/${roomID}`
+          );
+          setRoomContent(res.data);
+        } catch (e) {
+          console.error('객실정보를 받아올 수 없습니다.');
+        }
       }
     }
     getData();
@@ -42,11 +46,9 @@ export const RoomDetail = ({ roomID }) => {
       </ContentContainer>
 
       <ReserveBtn
-        onClick={() =>
-          navigate(
-            `/reservation/${roomID}?roomData=${roomContent.name}&roomPeople=${roomContent.maxPeople}`
-          )
-        }
+        onClick={() => {
+          navigate(`/reservation/${roomID}`);
+        }}
       >
         예약하기
       </ReserveBtn>
