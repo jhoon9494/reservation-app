@@ -1,10 +1,61 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import ReserveRoomInfo from '../components/ReserveRoomInfo';
+import ReserveUserInfo from '../components/ReserveUserInfo';
+import ReservePrice from '../components/ReservePrice';
+import PaymentTypes from '../components/PaymentTypes';
 import baseStyle from '../styles/baseStyle';
 import { Button } from 'react-bootstrap';
+import moment from 'moment';
+import axios from 'axios';
 
 const Payment = () => {
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    startPhoneNumber: '010',
+    midPhoneNumber: '',
+    endPhoneNumber: '',
+    email: '',
+    require: '',
+  });
+
+  const data = sessionStorage.getItem('reserveData');
+  const roomData = JSON.parse(data);
+
+  const handlePayment = async () => {
+    const reserveData = {
+      startDate: moment(roomData.startDate)._d,
+      endDate: moment(roomData.endDate)._d,
+      name: userInfo.name,
+      roomID: roomData.roomID,
+      peopleNumber: roomData.people,
+      requirements: userInfo.require,
+      price: roomData.price,
+      email: userInfo.email,
+      phoneNumber: [
+        userInfo.startPhoneNumber,
+        userInfo.midPhoneNumber,
+        userInfo.endPhoneNumber,
+      ].join('-'),
+    };
+    try {
+      const res = await axios.post(
+        'http://localhost:5000/api/booking/create',
+        JSON.stringify(reserveData)
+      );
+      if (res.status === 201) {
+        return alert('예약이 완료되었습니다!');
+      }
+      if (res.status === 400) {
+        return alert(res.data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -13,71 +64,11 @@ const Payment = () => {
         <LeftContainer>
           {/* 예약 상품 정보 */}
           <ContentBox>
-            <h2>예약 상품 정보</h2>
-            <RoomBox>
-              <RoomImg src={null} alt={'temp'} />
-              <RoomInfo>
-                <p>C-101호</p>
-                <p>인원 : 4인</p>
-                <p>일정 : 2022.08.12 ~ 22.08.14</p>
-              </RoomInfo>
-            </RoomBox>
+            <ReserveRoomInfo roomData={roomData} />
           </ContentBox>
           {/* 예약자 정보 */}
           <ContentBox>
-            <Header>
-              <h2>예약자 정보</h2>
-              <input
-                type={'checkbox'}
-                onChange={() => console.log('checked')}
-              />
-              <span>주문자와 동일</span>
-            </Header>
-            <UserInfo>
-              <input
-                type={'text'}
-                placeholder={'예약자명'}
-                style={{ width: '100px' }}
-              />
-              <div style={{ marginBottom: '9px' }}>
-                <input
-                  type={'number'}
-                  defaultValue={'010'}
-                  style={{
-                    width: '70px',
-                    border: 'none',
-                    background: 'lightgray',
-                    padding: '2px 10px',
-                  }}
-                />
-                <span> - </span>
-                <input
-                  type={'number'}
-                  style={{
-                    width: '100px',
-                    border: 'none',
-                    background: 'lightgray',
-                    padding: '2px 10px',
-                  }}
-                />
-                <span> - </span>
-                <input
-                  type={'number'}
-                  style={{
-                    width: '100px',
-                    border: 'none',
-                    background: 'lightgray',
-                    padding: '2px 10px',
-                  }}
-                />
-              </div>
-              <input type={'text'} placeholder={'이메일'} />
-              <input
-                type={'textarea'}
-                placeholder={'요청사항'}
-                style={{ height: '60px' }}
-              />
-            </UserInfo>
+            <ReserveUserInfo userInfo={userInfo} setUserInfo={setUserInfo} />
           </ContentBox>
           {/* 취소 및 환불 규정 */}
           <ContentBox>
@@ -91,20 +82,12 @@ const Payment = () => {
         <RightContainer>
           {/* 최종 결제 금액 */}
           <ContentBox>
-            <PriceContainer>
-              <h2>최종 결제 금액</h2>
-              <div>상품 금액 : 100,000원</div>
-              <div>총 숙박일 : 2박</div>
-              <hr />
-              <div>총 결제 금액 : 200,000원</div>
-            </PriceContainer>
+            <ReservePrice roomData={roomData} />
           </ContentBox>
           <ContentBox>
-            <h2>결제 수단</h2>
-            <input type={'checkbox'} />
-            <span>무통장 입금</span>
+            <PaymentTypes />
           </ContentBox>
-          <SubmitButton>결제하기</SubmitButton>
+          <PaymentButton onClick={handlePayment}>결제하기</PaymentButton>
         </RightContainer>
       </Container>
       <Footer />
@@ -161,7 +144,7 @@ const ContentBox = styled.div`
 
   h2 {
     font-size: ${baseStyle.subTitleFontSize};
-    margin: 0;
+    margin-bottom: 10px;
   }
 
   &:not(:first-child) {
@@ -169,63 +152,8 @@ const ContentBox = styled.div`
   }
 `;
 
-// 예약 상품 정보
-const RoomBox = styled.div`
-  display: flex;
-  margin-top: 13px;
-`;
-
-const RoomImg = styled.img`
-  display: block;
-  width: 87px;
-  height: 87px;
-  border: 1px solid black;
-`;
-
-const RoomInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0 9px;
-
-  > p {
-    padding: 5px;
-    margin: 0;
-    font-size: ${baseStyle.contentFontSize};
-  }
-`;
-
-// 예약자 정보
-const Header = styled.div`
-  display: flex;
-  > input {
-    margin-left: 20px;
-    width: 18px;
-  }
-
-  > span {
-    margin-left: 10px;
-    font-size: ${baseStyle.contentFontSize};
-  }
-`;
-
-const UserInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 9px;
-
-  > input {
-    border: none;
-    background-color: lightgray;
-    margin-bottom: 9px;
-    padding: 2px 10px;
-  }
-`;
-
-// 최종 결제금액
-const PriceContainer = styled.div``;
-
 // 결제하기 버튼
-const SubmitButton = styled(Button)`
+const PaymentButton = styled(Button)`
   width: 100%;
   margin-top: 24px;
   padding: 0.5rem;

@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import CheckPeople from '../components/CheckPeople';
@@ -11,34 +11,63 @@ import baseStyle from '../styles/baseStyle';
 import axios from 'axios';
 
 const Reservation = () => {
-  const params = new URLSearchParams(window.location.search);
   let { roomID } = useParams();
-  let peopleNumber = params.get('roomPeople');
-  let roomName = params.get('roomData');
 
+  const navigate = useNavigate();
   const [people, setPeople] = useState(0);
   const [date, setDate] = useState({ startDate: '', endDate: '' });
   const [roomInfo, setRoomInfo] = useState(roomID ? roomID : '');
+  const [roomContent, setRoomContent] = useState({});
 
-  const handleReserve = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/booking/confirm', {
-        params: {
-          startDate: JSON.stringify(date.startDate),
-          endDate: JSON.stringify(date.endDate),
-          roomID: JSON.stringify(roomInfo),
-        },
-      });
+  useEffect(() => {
+    async function getData() {
+      if (roomInfo !== '') {
+        try {
+          const res = await axios.get(
+            `http://localhost:5000/api/room/${roomInfo}`
+          );
 
-      //TODO 포스트맨으로 요청시 해당 객실에 예약이 있음에도 message:OK로 처리됩니다..수정 중
-      if (res.status === 200) {
-        console.log('중복된 예약이 없습니다.');
-      }
-    } catch (e) {
-      if (e.response.status === 403) {
-        alert('로그인한 유저만 예약할 수 있습니다');
+          setRoomContent(res.data);
+        } catch (e) {
+          console.error('객실정보를 받아올 수 없습니다.');
+        }
       }
     }
+    getData();
+  }, [roomInfo]);
+
+  const handleReserve = async () => {
+    if (people > 0 && roomInfo && date.startDate && date.endDate) {
+      const reserveData = JSON.stringify({
+        roomID: roomInfo,
+        startDate: date.startDate,
+        endDate: date.endDate,
+        people: people,
+        price: roomContent.price,
+        roomName: roomContent.name,
+        roomImg: roomContent.imgSrc[0],
+      });
+      sessionStorage.setItem('reserveData', reserveData);
+      navigate('/payment');
+    }
+
+    // FIXME 추후 api 연결하면 수정하기
+    // try {
+    // const res = await axios.get('http://localhost:5000/api/booking/confirm', {
+    //   params: {
+    //     startDate: JSON.stringify(date.startDate),
+    //     endDate: JSON.stringify(date.endDate),
+    //     roomID: JSON.stringify(roomInfo),
+    //   },
+    // });
+    //   if (res.status === 200) {
+    //     console.log('중복된 예약이 없습니다.');
+    //   }
+    // } catch (e) {
+    //   if (e.response.status === 403) {
+    //     alert('로그인한 유저만 예약할 수 있습니다');
+    //   }
+    // }
   };
   return (
     <>
@@ -46,13 +75,13 @@ const Reservation = () => {
       <Container roomID={roomID}>
         <CheckPeople
           setPeople={setPeople}
-          peopleNumber={peopleNumber ? peopleNumber : 6}
+          maxPeopleNumber={roomID ? roomContent.maxPeople : 6}
         />
         <DateRangePick setDate={setDate} roomID={roomID} />
       </Container>
       {roomID && (
         <SelectedRoomName>
-          <h6>선택하신 객실은 : {roomName} 입니다.</h6>
+          <h6>선택하신 객실은 : {roomContent.name} 입니다.</h6>
         </SelectedRoomName>
       )}
       {!roomID && (
