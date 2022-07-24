@@ -11,12 +11,15 @@ const RoomReviews = ({ roomID }) => {
 
   useEffect(() => {
     async function getDefaultReview() {
-      const res = await axios.get('http://localhost:5000/api/review', {
-        params: { roomID: roomID, page: currPage, perPage: 5 },
-      });
-      console.log(res.data);
-      setReviews(res.data.reviews);
-      setTotalPage(res.data.totalPage);
+      try {
+        const res = await axios.get('http://localhost:5000/api/review', {
+          params: { roomID: roomID, page: currPage, perPage: 5 },
+        });
+        setReviews(res.data.reviews);
+        setTotalPage(res.data.totalPage);
+      } catch (e) {
+        console.error('객실 후기정보를 불러올 수 없습니다.');
+      }
     }
     getDefaultReview();
   }, [currPage]);
