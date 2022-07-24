@@ -31,26 +31,28 @@ const MyPage = () => {
     const urlUser = `http://localhost:5000/api/user`;
     const urlBookingList = `http://localhost:5000/api/booking/user`;
     async function fetchBooking() {
-      const token = sessionStorage.getItem('token');
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get(urlBookingList, config, {
-        perPage: 1,
-        page: 1,
-      });
-      setGetBooking(res.data.bookingInfos);
-      // setGetBooking(() => [...getBookings]);
+      try {
+        const token = sessionStorage.getItem('token');
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+        const res = await axios.get(urlBookingList, config, {
+          perPage: 1,
+          page: 1,
+        });
+        setGetBooking(res.data.bookingInfos);
+        // setGetBooking(() => [...getBookings]);
+      } catch (err) {
+        console.log(err);
+      }
     }
     async function fetchUser() {
       try {
-        // const token =
-        //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQxOTRhYjE1ZWJlMDg2YmIzZWQxOGQiLCJyb2xlIjoidXNlciIsImlhdCI6MTY1ODM4ODY1Nn0.4ETF84HQFNOTB7Grq0v6VJFt6oaYM0Cc8oCVJAfwIXA';
         const token = sessionStorage.getItem('token');
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const res = await axios.get(urlUser, config);
         const getUsers = await res.data;
         setGetUser(() => ({ ...getUsers }));
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        console.log(err);
       }
     }
 
@@ -89,7 +91,7 @@ const MyPage = () => {
         })}
       </TabContainer>
       {currTab === '예약조회' ? (
-        <MypageReservationCheck getBooking={getBooking} />
+        <MypageReservationCheck getBooking={getBooking} getUser={getUser} />
       ) : currTab === '정보수정' && checkPw ? (
         <MypageModifyMemberInfo getUser={getUser} />
       ) : null}

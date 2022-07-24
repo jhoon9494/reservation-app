@@ -5,7 +5,8 @@ import MypageModal from '../components/MypageModal';
 
 const MypageReservationCheck = (props) => {
   const getBooking = props.getBooking;
-
+  const getUser = props.getUser;
+  // console.log(getUser.name);
   // modal제어
   const [modalShow, setModalShow] = useState(false);
   // modal창에 넘길 값
@@ -19,9 +20,9 @@ const MypageReservationCheck = (props) => {
   // '예약 상태'에 따라 '예약 취소' 버튼을 활성화 시킨다
   const checkingStatus = (status) => {
     if (status === '예약 취소' || status === '예약 완료') {
-      return false;
+      return true;
     }
-    return true;
+    return false;
   };
 
   const handlButton = (e) => {
@@ -29,21 +30,25 @@ const MypageReservationCheck = (props) => {
     switch (text) {
       case '예약 취소':
         console.log('예약 취소');
-        // console.log(e.target.dataset.room);
         setModalSelect({
           option: 'ModalReservationCancellation',
           width: 600,
           height: 405,
           room: e.target.dataset.room,
+          bookingid: e.target.dataset.bookingid,
         });
         setModalShow(true);
         break;
       case '후기 작성':
         console.log('후기 작성');
+        // console.log(e.target.dataset);
         setModalSelect({
           option: 'ModalWriteReview',
           width: 700,
           height: 500,
+          bookingid: e.target.dataset.bookingid,
+          roomid: e.target.dataset.roomid,
+          userName: getUser.name,
         });
         setModalShow(true);
         break;
@@ -53,9 +58,8 @@ const MypageReservationCheck = (props) => {
           option: 'ModalModifiedReview',
           width: 700,
           height: 500,
-          // booking: bookingId,
+          bookingid: e.target.dataset.bookingid,
         });
-
         setModalShow(true);
         break;
       default:
@@ -94,15 +98,20 @@ const MypageReservationCheck = (props) => {
               <BookListSpan>
                 <BookStateBtn
                   onClick={handlButton}
-                  data-roomID={list.roomID}
+                  data-room={list.roomID.name}
+                  data-bookingid={list._id}
                   disabled={checkingStatus(list.status)}
                 >
                   예약 취소
                 </BookStateBtn>
               </BookListSpan>
-              <BookListSpan onClick={handlButton}>
-                <ReviewWriteBtn onClick={handlButton}>
-                  {list.isReviewed ? '후기 작성' : '후기 수정'}
+              <BookListSpan>
+                <ReviewWriteBtn
+                  onClick={handlButton}
+                  data-bookingid={list._id}
+                  data-roomid={list.roomID._id}
+                >
+                  {list.isReviewed ? '후기 수정' : '후기 작성'}
                 </ReviewWriteBtn>
               </BookListSpan>
             </BookListLi>
@@ -188,6 +197,10 @@ const BookStateBtn = styled.button`
   border: 1px solid #ff0000;
   width: 100px;
   height: 30px;
+  :disabled {
+    border: 1px solid #d9d9d9;
+    background-color: #d9d9d9;
+  }
 `;
 
 const ReviewWriteBtn = styled.button`
@@ -197,8 +210,18 @@ const ReviewWriteBtn = styled.button`
   font-size: 14px;
   line-height: 21px;
   box-sizing: border-box;
-  color: #fff;
-  background-color: ${baseStyle.mainColor};
+  color: ${(props) => {
+    if (props.children === '후기 수정') {
+      return baseStyle.mainColor;
+    }
+    return '#fff';
+  }};
+  background-color: ${(props) => {
+    if (props.children === '후기 수정') {
+      return 'transparent';
+    }
+    return baseStyle.mainColor;
+  }};
   border: 1px solid ${baseStyle.mainColor};
   width: 100px;
   height: 30px;

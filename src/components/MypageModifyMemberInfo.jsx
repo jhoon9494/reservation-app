@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 
@@ -9,27 +10,61 @@ const MypageModifyMemberInfo = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState(getUser.name);
   const [phoneNumber, setPhoneNumber] = useState(getUser.phoneNumber);
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const inputs = {
-      password: password,
-      name: name,
-      phoneNumber: phoneNumber,
-    };
+    if (!phoneNumberFormatVerification.test(phoneNumber))
+      return alert('휴대폰 번호 형식이 맞지않습니다.');
 
-    //비번이 공란일시 이전 비번을 업데이트 시켜줌
-    if (password === '') inputs.password = getUser.password;
+    try {
+      const deleteUserUrl = `http://localhost:5000/api/user`;
+      const token = sessionStorage.getItem('token');
+      console.log('token', token);
+      const config = { headers: { Authorization: `Bearer ${token}` } };
 
-    console.log('회원정보를 업데이트함');
-    console.log(inputs);
+      let body = {
+        name: name,
+        password: password,
+        phoneNumber: phoneNumber,
+      };
+      //비번이 공란일시 이전 비번을 업데이트 시켜줌
+      if (password === '') body.password = getUser.password;
 
-    //await axios.post(serverURL, JSON.stringify(newObj))
+      console.log(body);
+      const res = await axios.patch(
+        deleteUserUrl,
+        config,
+        JSON.stringify(body)
+      );
+
+      alert('회원 정보가 업데이트 되었습니다..');
+      console.log('회원정보를 업데이트함:', res);
+    } catch (err) {
+      console.log(err);
+    }
   };
-  const handleMembershipWithdrawalSubmit = (event) => {
+
+  const handleMembershipWithdrawalSubmit = async (event) => {
     event.preventDefault();
     console.log(event);
     console.log('회원탈퇴 클릭시 api에 요청해서 회원 삭제');
+    try {
+      const deleteUserUrl = `http://localhost:5000/api/user`;
+      const token = sessionStorage.getItem('token');
+      console.log('token', token);
+
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const res = await axios.delete(deleteUserUrl, config);
+      alert('회원 탈퇴 되었습니다.');
+      console.log('삭제되었습니다.:', res);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  // 폰 번호 형식 검증하기 위함
+  const phoneNumberFormatVerification = /^[0-9]{3}-[0-9]{4}-[0-9]{4}/;
+
   return (
     <Form onSubmit={handleSubmit}>
       <label>이메일</label>
@@ -42,8 +77,8 @@ const MypageModifyMemberInfo = (props) => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div>
-        {password.length + 1 <= 4 && password.length > 0
-          ? '비밀번호를 4자리 이상 입력해야합니다.'
+        {password.length + 1 <= 8 && password.length > 0
+          ? '비밀번호를 8자리 이상 입력해야합니다.'
           : ''}
       </div>
       <label>신규비밀번호 확인</label>
@@ -51,7 +86,7 @@ const MypageModifyMemberInfo = (props) => {
         name="confirmPassword"
         type="password"
         onChange={(e) => setConfirmPassword(e.target.value)}
-        disabled={password.length + 1 <= 4}
+        disabled={password.length + 1 <= 8}
       ></input>
       <div>
         {password === confirmPassword ? '' : '비밀번호가 일치해야합니다'}
@@ -72,7 +107,11 @@ const MypageModifyMemberInfo = (props) => {
         value={phoneNumber || ''}
         onChange={(e) => setPhoneNumber(e.target.value)}
       />
-
+      <div>
+        {phoneNumberFormatVerification.test(phoneNumber)
+          ? ''
+          : '000-0000-0000으로 입력해주세요.'}
+      </div>
       <WithdrawalButton onClick={handleMembershipWithdrawalSubmit}>
         회원탈퇴
       </WithdrawalButton>
