@@ -9,7 +9,11 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
   const handleOrderCheckbox = async () => {
     if (!orderCheck) {
       try {
-        const res = await axios.get('http://localhost:5000/api/user');
+        const res = await axios.get('http://localhost:5000/api/user', {
+          headers: {
+            Authorization: `bearer ${sessionStorage.getItem('token')}`,
+          },
+        });
         const { name, email, phoneNumber } = res.data;
         const phoneNumberArray = phoneNumber.split('-');
         setUserInfo((prev) => ({
