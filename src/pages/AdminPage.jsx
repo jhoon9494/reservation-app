@@ -2,7 +2,6 @@
 import styled, { css } from 'styled-components';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { AdminUserPage } from '../components/AdminUserPage';
@@ -20,19 +19,15 @@ const AdminPage = () => {
   const [filteredBookRequestsData, setFilteredBookRequestsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage, setDataPerPage] = useState(6);
-
   const [deleteUser, setDeleteUser] = useState(false);
   const [changeBookStatus, setChangeBookStatus] = useState(false);
 
   // 첫 유저 데이터
   useEffect(() => {
     async function getUserList() {
-      const userData = await axios.get('http://localhost:5000/api/admin/user');
+      const userData = await axios.get('http://localhost:5000/api/admin/users');
       const userList = userData.data;
       setUserData(userList);
-      // 필터링 된 유저데이터 초기화
-      // setSearchingName('');
-      // setFilteredUserData('');
     }
     getUserList();
   }, [deleteUser]);
@@ -70,11 +65,11 @@ const AdminPage = () => {
 
   // 이름으로 찾기
   const searchByName = (e) => {
-    if (management == 'user') {
+    if (management === 'user') {
       // 유저 데이터
       async function findUsersByName() {
         const userData = await axios.get(
-          'http://localhost:5000/api/admin/userByName',
+          'http://localhost:5000/api/admin/user',
           {
             params: { name: searchingName },
           }
@@ -166,7 +161,7 @@ const AdminPage = () => {
             />
             <SearchButton onClick={(e) => searchByName(e)}>검색</SearchButton>
           </ManageBar>
-          {management == 'user' ? (
+          {management === 'user' ? (
             <AdminUserPage
               filteredUserData={filteredUserData}
               setDeleteUser={setDeleteUser}

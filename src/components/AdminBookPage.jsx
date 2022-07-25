@@ -32,28 +32,30 @@ export const AdminBookPage = ({
     setBookmenu('manage');
   };
 
+  const initialize = () => {
+    setSearchingName('');
+    setFilteredBookData('');
+    setFilteredBookRequestsData('');
+  };
+
   return (
     <BookWrap>
       <BookManageBar>
-        <BookApprove onClick={(e) => changeApproveMenu(e)}>
+        <BookApprove onClick={changeApproveMenu}>
           <ApproveSpan
             bookMenu={bookMenu}
             onClick={() => {
-              setSearchingName('');
-              setFilteredBookData('');
-              setFilteredBookRequestsData('');
+              initialize();
             }}
           >
             예약 요청 관리
           </ApproveSpan>
         </BookApprove>
-        <BookManage onClick={(e) => changeManageMenu(e)}>
+        <BookManage onClick={changeManageMenu}>
           <ManageSpan
             bookMenu={bookMenu}
             onClick={() => {
-              setSearchingName('');
-              setFilteredBookData('');
-              setFilteredBookRequestsData('');
+              initialize();
             }}
           >
             예약 조회
@@ -67,24 +69,28 @@ export const AdminBookPage = ({
         <BookBarSpan>예약 기간</BookBarSpan>
         <BookBarSpan>객실명</BookBarSpan>
         <BookBarSpan>인원</BookBarSpan>
-        <BookBarSpan>예약 상태</BookBarSpan>
+        {bookMenu === 'approve' ? (
+          <BookBarSpan></BookBarSpan>
+        ) : (
+          <BookBarSpan>예약 상태</BookBarSpan>
+        )}
       </BookBar>
-      {bookMenu == 'approve' ? (
+      {bookMenu === 'approve' ? (
         <BookLists>
-          {filteredBookRequestsData == ''
-            ? currentData(bookRequestsData).map((data, index) => {
+          {filteredBookRequestsData.length === 0
+            ? currentData(bookRequestsData).map((data) => {
                 return (
                   <ShowBookRequests
-                    key={index}
+                    key={data._id}
                     data={data}
                     setChangeBookStatus={setChangeBookStatus}
                   />
                 );
               })
-            : currentData(filteredBookRequestsData).map((data, index) => {
+            : currentData(filteredBookRequestsData).map((data) => {
                 return (
                   <ShowBookRequests
-                    key={index}
+                    key={data._id}
                     data={data}
                     setChangeBookStatus={setChangeBookStatus}
                   />
@@ -93,7 +99,7 @@ export const AdminBookPage = ({
         </BookLists>
       ) : (
         <BookLists>
-          {filteredBookData == ''
+          {filteredBookData.length === 0
             ? currentData(bookData).map((data, index) => {
                 return (
                   <ShowBookExceptRequests
@@ -126,23 +132,23 @@ export const AdminBookPage = ({
           <FiArrowLeft /> 이전
         </ArrowButton>
 
-        {bookMenu == 'approve'
-          ? filteredBookRequestsData == ''
+        {bookMenu === 'approve'
+          ? filteredBookRequestsData.length === 0
             ? pageCount(bookRequestsData)
             : pageCount(filteredBookRequestsData)
-          : filteredBookData == ''
+          : filteredBookData.length === 0
           ? pageCount(bookData)
           : pageCount(filteredBookData)}
         <ArrowButton
           style={{ marginLeft: '15px' }}
           disabled={
-            bookMenu == 'approve'
-              ? filteredBookRequestsData == ''
+            bookMenu === 'approve'
+              ? filteredBookRequestsData.length === 0
                 ? currentPage ==
                   Math.ceil(bookRequestsData.length / dataPerPage)
                 : currentPage ==
                   Math.ceil(filteredBookRequestsData.length / dataPerPage)
-              : filteredBookData == ''
+              : filteredBookData.length === 0
               ? currentPage == Math.ceil(bookData.length / dataPerPage)
               : currentPage == Math.ceil(filteredBookData.length / dataPerPage)
           }
@@ -167,7 +173,9 @@ const BookWrap = styled.div`
 
 const BookBar = styled.div`
   border-bottom: 1px solid #595959;
-  display: flex;
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 1.5fr 0.5fr 0.5fr 1fr;
+  grid-template-rows: 1fr;
 `;
 
 const BookBarSpan = styled.span`
@@ -205,10 +213,9 @@ const ArrowButton = styled.button`
 `;
 
 const BookManageBar = styled.div`
-  padding: 10px;
   width: 850px;
   height: 45px;
-  margin: auto;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
 `;
@@ -242,11 +249,11 @@ const BookManage = styled.div`
 
 const ApproveSpan = styled.span`
   color: ${(props) => {
-    return props.bookMenu == 'approve' ? 'red' : 'gray';
+    return props.bookMenu === 'approve' ? 'red' : 'gray';
   }};
 `;
 const ManageSpan = styled.span`
   color: ${(props) => {
-    return props.bookMenu == 'approve' ? 'gray' : 'red';
+    return props.bookMenu === 'approve' ? 'gray' : 'red';
   }};
 `;
