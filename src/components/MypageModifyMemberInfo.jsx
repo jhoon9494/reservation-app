@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
@@ -11,80 +12,92 @@ const MypageModifyMemberInfo = () => {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [checkPhoneNumForm, setCheckPhoneNumForm] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('useEffect');
-    fetchUser();
+    // console.log('회원정보 불러옴');
+
     async function fetchUser() {
       try {
         const urlUser = `http://localhost:5000/api/user`;
         const token = sessionStorage.getItem('token');
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const res = await axios.get(urlUser, config);
-        const getUsers = await res.data;
-        setGetUser(() => ({ ...getUsers }));
+        setGetUser({ ...res.data });
+        setName(res.data.name);
+        setPhoneNumber(res.data.phoneNumber);
+        // console.log(getUser);
       } catch (err) {
-        console.log(err);
+        alert(err.response.data.reason);
       }
     }
+    fetchUser();
   }, []);
 
   // 회원 정보 수정 요청
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!phoneNumberFormatVerification.test(phoneNumber))
+
+    setCheckPhoneNumForm(phoneNumberFormatVerification.test(phoneNumber));
+    if (!checkPhoneNumForm) return alert('휴대폰 번호 형식이 맞지않습니다.');
+    if (phoneNumber.length < 13)
       return alert('휴대폰 번호 형식이 맞지않습니다.');
 
     try {
-      const deleteUserUrl = `http://localhost:5000/api/user`;
+      const editUserUrl = `http://localhost:5000/api/user`;
       const token = sessionStorage.getItem('token');
-      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const config = {
+        headers: {
+          'Content-Type': `application/json`,
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
       let body = {
-        name: name,
-        password: password === '' ? getUser.password : password,
+        name: name.length < 1 ? getUser.name : name,
         phoneNumber: phoneNumber,
       };
-      //비번이 공란일시 이전 비번을 업데이트 시켜줌
-      // if (password === '') body.password = getUser.password;
+      if (password.length >= 1) {
+        body.password = password;
+      }
 
-      console.log('token : ', token);
-      console.log('body : ', body);
-      const res = await axios.patch(
-        deleteUserUrl,
-        config,
-        JSON.stringify(body)
-      );
+      // console.log('token : ', token);
+      // console.log('body : ', JSON.stringify(body));
+      // console.log('config : ', config);
+      await axios.patch(editUserUrl, JSON.stringify(body), config);
 
       alert('회원 정보가 업데이트 되었습니다..');
-      console.log('회원정보를 업데이트함:', res);
+      navigate('/');
     } catch (err) {
-      console.log(err);
+      alert(err.response.data.reason);
     }
   };
 
   // 회원탈퇴 요청
   const handleMembershipWithdrawalSubmit = async (event) => {
     event.preventDefault();
+
     console.log(event);
     console.log('회원탈퇴 클릭시 api에 요청해서 회원 삭제');
     try {
-      //http://localhost:5000/api/admin/user //ShowUserList.jsx를 참조함
       const deleteUserUrl = `http://localhost:5000/api/user`;
       const token = sessionStorage.getItem('token');
       console.log('token : ', token);
 
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.delete(deleteUserUrl, config);
+      await axios.delete(deleteUserUrl, config);
+      // console.log('삭제되었습니다.:', res);
       alert('회원 탈퇴 되었습니다.');
-      console.log('삭제되었습니다.:', res);
+      sessionStorage.removeItem('token');
+      navigate('/');
     } catch (err) {
-      console.log(err);
+      alert(err.response.data.reason);
+      navigate('/');
     }
   };
 
   // 폰 번호 형식 검증하기 위함
-  const phoneNumberFormatVerification = /^[0-9]{3}-[0-9]{4}-[0-9]{4}/;
+  const phoneNumberFormatVerification = /^[0-9]{3}[-]+[0-9]{4}[-]+[0-9]{4}$/;
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -116,19 +129,20 @@ const MypageModifyMemberInfo = () => {
       <input
         name="name"
         type="text"
-        placeholder={getUser.name}
-        value={name || ''}
+        value={name}
         onChange={(e) => setName(e.target.value)}
       />
       <label>전화번호</label>
       <input
         name="phoneNumber"
         type="text"
-        placeholder={getUser.phoneNumber}
-        value={phoneNumber || ''}
+        value={phoneNumber}
+        maxLength={13}
         onChange={(e) => {
           setPhoneNumber(e.target.value);
-          setCheckPhoneNumForm(phoneNumberFormatVerification.test(phoneNumber));
+          setCheckPhoneNumForm(
+            phoneNumberFormatVerification.test(e.target.value)
+          );
         }}
       />
       <div>{checkPhoneNumForm ? '' : '000-0000-0000으로 입력해주세요.'}</div>

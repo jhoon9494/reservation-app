@@ -7,8 +7,8 @@ import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 
 const MypageReservationCheck = () => {
   const [getBooking, setGetBooking] = useState([]);
-  const [getUser, setGetUser] = useState({});
-  console.log('getBooking : ', getBooking);
+  // const [getUser, setGetUser] = useState({});
+  // console.log('getBooking : ', getBooking);
 
   // 페이징네이션
   const [totalPage, setTotalPage] = useState(0);
@@ -28,36 +28,42 @@ const MypageReservationCheck = () => {
     // 예약 리스트 요청
     async function fetchBooking() {
       try {
-        const urlBookingList = `http://localhost:5000/api/booking/user`;
+        const urlBookingList = `http://localhost:5000/api/booking/user?page=${currPage}&perPage=5`;
         const token = sessionStorage.getItem('token');
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const res = await axios.get(urlBookingList, config);
-        console.log(res.data);
+        // console.log(res.data);
         setGetBooking(res.data.bookingInfos);
         setTotalPage(res.data.totalPage);
       } catch (err) {
-        console.log(err);
+        console.log(err.response.data.reason);
       }
     }
     // 유저 정보 요청
-    async function fetchUser() {
-      try {
-        const urlUser = `http://localhost:5000/api/user`;
-        const token = sessionStorage.getItem('token');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.get(urlUser, config, {
-          page: currPage,
-        });
-        const getUsers = await res.data;
-        setGetUser(() => ({ ...getUsers }));
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    // async function fetchUser() {
+    //   try {
+    //     const urlUser = `http://localhost:5000/api/booking/user`;
+    //     const token = sessionStorage.getItem('token');
+    //     const config = {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     };
+    //     console.log('config:', config);
+
+    //     const res = await axios.get(urlUser, config);
+
+    //     console.log('페이징 됨', res);
+    //     const getUsers = await res.data;
+    //     setGetUser(() => ({ ...getUsers }));
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // }
+    // fetchUser();
 
     fetchBooking();
-    fetchUser();
-    console.log(currPage);
+    // console.log(currPage);
   }, [currPage]);
 
   // '예약 상태'에 따라 '예약 취소' 버튼을 활성화 시킨다
@@ -72,7 +78,7 @@ const MypageReservationCheck = () => {
     const text = e.target.innerText;
     switch (text) {
       case '예약 취소':
-        console.log('예약 취소');
+        // console.log('예약 취소');
         setModalSelect({
           option: 'ModalReservationCancellation',
           width: 600,
@@ -83,20 +89,20 @@ const MypageReservationCheck = () => {
         setModalShow(true);
         break;
       case '후기 작성':
-        console.log('후기 작성');
-        // console.log(e.target.dataset);
+        // console.log('후기 작성');
+        // console.log('e.target.dataset.name', e.target.dataset.username);
         setModalSelect({
           option: 'ModalWriteReview',
           width: 700,
           height: 500,
           bookingid: e.target.dataset.bookingid,
           roomid: e.target.dataset.roomid,
-          userName: getUser.name,
+          userName: e.target.dataset.username,
         });
         setModalShow(true);
         break;
       case '후기 수정':
-        console.log('후기 수정');
+        // console.log('후기 수정');
         setModalSelect({
           option: 'ModalModifiedReview',
           width: 700,
@@ -106,7 +112,7 @@ const MypageReservationCheck = () => {
         setModalShow(true);
         break;
       default:
-        console.log('버튼 클릭');
+      // console.log('버튼 클릭');
     }
   };
 
@@ -169,6 +175,7 @@ const MypageReservationCheck = () => {
                         onClick={handlButton}
                         data-bookingid={list._id}
                         data-roomid={list.roomID._id}
+                        data-username={list.name}
                       >
                         {list.isReviewed ? '후기 수정' : '후기 작성'}
                       </ReviewWriteBtn>
@@ -216,9 +223,9 @@ const MypageReservationCheck = () => {
             />
           </>
         ) : (
-          <NonReview>
+          <NonList>
             <h4>예약한 상품을 찾을 수 없습니다.</h4>
-          </NonReview>
+          </NonList>
         )}
       </ReservationCheckContainer>
     </>
@@ -367,9 +374,13 @@ const PageNationBtn = styled.button`
     `}
 `;
 
-const NonReview = styled.div`
+const NonList = styled.div`
   height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
+  & h4 {
+    display: block;
+    padding-top: 50px;
+  }
 `;
