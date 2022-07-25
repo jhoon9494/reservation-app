@@ -1,10 +1,20 @@
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-const LoginForm = () => {
+const REACT_APP_REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+const REDIRECT_URI = 'http://localhost:5000/api/oauth';
+const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+const LoginForm = (props) => {
+  const { close } = props;
+
+  const [error, setError] = useState('');
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -16,8 +26,24 @@ const LoginForm = () => {
         .required('이메일 주소를 입력해주세요.'),
       password: Yup.string().required('비밀번호를 입력해주세요.'),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      try {
+        setError('');
+        const { email, password } = values;
+        const loginInfo = await axios.post('http://localhost:5000/api/login', {
+          email,
+          password,
+        });
+
+        sessionStorage.clear();
+        sessionStorage.setItem('token', loginInfo.data.token.token);
+        sessionStorage.setItem('role', loginInfo.data.token.role);
+
+        alert('로그인 되었습니다.');
+        close();
+      } catch (error) {
+        setError(error.response.data);
+      }
     },
   });
 
@@ -42,12 +68,17 @@ const LoginForm = () => {
       {formik.touched.password && formik.errors.password ? (
         <InputErrorMessage>{formik.errors.password}</InputErrorMessage>
       ) : null}
+      {error ? <ErrorMessage>{error}</ErrorMessage> : null}
       <SubmitButton type="submit">로그인</SubmitButton>
       <Line />
-      <KakaoLoginButton>
+      {/* TODO: 인가코드 전달 및 토큰 저장 */}
+      <KakaoLoginButton href={KAKAO_AUTH_URI}>
         <KakaoIcon src="images/kakao-icon.png" />
         카카오 로그인
       </KakaoLoginButton>
+      <FindEmailPasswordWrap>
+        <StyledLink to="/findAccount">이메일 찾기 / 비밀번호 찾기</StyledLink>
+      </FindEmailPasswordWrap>
     </ModalForm>
   );
 };
@@ -88,6 +119,12 @@ const InputErrorMessage = styled.div`
   color: red;
 `;
 
+const ErrorMessage = styled.div`
+  margin: 0.25rem;
+  font-size: 0.8rem;
+  color: red;
+`;
+
 const SubmitButton = styled(Button)`
   width: 100%;
   margin: 2rem 0 1rem;
@@ -106,7 +143,7 @@ const Line = styled.div`
 
 const KakaoLoginButton = styled(Button)`
   width: 100%;
-  margin: 1rem 0 2rem;
+  margin: 1rem 0;
   padding: 0.5rem;
   background-color: rgba(254, 229, 0, 1);
   color: #191919;
@@ -123,4 +160,28 @@ const KakaoLoginButton = styled(Button)`
 const KakaoIcon = styled.img`
   width: 1.5rem;
   margin-right: 0.25rem;
+`;
+
+const FindEmailPasswordWrap = styled.div`
+  font-size: 0.8rem;
+  margin: 0 0 1rem 0.25rem;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${baseStyle.navbarColor};
+  transition: color 0.5s;
+
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+    color: ${baseStyle.navbarHoverColor};
+  }
 `;
