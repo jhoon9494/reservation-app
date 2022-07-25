@@ -83,8 +83,8 @@ const Caravan = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   left: ${(props) => props.left}%;
-  width: 60px;
-  height: 40px;
+  width: 5rem;
+  height: 3rem;
 
   :hover {
     cursor: pointer;
@@ -95,8 +95,8 @@ const Tent = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   right: ${(props) => props.right}%;
-  width: 40px;
-  height: 35px;
+  width: 3rem;
+  height: 3rem;
 
   :hover {
     cursor: pointer;
@@ -107,8 +107,8 @@ const Glamp = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   right: ${(props) => props.right}%;
-  width: 45px;
-  height: 40px;
+  width: 3.5rem;
+  height: 3.5rem;
 
   :hover {
     cursor: pointer;
