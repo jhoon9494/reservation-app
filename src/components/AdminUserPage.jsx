@@ -18,23 +18,23 @@ export const AdminUserPage = ({
         <UserBarSpan>이름</UserBarSpan>
         <UserBarSpan>E-Mail</UserBarSpan>
         <UserBarSpan>전화번호</UserBarSpan>
-        <UserBarSpan>회원탈퇴</UserBarSpan>
+        <UserBarSpan></UserBarSpan>
       </UserBar>
       <UserLists>
-        {filteredUserData == ''
-          ? currentData(userData).map((data, index) => {
+        {filteredUserData.length === 0
+          ? currentData(userData).map((data) => {
               return (
                 <ShowUserList
-                  key={index}
+                  key={data._id}
                   data={data}
                   setDeleteUser={() => setDeleteUser()}
                 />
               );
             })
-          : currentData(filteredUserData).map((data, index) => {
+          : currentData(filteredUserData).map((data) => {
               return (
                 <ShowUserList
-                  key={index}
+                  key={data._id}
                   data={data}
                   setDeleteUser={() => setDeleteUser()}
                 />
@@ -53,14 +53,14 @@ export const AdminUserPage = ({
           <FiArrowLeft style={{ marginRight: '5px' }} /> 이전
         </ArrowButton>
 
-        {filteredUserData == ''
+        {filteredUserData.length === 0
           ? pageCount(userData)
           : pageCount(filteredUserData)}
 
         <ArrowButton
           style={{ marginLeft: '15px' }}
           disabled={
-            filteredUserData == ''
+            filteredUserData.length === 0
               ? currentPage == Math.ceil(userData.length / dataPerPage)
               : currentPage == Math.ceil(filteredUserData.length / dataPerPage)
           }
@@ -96,10 +96,13 @@ const UserBarSpan = styled.span`
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: bold;
-  font-size: 18px;
-  line-height: 23px;
+  font-size: 16px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 210px;
   margin: auto;
-  padding: 10px 0;
 `;
 
 const UserLists = styled.div`
