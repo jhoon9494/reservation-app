@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
-import axios from 'axios';
+
 //components
 import Navbar from '../components/Navbar';
 import MypageReservationCheck from '../components/MypageReservationCheck';
@@ -9,9 +9,6 @@ import MypageModal from '../components/MypageModal';
 import MypageModifyMemberInfo from '../components/MypageModifyMemberInfo';
 
 const MyPage = () => {
-  const [getUser, setGetUser] = useState({});
-  const [getBooking, setGetBooking] = useState([]);
-
   const [checkPw, setCheckPw] = useState(false);
 
   // modal 제어
@@ -25,40 +22,6 @@ const MyPage = () => {
   });
   // tab제어
   const [currTab, setCurrTab] = useState('예약조회');
-
-  useEffect(() => {
-    console.log('useEffect');
-    const urlUser = `http://localhost:5000/api/user`;
-    const urlBookingList = `http://localhost:5000/api/booking/user`;
-    async function fetchBooking() {
-      try {
-        const token = sessionStorage.getItem('token');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.get(urlBookingList, config, {
-          perPage: 1,
-          page: 1,
-        });
-        setGetBooking(res.data.bookingInfos);
-        // setGetBooking(() => [...getBookings]);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    async function fetchUser() {
-      try {
-        const token = sessionStorage.getItem('token');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.get(urlUser, config);
-        const getUsers = await res.data;
-        setGetUser(() => ({ ...getUsers }));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    fetchBooking();
-    fetchUser();
-  }, []);
 
   // tab
   const tabs = ['예약조회', '정보수정'];
@@ -91,9 +54,9 @@ const MyPage = () => {
         })}
       </TabContainer>
       {currTab === '예약조회' ? (
-        <MypageReservationCheck getBooking={getBooking} getUser={getUser} />
+        <MypageReservationCheck />
       ) : currTab === '정보수정' && checkPw ? (
-        <MypageModifyMemberInfo getUser={getUser} />
+        <MypageModifyMemberInfo />
       ) : null}
       <MypageModal
         modalShow={modalShow}

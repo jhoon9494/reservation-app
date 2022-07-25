@@ -11,7 +11,7 @@ const MypageModal = (props) => {
 
   // modal option값에 따라 창 다르게 띄워주기
   const viewContent = () => {
-    console.log('modalSelect :', modalSelect);
+    // console.log('modalSelect :', modalSelect);
     switch (modalSelect.option) {
       // 예약조회 창
       case 'ModalReservationCancellation':
@@ -155,16 +155,17 @@ const ModalReservationCancellation = styled.section`
   }
 `;
 
+// 예약 취소 요청
 const ContentReservationCancellation = (props) => {
-  console.log('content props:', props);
+  // console.log('content props:', props);
   const reservationCancellationRequest = async () => {
-    console.log('취소요청보냄', props.bookingid);
+    // console.log('취소요청보냄', props.bookingid);
 
     try {
       const reservationCancelUrl = `http://localhost:5000/api/booking/cancel`;
       const token = sessionStorage.getItem('token');
       console.log(
-        'json형태',
+        'json형태 : ',
         token,
         JSON.stringify({
           bookingID: props.bookingid,
@@ -288,6 +289,7 @@ const ModalWriteReview = styled.section`
   }
 `;
 
+// 후기 작성 요청
 const ContentWriteReview = (props) => {
   // console.log('createReviewContent : ', props);
   const [grade, setGrade] = useState();
@@ -319,6 +321,8 @@ const ContentWriteReview = (props) => {
         title: title,
         content: content,
       };
+
+      console.log('json 형태 : ', token, JSON.stringify(body));
       const res = await axios.post(loadReviewUrl, config, JSON.stringify(body));
 
       console.log('리뷰 작성 완료', res);
@@ -456,14 +460,17 @@ const ModalModifiedReview = styled.section`
   }
 `;
 
+// 후기 수정
 const ContentModifiedReview = (props) => {
-  // console.log('후기수정 :', props.bookingid);
-  const grade = loadReview.grade;
+  console.log('후기수정 :', props.bookingid);
+  loadReviewContent();
+  // const grade = loadReview.grade;
+  const grade = 5;
   const [title, setTitle] = useState(loadReview.title);
   const [content, setContent] = useState(loadReview.content);
   const [loadReview, setLoadReview] = useState({});
 
-  // 리뷰 작성한거 불러오기
+  // 후기 조회 요청
   const loadReviewContent = async () => {
     console.log('loadReviewContent');
     try {
@@ -476,9 +483,8 @@ const ContentModifiedReview = (props) => {
       console.log(err);
     }
   };
-  loadReviewContent();
 
-  //리뷰 수정해서 api에 요청하기
+  // 후기 수정 후 작성 요청
   const editReviewContent = async () => {
     console.log('editReviewContent');
     try {
@@ -487,7 +493,7 @@ const ContentModifiedReview = (props) => {
       if (!content) return alert('내용을 입력해주세요.');
 
       // 요청하는 api
-      const loadReviewUrl = `http://localhost:5000/api/review/create`;
+      const editReviewUrl = `http://localhost:5000/api/review`;
       const token = sessionStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const body = {
@@ -498,7 +504,9 @@ const ContentModifiedReview = (props) => {
         title: title,
         content: content,
       };
-      const res = await axios.post(loadReviewUrl, config, JSON.stringify(body));
+      console.log('json보내는 형식 : ', token, JSON.stringify(body));
+
+      const res = await axios.post(editReviewUrl, config, JSON.stringify(body));
 
       console.log('리뷰 수정 작성 완료', res);
     } catch (err) {
@@ -516,6 +524,7 @@ const ContentModifiedReview = (props) => {
             type="text"
             placeholder=" [이전내용]제목을 입력해주세요."
             onChange={(e) => setTitle(e.target.value)}
+            // value={title}
           ></input>
           <select disabled>
             <option value={grade}>{grade}</option>
@@ -529,6 +538,7 @@ const ContentModifiedReview = (props) => {
             rows="4"
             maxLength="100"
             onChange={(e) => setContent(e.target.value)}
+            // value={content}
           ></textarea>
         </div>
         <div className="btnLine">

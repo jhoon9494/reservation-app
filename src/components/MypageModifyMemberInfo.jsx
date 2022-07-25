@@ -1,16 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 
-const MypageModifyMemberInfo = (props) => {
-  const getUser = props.getUser;
-  // console.log('getUser', getUser);
+const MypageModifyMemberInfo = () => {
+  const [getUser, setGetUser] = useState({});
+  // console.log('getUser : ', getUser);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState(getUser.name);
-  const [phoneNumber, setPhoneNumber] = useState(getUser.phoneNumber);
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [checkPhoneNumForm, setCheckPhoneNumForm] = useState(true);
 
+  useEffect(() => {
+    console.log('useEffect');
+    fetchUser();
+    async function fetchUser() {
+      try {
+        const urlUser = `http://localhost:5000/api/user`;
+        const token = sessionStorage.getItem('token');
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+        const res = await axios.get(urlUser, config);
+        const getUsers = await res.data;
+        setGetUser(() => ({ ...getUsers }));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, []);
+
+  // 회원 정보 수정 요청
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!phoneNumberFormatVerification.test(phoneNumber))
@@ -19,18 +38,18 @@ const MypageModifyMemberInfo = (props) => {
     try {
       const deleteUserUrl = `http://localhost:5000/api/user`;
       const token = sessionStorage.getItem('token');
-      console.log('token', token);
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       let body = {
         name: name,
-        password: password,
+        password: password === '' ? getUser.password : password,
         phoneNumber: phoneNumber,
       };
       //비번이 공란일시 이전 비번을 업데이트 시켜줌
-      if (password === '') body.password = getUser.password;
+      // if (password === '') body.password = getUser.password;
 
-      console.log(body);
+      console.log('token : ', token);
+      console.log('body : ', body);
       const res = await axios.patch(
         deleteUserUrl,
         config,
@@ -44,14 +63,16 @@ const MypageModifyMemberInfo = (props) => {
     }
   };
 
+  // 회원탈퇴 요청
   const handleMembershipWithdrawalSubmit = async (event) => {
     event.preventDefault();
     console.log(event);
     console.log('회원탈퇴 클릭시 api에 요청해서 회원 삭제');
     try {
+      //http://localhost:5000/api/admin/user //ShowUserList.jsx를 참조함
       const deleteUserUrl = `http://localhost:5000/api/user`;
       const token = sessionStorage.getItem('token');
-      console.log('token', token);
+      console.log('token : ', token);
 
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const res = await axios.delete(deleteUserUrl, config);
@@ -105,13 +126,12 @@ const MypageModifyMemberInfo = (props) => {
         type="text"
         placeholder={getUser.phoneNumber}
         value={phoneNumber || ''}
-        onChange={(e) => setPhoneNumber(e.target.value)}
+        onChange={(e) => {
+          setPhoneNumber(e.target.value);
+          setCheckPhoneNumForm(phoneNumberFormatVerification.test(phoneNumber));
+        }}
       />
-      <div>
-        {phoneNumberFormatVerification.test(phoneNumber)
-          ? ''
-          : '000-0000-0000으로 입력해주세요.'}
-      </div>
+      <div>{checkPhoneNumForm ? '' : '000-0000-0000으로 입력해주세요.'}</div>
       <WithdrawalButton onClick={handleMembershipWithdrawalSubmit}>
         회원탈퇴
       </WithdrawalButton>
