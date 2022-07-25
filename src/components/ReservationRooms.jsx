@@ -17,8 +17,12 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
   // 전체 객실 정보 받아오기
   useEffect(() => {
     async function getAllRooms() {
-      const res = await axios.get('http://localhost:5000/api/room');
-      setAllRooms(res.data);
+      try {
+        const res = await axios.get('http://localhost:5000/api/room');
+        setAllRooms(res.data);
+      } catch (e) {
+        console.error('객실정보를 받아올 수 없습니다.');
+      }
     }
     getAllRooms();
   }, []);
@@ -29,17 +33,21 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
       // 입실, 퇴실, 인원 수를 설정해야 api 요청 가능
       // 둘러보기에서 예약페이지로 넘어올 경우 현재 컴포넌트를 사용하지 않는 로직때문에 api 호출하지 않음.
       if (people && selectedDate?.startDate && selectedDate?.endDate) {
-        const res = await axios.get(
-          'http://localhost:5000/api/booking/byDates',
-          {
-            params: {
-              startDate: selectedDate.startDate,
-              endDate: selectedDate.endDate,
-              peopleNumber: people,
-            },
-          }
-        );
-        setReservedRoomsData(res.data);
+        try {
+          const res = await axios.get(
+            'http://localhost:5000/api/booking/byDates',
+            {
+              params: {
+                startDate: selectedDate.startDate,
+                endDate: selectedDate.endDate,
+                peopleNumber: people,
+              },
+            }
+          );
+          setReservedRoomsData(res.data);
+        } catch (e) {
+          console.error('객실정보를 받아올 수 없습니다.');
+        }
       }
     }
     getReservedRooms();
