@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import baseStyle from '../styles/baseStyle';
 
 const MypageModal = (props) => {
   // console.log(props);
@@ -11,7 +13,7 @@ const MypageModal = (props) => {
 
   // modal option값에 따라 창 다르게 띄워주기
   const viewContent = () => {
-    // console.log('modalSelect :', props.modalSelect);
+    // console.log('modalSelect :', modalSelect);
     switch (modalSelect.option) {
       // 예약조회 창
       case 'ModalReservationCancellation':
@@ -19,6 +21,7 @@ const MypageModal = (props) => {
           <ModalReservationCancellation>
             <ContentReservationCancellation
               room={modalSelect.room}
+              bookingid={modalSelect.bookingid}
               setModalShow={setModalShow}
             />
           </ModalReservationCancellation>
@@ -27,14 +30,22 @@ const MypageModal = (props) => {
       case 'ModalWriteReview':
         return (
           <ModalWriteReview>
-            <ContentWriteReview setModalShow={setModalShow} />
+            <ContentWriteReview
+              setModalShow={setModalShow}
+              bookingid={modalSelect.bookingid}
+              roomid={modalSelect.roomid}
+              userName={modalSelect.userName}
+            />
           </ModalWriteReview>
         );
       // 후기수정 창
       case 'ModalModifiedReview':
         return (
           <ModalModifiedReview>
-            <ContentModifiedReview setModalShow={setModalShow} />
+            <ContentModifiedReview
+              setModalShow={setModalShow}
+              bookingid={modalSelect.bookingid}
+            />
           </ModalModifiedReview>
         );
       // 정보수정 비번확인 창
@@ -134,30 +145,66 @@ const ModalReservationCancellation = styled.section`
     }
 
     .checkBtn {
-      color: #000000;
+      color: ${baseStyle.mainColor};
       background-color: transparent;
-      border: 1px solid #f90303;
+      border: 1px solid ${baseStyle.mainColor};
     }
     .cancelBtn {
       color: #ffffff;
-      background: #524fa1;
+      border: 1px solid ${baseStyle.mainColor};
+      background: ${baseStyle.mainColor};
       margin-left: 46px;
     }
   }
 `;
 
+// 예약 취소 요청
 const ContentReservationCancellation = (props) => {
-  // console.log(props);
+  // console.log('content props:', props);
+  const reservationCancellationRequest = async () => {
+    // console.log('취소요청보냄', props.bookingid);
+
+    try {
+      const reservationCancelUrl = `http://localhost:5000/api/booking/cancel`;
+      const token = sessionStorage.getItem('token');
+      // console.log(
+      //   'json형태 : ',
+      //   token,
+      //   JSON.stringify({
+      //     bookingID: props.bookingid,
+      //   })
+      // );
+      const body = {
+        bookingID: props.bookingid,
+      };
+
+      const config = {
+        headers: {
+          'Content-Type': `application/json`,
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      await axios.patch(reservationCancelUrl, JSON.stringify(body), config);
+      alert('취소 신청이 되었습니다.');
+      props.setModalShow();
+      // console.log('취소가 되었습니다:', res);
+    } catch (err) {
+      alert(err.response.data.reason);
+      props.setModalShow();
+    }
+  };
   return (
     <>
-      <h2>{props.roomID.name}를 예약 취소하겠습니까?</h2>
+      <h2>{props.room}를 예약 취소하겠습니까?</h2>
       <h3>환불규정</h3>
       <p>환불규정은 시즌과 상관없이 동일하게 적용됩니다.</p>
       <p>1일 전 취소 : 0% 환불</p>
       <p>2일 전 취소 : 30% 환불</p>
       <p>5일 전 취소 : 100% 환불</p>
       <div>
-        <button className="checkBtn">확인</button>
+        <button className="checkBtn" onClick={reservationCancellationRequest}>
+          확인
+        </button>
         <button className="cancelBtn" onClick={() => props.setModalShow()}>
           취소
         </button>
@@ -168,7 +215,7 @@ const ContentReservationCancellation = (props) => {
 
 // 후기 작성 창과 내용 제어
 const ModalWriteReview = styled.section`
-  padding: 80px;
+  padding: 60px 80px;
   display: flex;
   flex-direction: column;
   align-items: stretch
@@ -238,26 +285,98 @@ const ModalWriteReview = styled.section`
     }
 
     .checkBtn {
-      color: #000000;
+      color: ${baseStyle.mainColor};
       background-color: transparent;
-      border: 1px solid #f90303;
+      border: 1px solid ${baseStyle.mainColor};
     }
     .cancelBtn {
       color: #ffffff;
-      background: #524fa1;
+      border : 1px solid ${baseStyle.mainColor};
+      background: ${baseStyle.mainColor};
       margin-left: 100px;
     }
   }
 `;
 
+// 후기 작성 요청
 const ContentWriteReview = (props) => {
+  // console.log('createReviewContent : ', props);
+  const [grade, setGrade] = useState();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+
+  const createReviewContent = async () => {
+    // console.log('createReviewContent');
+    try {
+      // 빈 공란 경고메세지
+      if (!title) return alert('제목을 입력해주세요.');
+      if (!grade) return alert('점수를 선택해주세요.');
+      if (!content) return alert('내용을 입력해주세요.');
+
+      // 리뷰 작성 요청하는 api
+      const loadReviewUrl = `http://localhost:5000/api/review/create`;
+
+      const token = sessionStorage.getItem('token');
+      const config = {
+        headers: {
+          'Content-Type': `application/json`,
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const body = {
+        bookingID: props.bookingid,
+        roomID: props.roomid,
+        name: props.userName,
+        grade: grade,
+        title: title,
+        content: content,
+      };
+
+      // console.log('json 형태 : ', token, JSON.stringify(body));
+      await axios.post(loadReviewUrl, JSON.stringify(body), config);
+      await changeReviewState();
+
+      // console.log('리뷰 작성 완료', res);
+    } catch (err) {
+      alert(err.response.data.reason);
+      props.setModalShow();
+    }
+  };
+
+  //리뷰 상태 변경하는 요청
+  const changeReviewState = async () => {
+    try {
+      const changeReviewStateUrl = `http://localhost:5000/api/booking/review`;
+      const config = {
+        headers: {
+          'Content-Type': `application/json`,
+        },
+      };
+      await axios.patch(
+        changeReviewStateUrl,
+        JSON.stringify({ bookingID: props.bookingid }),
+        config
+      );
+
+      await alert('후기 작성 되었습니다.');
+      // console.log('리뷰 상태 변경 완료', res);
+    } catch (err) {
+      alert(err.response.data.reason);
+      props.setModalShow();
+    }
+  };
+
   return (
     <>
       <h2>후기 작성를 작성하세요</h2>
       <div className="titleLine">
         <label>제목 :</label>
-        <input type="text" placeholder=" 제목을 입력해주세요."></input>
-        <select>
+        <input
+          type="text"
+          placeholder=" 제목을 입력해주세요."
+          onChange={(e) => setTitle(e.target.value)}
+        ></input>
+        <select onChange={(e) => setGrade(parseInt(e.target.value))}>
           <option value="">점수 주기</option>
           <option value="5">5</option>
           <option value="4">4</option>
@@ -270,16 +389,19 @@ const ContentWriteReview = (props) => {
         <label>내용 :</label>
         <textarea
           type="textarea"
-          placeholder=" 내용을 입력해주세요."
+          placeholder="100자 내외로 내용을 입력해주세요."
           rows="4"
           maxLength="100"
+          onChange={(e) => setContent(e.target.value)}
         ></textarea>
       </div>
       <div className="btnLine">
         <button className="checkBtn" onClick={() => props.setModalShow()}>
           취소
         </button>
-        <button className="cancelBtn">확인</button>
+        <button className="cancelBtn" onClick={createReviewContent}>
+          확인
+        </button>
       </div>
     </>
   );
@@ -287,7 +409,7 @@ const ContentWriteReview = (props) => {
 
 // 후기 수정 창과 내용 제어
 const ModalModifiedReview = styled.section`
-  padding: 80px;
+  padding: 60px 80px;
   display: flex;
   flex-direction: column;
   align-items: stretch
@@ -295,6 +417,10 @@ const ModalModifiedReview = styled.section`
   font-family: 'Noto Sans KR';
   font-size: 14px;
   line-height: 21px;
+  & section {
+    padding:0px;
+
+  }
 
   & h2 {
     font-size: 20px;
@@ -357,19 +483,86 @@ const ModalModifiedReview = styled.section`
     }
 
     .checkBtn {
-      color: #000000;
+      color: ${baseStyle.mainColor};
       background-color: transparent;
-      border: 1px solid #f90303;
+      border: 1px solid ${baseStyle.mainColor};
     }
     .cancelBtn {
       color: #ffffff;
-      background: #524fa1;
+      border : 1px solid ${baseStyle.mainColor};
+      background: ${baseStyle.mainColor};
       margin-left: 100px;
     }
   }
 `;
 
+// 후기 수정
 const ContentModifiedReview = (props) => {
+  // console.log('후기수정 :', props.bookingid);
+  // const grade = loadReview.grade;
+  const grade = 5;
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [loadReview, setLoadReview] = useState({});
+
+  useEffect(() => {
+    // 후기 조회 요청
+    const loadReviewContent = async () => {
+      // console.log('loadReviewContent');
+      // console.log(setLoadReview);
+      try {
+        const loadReviewUrl = `http://localhost:5000/api/review/booking?bookingID=${props.bookingid}`;
+
+        const res = await axios.get(loadReviewUrl);
+        // console.log('loadReview 로드완료', res);
+        await setLoadReview({ ...res.data });
+        await setTitle(res.data.title);
+        await setContent(res.data.content);
+
+        // console.log('loadReview 로드완료', loadReview);
+      } catch (err) {
+        alert(err.response.data.reason);
+        props.setModalShow();
+      }
+    };
+    loadReviewContent();
+  }, []);
+
+  // 후기 수정 후 작성 요청
+  const editReviewContent = async () => {
+    // console.log('editReviewContent');
+    // console.log('loadReview._id:', loadReview._id);
+    try {
+      // 빈 공란 경고메세지
+      if (!title) return alert('제목을 입력해주세요.');
+      if (!content) return alert('내용을 입력해주세요.');
+
+      // 요청하는 api
+      const editReviewUrl = `http://localhost:5000/api/review/${loadReview._id}`;
+      const token = sessionStorage.getItem('token');
+      const config = {
+        headers: {
+          'Content-Type': `application/json`,
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const body = {
+        grade: grade,
+        title: title,
+        content: content,
+      };
+      // console.log('json보내는 형식 : ', token, JSON.stringify(body));
+
+      await axios.patch(editReviewUrl, JSON.stringify(body), config);
+      alert('후기 수정을 완료했습니다.');
+      // console.log('리뷰 수정 작성 완료', res);
+      props.setModalShow();
+    } catch (err) {
+      alert(err.response.data.reason);
+      props.setModalShow();
+    }
+  };
+
   return (
     <>
       <ModalModifiedReview>
@@ -378,31 +571,30 @@ const ContentModifiedReview = (props) => {
           <label>제목 :</label>
           <input
             type="text"
-            placeholder=" [이전내용]제목을 입력해주세요."
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
           ></input>
           <select disabled>
-            <option value="">점수 주기</option>
-            <option value="5">5</option>
-            <option value="4">4</option>
-            <option value="3">3</option>
-            <option value="2">2</option>
-            <option value="1">1</option>
+            <option value={grade}>{grade}</option>
           </select>
         </div>
         <div className="contentsLine">
           <label>내용 :</label>
           <textarea
             type="textarea"
-            placeholder=" [이전내용]내용을 입력해주세요."
             rows="4"
-            maxLength="50"
+            maxLength="100"
+            onChange={(e) => setContent(e.target.value)}
+            value={content}
           ></textarea>
         </div>
         <div className="btnLine">
           <button className="checkBtn" onClick={() => props.setModalShow()}>
             취소
           </button>
-          <button className="cancelBtn">확인</button>
+          <button className="cancelBtn" onClick={editReviewContent}>
+            확인
+          </button>
         </div>
       </ModalModifiedReview>
     </>
@@ -424,7 +616,7 @@ text-align: center;
 
 & input {
   margin: 50px auto 55px;
-  border: 1px solid #000000;
+  border: 1px solid ${baseStyle.mainColor};
   border-radius: 10px;
   width: 306px;
   height: 38px;
@@ -438,15 +630,18 @@ text-align: center;
   
   width: 142px;
   height: 36px;
+  border: 1px solid ${baseStyle.mainColor};
   border-radius: 50px;
   color: #ffffff;
-  background: #524fa1;
+  background: ${baseStyle.mainColor};
   margin: auto;
 }
 `;
 
+// 비번 검증 모달창
 const ContentCheckPassword = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
   // 비번 검증
   const checkedPw = () => {
@@ -454,15 +649,13 @@ const ContentCheckPassword = (props) => {
       try {
         const confirmUrl = `http://localhost:5000/api/confirmPW?password=${confirmPassword}`;
         const token = sessionStorage.getItem('token');
-        // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQxOTRhYjE1ZWJlMDg2YmIzZWQxOGQiLCJyb2xlIjoidXNlciIsImlhdCI6MTY1ODM4ODY1Nn0.4ETF84HQFNOTB7Grq0v6VJFt6oaYM0Cc8oCVJAfwIXA';
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.get(confirmUrl, config);
-        return res;
-      } catch (e) {
+        await axios.get(confirmUrl, config);
+      } catch (err) {
         props.setCheckPw(false);
         props.setModalShow(false);
-        alert('비밀번호가 틀렸습니다.');
-        console.log(e);
+        alert(err.response.data.reason);
+        navigate('/');
       }
     }
     confirmUserPw(confirmPassword);
