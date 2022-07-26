@@ -1,7 +1,7 @@
 const baseStyle = {
   mainColor: '#8AA8CD',
   mainHoverColor: '#6695d1',
-  disableColor: '#A9A7D0',
+  disableColor: '#A9BCCC',
   titleFontSize: '20px',
   subTitleFontSize: '16px',
   contentFontSize: '14px',
