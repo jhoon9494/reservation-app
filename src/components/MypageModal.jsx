@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import baseStyle from '../styles/baseStyle';
 
 const MypageModal = (props) => {
   // console.log(props);
@@ -144,13 +145,14 @@ const ModalReservationCancellation = styled.section`
     }
 
     .checkBtn {
-      color: #000000;
+      color: ${baseStyle.mainColor};
       background-color: transparent;
-      border: 1px solid #f90303;
+      border: 1px solid ${baseStyle.mainColor};
     }
     .cancelBtn {
       color: #ffffff;
-      background: #524fa1;
+      border: 1px solid ${baseStyle.mainColor};
+      background: ${baseStyle.mainColor};
       margin-left: 46px;
     }
   }
@@ -283,13 +285,14 @@ const ModalWriteReview = styled.section`
     }
 
     .checkBtn {
-      color: #000000;
+      color: ${baseStyle.mainColor};
       background-color: transparent;
-      border: 1px solid #f90303;
+      border: 1px solid ${baseStyle.mainColor};
     }
     .cancelBtn {
       color: #ffffff;
-      background: #524fa1;
+      border : 1px solid ${baseStyle.mainColor};
+      background: ${baseStyle.mainColor};
       margin-left: 100px;
     }
   }
@@ -480,13 +483,14 @@ const ModalModifiedReview = styled.section`
     }
 
     .checkBtn {
-      color: #000000;
+      color: ${baseStyle.mainColor};
       background-color: transparent;
-      border: 1px solid #f90303;
+      border: 1px solid ${baseStyle.mainColor};
     }
     .cancelBtn {
       color: #ffffff;
-      background: #524fa1;
+      border : 1px solid ${baseStyle.mainColor};
+      background: ${baseStyle.mainColor};
       margin-left: 100px;
     }
   }
@@ -612,7 +616,7 @@ text-align: center;
 
 & input {
   margin: 50px auto 55px;
-  border: 1px solid #000000;
+  border: 1px solid ${baseStyle.mainColor};
   border-radius: 10px;
   width: 306px;
   height: 38px;
@@ -626,9 +630,10 @@ text-align: center;
   
   width: 142px;
   height: 36px;
+  border: 1px solid ${baseStyle.mainColor};
   border-radius: 50px;
   color: #ffffff;
-  background: #524fa1;
+  background: ${baseStyle.mainColor};
   margin: auto;
 }
 `;

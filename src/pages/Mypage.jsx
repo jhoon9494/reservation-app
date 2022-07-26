@@ -102,9 +102,9 @@ const EactTab = styled.p`
   ${(props) =>
     props.active &&
     css`
-      color: #524fa1;
+      color: ${baseStyle.mainColor};
       font-weight: bold;
-      background: rgba(230, 230, 230, 0.0001);
-      border-bottom: 5px solid #524fa1;
+      background: rgba(138, 168, 205, 0.0001);
+      border-bottom: 5px solid ${baseStyle.mainColor};
     `}
 `;

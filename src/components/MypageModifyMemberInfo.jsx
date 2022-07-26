@@ -182,7 +182,7 @@ const Form = styled.form`
     margin-top: 30px;
 
     &:disabled {
-      background: rgba(169, 167, 208, 0.7);
+      background: rgba(169, 187, 210, 0.7);
     }
   }
   & div {
@@ -201,7 +201,7 @@ const WithdrawalButton = styled.button`
   width: 142px;
   height: 36px;
   background: transparent;
-  border: 3px solid #ff0000;
+  border: 3px solid ${baseStyle.mainColor};
   border-radius: 50px;
   font-weight: 700;
   font-size: ${baseStyle.subTitleFontSize};
@@ -223,7 +223,8 @@ const SubmitButton = styled.button`
   color: #ffffff;
 
   &:disabled {
-    background: ${baseStyle.disableColor};
-    border: 1px solid ${baseStyle.disableColor};
+    color: ${baseStyle.disableColor};
+    background-color: transparent;
+    border: 1px solid transparent;
   }
 `;

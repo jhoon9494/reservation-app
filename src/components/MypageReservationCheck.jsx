@@ -4,10 +4,10 @@ import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import MypageModal from '../components/MypageModal';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
+import moment from 'moment';
 
 const MypageReservationCheck = () => {
   const [getBooking, setGetBooking] = useState([]);
-  // const [getUser, setGetUser] = useState({});
   // console.log('getBooking : ', getBooking);
 
   // 페이징네이션
@@ -39,39 +39,22 @@ const MypageReservationCheck = () => {
         console.log(err.response.data.reason);
       }
     }
-    // 유저 정보 요청
-    // async function fetchUser() {
-    //   try {
-    //     const urlUser = `http://localhost:5000/api/booking/user`;
-    //     const token = sessionStorage.getItem('token');
-    //     const config = {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     };
-    //     console.log('config:', config);
-
-    //     const res = await axios.get(urlUser, config);
-
-    //     console.log('페이징 됨', res);
-    //     const getUsers = await res.data;
-    //     setGetUser(() => ({ ...getUsers }));
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // }
-    // fetchUser();
 
     fetchBooking();
     // console.log(currPage);
   }, [currPage]);
 
   // '예약 상태'에 따라 '예약 취소' 버튼을 활성화 시킨다
-  const checkingStatus = (status) => {
-    if (status === '예약 취소' || status === '예약 완료') {
-      return true;
-    }
-    return false;
+  const checkingStatus = (status, startDate) => {
+    const checkinDate = moment(startDate).format('YYYY-MM-DD');
+    const toDay = moment().format('YYYY-MM-DD');
+
+    // 오늘 기준으로 체크인 날짜가 지나면 true가 되서 disabled됨
+    if (moment(toDay).isAfter(checkinDate)) return true;
+    // status가 요청, 완료일때만 false로 활성화 됨
+    if (status === '예약 요청' || status === '예약 완료') return false;
+    // 그 외 true 비활성화
+    return true;
   };
 
   const handlButton = (e) => {
@@ -165,7 +148,7 @@ const MypageReservationCheck = () => {
                         onClick={handlButton}
                         data-room={list.roomID.name}
                         data-bookingid={list._id}
-                        disabled={checkingStatus(list.status)}
+                        disabled={checkingStatus(list.status, list.startDate)}
                       >
                         예약 취소
                       </BookStateBtn>
@@ -300,12 +283,13 @@ const BookStateBtn = styled.button`
   box-sizing: border-box;
   color: ${baseStyle.mainColor};
   background-color: transparent;
-  border: 1px solid #ff0000;
+  border: 1px solid ${baseStyle.mainColor};
   width: 100px;
   height: 30px;
   :disabled {
-    border: 1px solid #d9d9d9;
-    background-color: #d9d9d9;
+    color: ${baseStyle.disableColor};
+    border: 1px solid transparent;
+    background-color: transparent;
   }
 `;
 
