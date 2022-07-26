@@ -50,7 +50,7 @@ const Navbar = () => {
       <NavigationBarWrap>
         <NavigationBar>
           <LogoWrap>
-            <Logo src="images/logo.png" alt="logo" onClick={handleLogoClick} />
+            <Logo src="/images/logo.png" alt="logo" onClick={handleLogoClick} />
           </LogoWrap>
           <NavigationMenuWrap>
             <NavigationMunu>

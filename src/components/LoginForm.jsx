@@ -77,7 +77,9 @@ const LoginForm = (props) => {
         카카오 로그인
       </KakaoLoginButton>
       <FindEmailPasswordWrap>
-        <StyledLink to="/findAccount">이메일 찾기 / 비밀번호 찾기</StyledLink>
+        <StyledLink to="/findAccount" onClick={close}>
+          이메일 찾기 / 비밀번호 찾기
+        </StyledLink>
       </FindEmailPasswordWrap>
     </ModalForm>
   );
