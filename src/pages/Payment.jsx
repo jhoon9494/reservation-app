@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import ReserveRoomInfo from '../components/ReserveRoomInfo';
 import ReserveUserInfo from '../components/ReserveUserInfo';
 import ReservePrice from '../components/ReservePrice';
@@ -71,7 +69,6 @@ const Payment = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <Navbar />
       {successReserve ? (
         <Container>
           <LinkContainer>
@@ -109,17 +106,11 @@ const Payment = () => {
               <ContentBox>
                 <ReservePrice roomData={roomData} />
               </ContentBox>
-              {/* TODO 추후 기능 추가 예정
-              <ContentBox>
-                <PaymentTypes />
-              </ContentBox> 
-              */}
               <PaymentButton onClick={handlePayment}>결제하기</PaymentButton>
             </RightContainer>
           </Container>
         </>
       )}
-      <Footer />
     </div>
   );
 };
@@ -187,6 +178,12 @@ const PaymentButton = styled(Button)`
   margin-top: 24px;
   padding: 0.5rem;
   background-color: ${baseStyle.mainColor};
+  border: 1px solid ${baseStyle.mainColor};
+
+  &:hover {
+    background-color: ${baseStyle.mainHoverColor};
+    border: 1px solid ${baseStyle.mainHoverColor};
+  }
 `;
 
 // 결제 성공 후 버튼
@@ -198,10 +195,15 @@ const LinkContainer = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-  border: 1px solid lightgray;
+  border: 2px solid ${baseStyle.mainColor};
+  color: ${baseStyle.mainColor};
   border-radius: 5px;
   padding: 8px 30px;
   font-size: ${baseStyle.subTitleFontSize};
   margin: 5px;
-  color: black;
+
+  &:hover {
+    color: white;
+    background-color: ${baseStyle.mainColor};
+  }
 `;
