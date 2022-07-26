@@ -4,9 +4,12 @@ import * as Yup from 'yup';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const FindEmail = () => {
   const [error, setError] = useState('');
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -24,13 +27,23 @@ const FindEmail = () => {
     onSubmit: async (values) => {
       try {
         setError('');
-        const { name, phoneNumber } = values;
+        const { name } = values;
         // TODO: 이메일 찾기 API
-        const email = 'TODO';
-        alert(name, phoneNumber);
-        alert(`${name}님이 가입하신 이메일 주소는 ${email} 입니다.`);
+        // query-params에 휴대폰 번호 추가
+        const findEmailInfo = await axios.get(
+          'http://localhost:5000/api/findEmail',
+          {
+            params: { name },
+          },
+          { withCredentials: true }
+        );
+
+        alert(
+          `${name}님이 가입하신 이메일 주소는 ${findEmailInfo.data} 입니다.`
+        );
+        navigate('/');
       } catch (error) {
-        setError(error.response.data);
+        setError(error);
       }
     },
   });
