@@ -1,11 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <Container>
       <LogoWrap>
-        <Logo src="images/logo.png" alt="Logo" />
+        <Logo src="/images/logo.png" alt="Logo" onClick={handleLogoClick} />
       </LogoWrap>
       <ContentWrap>
         <Content>캠핑장 주소 : 12345 부산시 XX구 XXX로 XX</Content>
@@ -24,20 +30,24 @@ export default Footer;
 
 const Container = styled.footer`
   display: flex;
+  width: 100%;
+  height: 120px;
   border-top: 1px solid lightgray;
   margin-top: 4rem;
   padding: 1rem 4rem;
-  background-color: lightgray;
+  background-color: white;
 `;
 
 const LogoWrap = styled.div`
   display: flex;
   align-items: center;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 85px;
 `;
 
 const Logo = styled.img`
+  height: 100%;
+
   &:hover {
     cursor: pointer;
   }
@@ -53,5 +63,5 @@ const ContentWrap = styled.div`
 `;
 
 const Content = styled.p`
-  margin-bottom: 0.25rem;
+  margin: 0 2rem 0.25rem;
 `;

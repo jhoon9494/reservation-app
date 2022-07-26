@@ -7,13 +7,15 @@ import Site from './pages/Site';
 import About from './pages/About';
 import Reservation from './pages/Reservation';
 import FindAccount from './pages/FindAccount';
+import ChangePassword from './pages/ChangePassword';
 import Payment from './pages/Payment';
+import Layout from './components/Layout';
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/mypage" element={<Mypage />} />
@@ -23,9 +25,10 @@ function App() {
           <Route path="/reservation/:roomID" element={<Reservation />} />
           <Route path="/findAccount" element={<FindAccount />} />
           <Route path="/payment" element={<Payment />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+        </Route>
+        <Route path="/changePassword" element={<ChangePassword />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
