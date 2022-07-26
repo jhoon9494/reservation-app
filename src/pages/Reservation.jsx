@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import CheckPeople from '../components/CheckPeople';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import DateRangePick from '../components/DateRangePick';
 import ReservationRooms from '../components/ReservationRooms';
 import baseStyle from '../styles/baseStyle';
@@ -80,8 +78,7 @@ const Reservation = () => {
     }
   };
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <Navbar />
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Container roomID={roomID}>
         <CheckPeople
           setPeople={setPeople}
@@ -105,7 +102,6 @@ const Reservation = () => {
         </MapContainer>
       )}
       <ReserveBtn onClick={handleReserve}>예약하기</ReserveBtn>
-      <Footer />
     </div>
   );
 };
@@ -135,8 +131,14 @@ const MapImg = styled.img`
 const ReserveBtn = styled(Button)`
   display: block;
   background-color: ${baseStyle.mainColor};
+  border: 1px solid ${baseStyle.mainColor};
   width: 140px;
   margin: 30px auto auto;
+
+  &:hover {
+    background-color: ${baseStyle.mainHoverColor};
+    border: 1px solid ${baseStyle.mainHoverColor};
+  }
 `;
 
 const SelectedRoomName = styled.div`

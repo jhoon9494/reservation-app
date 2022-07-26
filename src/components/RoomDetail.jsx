@@ -75,6 +75,12 @@ const ContentContainer = styled.div`
 const ReserveBtn = styled(Button)`
   display: block;
   background-color: ${baseStyle.mainColor};
+  border: 1px solid ${baseStyle.mainColor};
   width: 140px;
   margin: 17px auto 38px;
+
+  &:hover {
+    background-color: ${baseStyle.mainHoverColor};
+    border: 1px solid ${baseStyle.mainHoverColor};
+  }
 `;

@@ -1,6 +1,6 @@
 const baseStyle = {
-  mainColor: 'rgba(82, 79, 161, 1)',
-  mainHoverColor: 'rgba(82, 79, 161, 0.8)',
+  mainColor: '#8AA8CD',
+  mainHoverColor: '#6695d1',
   disableColor: '#A9A7D0',
   titleFontSize: '20px',
   subTitleFontSize: '16px',
