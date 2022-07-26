@@ -4,24 +4,31 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 const Site = () => {
   return (
-    <>
+    <Container>
       <Navbar />
-      <Container>
+      <MapContainer>
         <MapImg src="/images/campMapImg.png" alt="mapImg" />
         <SiteRooms />
-      </Container>
+      </MapContainer>
       <Footer />
-    </>
+    </Container>
   );
 };
 
 export default Site;
 
 const Container = styled.div`
-  width: 932px;
-  height: 637px;
-  margin: 157px auto auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const MapContainer = styled.div`
+  width: 70rem;
+  height: 50rem;
+  margin: 157px auto;
   position: relative;
+  flex-grow: 1;
 `;
 
 const MapImg = styled.img`

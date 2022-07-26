@@ -108,9 +108,11 @@ const NavigationBar = styled.nav`
 
 const LogoWrap = styled.div`
   width: 200px;
+  height: 85px;
 `;
 
 const Logo = styled.img`
+  height: 100%;
   &:hover {
     cursor: pointer;
   }
