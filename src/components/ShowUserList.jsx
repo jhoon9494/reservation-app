@@ -15,6 +15,7 @@ export const ShowUserList = ({ data, setDeleteUser }) => {
           data: {
             userId: data._id,
           },
+          withCredentials: true,
         });
       } catch (e) {
         alert('회원 탈퇴에 실패하였습니다.');

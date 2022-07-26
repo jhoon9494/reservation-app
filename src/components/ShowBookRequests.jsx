@@ -10,12 +10,18 @@ export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
       window.confirm(`${data.name} 예약자 님의 예약 요청을 승인 하시겠습니까?`)
     ) {
       try {
-        await axios.patch('http://localhost:5000/api/admin/book', {
-          data: {
-            bookingID: data._id,
-            status: '예약 완료',
+        await axios.patch(
+          'http://localhost:5000/api/admin/book',
+          {
+            data: {
+              bookingID: data._id,
+              status: '예약 완료',
+            },
           },
-        });
+          {
+            withCredentials: true,
+          }
+        );
       } catch (e) {
         alert('예약 승인에 실패하였습니다.');
         console.log(e.response.data);
@@ -31,11 +37,11 @@ export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
 
     if (window.confirm(`${data.name} 예약자 님의 예약을 취소 하시겠습니까?`)) {
       try {
-        await axios.patch('http://localhost:5000/api/admin/book', {
+        await axios.delete('http://localhost:5000/api/admin/book', {
           data: {
             bookingID: data._id,
-            status: '예약 취소',
           },
+          withCredentials: true,
         });
       } catch (e) {
         alert('예약 취소에 실패하였습니다.');
@@ -59,10 +65,15 @@ export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
       <BookListSpan>{data.roomID.name}</BookListSpan>
       <BookListSpan>{data.peopleNumber}명</BookListSpan>
       <BookListSpan>
-        <BookApproveBtn onClick={(e) => bookApprove(e)}>
-          예약 승인
-        </BookApproveBtn>
-        <BookCancelBtn onClick={(e) => bookCancel(e)}>예약 취소</BookCancelBtn>
+        {data.status === '예약 요청' ? (
+          <BookApproveBtn onClick={(e) => bookApprove(e)}>
+            예약 승인
+          </BookApproveBtn>
+        ) : (
+          <BookCancelBtn onClick={(e) => bookCancel(e)}>
+            예약 취소
+          </BookCancelBtn>
+        )}
       </BookListSpan>
     </BookList>
   );
