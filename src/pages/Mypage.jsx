@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 
 //components
-import Navbar from '../components/Navbar';
 import MypageReservationCheck from '../components/MypageReservationCheck';
 import MypageModal from '../components/MypageModal';
 import MypageModifyMemberInfo from '../components/MypageModifyMemberInfo';
@@ -39,7 +38,6 @@ const MyPage = () => {
 
   return (
     <Container>
-      <Navbar />
       <TabContainer>
         {tabs.map((tab, i) => {
           return (

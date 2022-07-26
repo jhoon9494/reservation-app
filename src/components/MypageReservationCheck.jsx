@@ -176,8 +176,13 @@ const MypageReservationCheck = () => {
                         data-bookingid={list._id}
                         data-roomid={list.roomID._id}
                         data-username={list.name}
+                        data-status={list.status}
                       >
-                        {list.isReviewed ? '후기 수정' : '후기 작성'}
+                        {list.status === '예약 완료'
+                          ? list.isReviewed
+                            ? '후기 수정'
+                            : '후기 작성'
+                          : ''}
                       </ReviewWriteBtn>
                     </BookListSpan>
                   </BookListLi>
@@ -305,6 +310,10 @@ const BookStateBtn = styled.button`
 `;
 
 const ReviewWriteBtn = styled.button`
+  &[data-status='예약 완료'] {
+    display: inline-block;
+  }
+  display: none;
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 400;
