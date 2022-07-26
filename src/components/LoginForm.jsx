@@ -7,10 +7,6 @@ import baseStyle from '../styles/baseStyle';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const REACT_APP_REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-const REDIRECT_URI = 'http://localhost:5000/api/oauth';
-const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-
 const LoginForm = (props) => {
   const { close } = props;
 
@@ -38,14 +34,9 @@ const LoginForm = (props) => {
           },
           { withCredentials: true }
         );
-        // sessionStorage.clear();
-        // sessionStorage.setItem('token', loginInfo.data.token.token);
-        // sessionStorage.setItem('role', loginInfo.data.token.role);
-
         alert('로그인 되었습니다.');
         close();
       } catch (error) {
-        // setError(error.response.data);
         console.error(error);
       }
     },
@@ -75,8 +66,7 @@ const LoginForm = (props) => {
       {error ? <ErrorMessage>{error}</ErrorMessage> : null}
       <SubmitButton type="submit">로그인</SubmitButton>
       <Line />
-      {/* TODO: 인가코드 전달 및 토큰 저장 */}
-      <KakaoLoginButton href={KAKAO_AUTH_URI}>
+      <KakaoLoginButton href="http://localhost:5000/api/kakao">
         <KakaoIcon src="images/kakao-icon.png" />
         카카오 로그인
       </KakaoLoginButton>

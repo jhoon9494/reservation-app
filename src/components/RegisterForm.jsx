@@ -45,13 +45,16 @@ const RegisterForm = (props) => {
       try {
         setError('');
         const { email, password, name, phoneNumber } = values;
-        await axios.post('http://localhost:5000/api/register', {
-          email,
-          password,
-          name,
-          phoneNumber,
-        });
-
+        await axios.post(
+          'http://localhost:5000/api/register',
+          {
+            email,
+            password,
+            name,
+            phoneNumber,
+          },
+          { withCredentials: true }
+        );
         alert('회원가입이 완료되었습니다. 로그인 해주세요.');
         close();
       } catch (error) {
