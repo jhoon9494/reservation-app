@@ -45,9 +45,9 @@ const Payment = () => {
         JSON.stringify(reserveData),
         {
           headers: {
-            Authorization: `bearer ${sessionStorage.getItem('token')}`,
             'Content-Type': `application/json`,
           },
+          withCredentials: true,
         }
       );
       if (res.status === 201) {

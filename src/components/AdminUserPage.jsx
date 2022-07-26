@@ -86,10 +86,10 @@ const UserDiv = styled.div`
 
 const UserBar = styled.div`
   border-bottom: 1px solid #595959;
-  //   display: flex;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
+  padding-bottom: 10px;
 `;
 
 const UserBarSpan = styled.span`
