@@ -31,9 +31,9 @@ export const ShowBookExceptRequests = ({ data, setChangeBookStatus }) => {
       <BookListSpan>{data.name}</BookListSpan>
       <BookListSpan>{data.phoneNumber}</BookListSpan>
       <BookListSpan>
-        {data.processDate[0].substring(0, 10)}
+        {data.startDate.substring(0, 10)}
         {' ~ '}
-        {data.processDate[data.processDate.length - 1].substring(0, 10)}
+        {data.endDate.substring(0, 10)}
       </BookListSpan>
       <BookListSpan>{data.roomID.name}</BookListSpan>
       <BookListSpan>{data.peopleNumber}명</BookListSpan>
@@ -45,7 +45,7 @@ export const ShowBookExceptRequests = ({ data, setChangeBookStatus }) => {
               예약 취소
             </BookCancelBtn>
           </>
-        ) : data.status === '예약 취소 요청' ? (
+        ) : data.status === '취소 요청' ? (
           <>
             {data.status}
             <BookCancelBtn onClick={(e) => bookCancel(e)}>
