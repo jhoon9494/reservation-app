@@ -30,7 +30,7 @@ const LoginForm = (props) => {
       try {
         setError('');
         const { email, password } = values;
-        const loginInfo = await axios.post(
+        await axios.post(
           'http://localhost:5000/api/login',
           {
             email,
