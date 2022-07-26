@@ -6,6 +6,13 @@ import MypageModal from '../components/MypageModal';
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import moment from 'moment';
 
+const withCredentials = {
+  headers: {
+    'Content-Type': `application/json`,
+  },
+  withCredentials: true,
+};
+
 const MypageReservationCheck = () => {
   const [getBooking, setGetBooking] = useState([]);
   // console.log('getBooking : ', getBooking);
@@ -25,18 +32,21 @@ const MypageReservationCheck = () => {
   });
 
   useEffect(() => {
+    //kdt-sw2-busan-team03.elicecoding.com:5000/
     // 예약 리스트 요청
     async function fetchBooking() {
       try {
         const urlBookingList = `http://localhost:5000/api/booking/user?page=${currPage}&perPage=5`;
-        const token = sessionStorage.getItem('token');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.get(urlBookingList, config);
+        // const token = sessionStorage.getItem('token');
+        // const config = { headers: { Authorization: `Bearer ${token}` } };
+        // const res = await axios.get(urlBookingList, config);
+        const res = await axios.get(urlBookingList, withCredentials);
         // console.log(res.data);
+        // console.log(res);
         setGetBooking(res.data.bookingInfos);
         setTotalPage(res.data.totalPage);
       } catch (err) {
-        console.log(err.response.data.reason);
+        alert(err.response.data.reason);
       }
     }
 
@@ -51,8 +61,10 @@ const MypageReservationCheck = () => {
 
     // 오늘 기준으로 체크인 날짜가 지나면 true가 되서 disabled됨
     if (moment(toDay).isAfter(checkinDate)) return true;
+
     // status가 요청, 완료일때만 false로 활성화 됨
     if (status === '예약 요청' || status === '예약 완료') return false;
+
     // 그 외 true 비활성화
     return true;
   };

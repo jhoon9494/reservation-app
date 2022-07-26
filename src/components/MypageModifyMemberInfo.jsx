@@ -4,6 +4,13 @@ import axios from 'axios';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 
+const withCredentials = {
+  headers: {
+    'Content-Type': `application/json`,
+  },
+  withCredentials: true,
+};
+
 const MypageModifyMemberInfo = () => {
   const [getUser, setGetUser] = useState({});
   // console.log('getUser : ', getUser);
@@ -20,15 +27,18 @@ const MypageModifyMemberInfo = () => {
     async function fetchUser() {
       try {
         const urlUser = `http://localhost:5000/api/user`;
-        const token = sessionStorage.getItem('token');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.get(urlUser, config);
+        // const token = sessionStorage.getItem('token');
+        // const config = { headers: { Authorization: `Bearer ${token}` } };
+        // const res = await axios.get(urlUser, config);
+
+        const res = await axios.get(urlUser, withCredentials);
+
         setGetUser({ ...res.data });
         setName(res.data.name);
         setPhoneNumber(res.data.phoneNumber);
         // console.log(getUser);
       } catch (err) {
-        alert(err.response.data.reason);
+        alert(err);
       }
     }
     fetchUser();
@@ -45,29 +55,34 @@ const MypageModifyMemberInfo = () => {
 
     try {
       const editUserUrl = `http://localhost:5000/api/user`;
-      const token = sessionStorage.getItem('token');
-      const config = {
-        headers: {
-          'Content-Type': `application/json`,
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
+      // const token = sessionStorage.getItem('token');
+      // const config = {
+      //   headers: {
+      //     'Content-Type': `application/json`,
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // };
       let body = {
         name: name.length < 1 ? getUser.name : name,
         phoneNumber: phoneNumber,
       };
+
       if (password.length >= 1) {
         body.password = password;
       }
 
-      // console.log('token : ', token);
-      // console.log('body : ', JSON.stringify(body));
-      // console.log('config : ', config);
-      await axios.patch(editUserUrl, JSON.stringify(body), config);
+      console.log('body', body);
 
+      const res = await axios.patch(
+        editUserUrl,
+        JSON.stringify(body),
+        withCredentials
+      );
+
+      // await axios.patch(editUserUrl, JSON.stringify(body), config);
+      console.log(res);
       alert('회원 정보가 업데이트 되었습니다..');
-      navigate('/');
+      // navigate('/');
     } catch (err) {
       alert(err.response.data.reason);
     }
@@ -77,18 +92,16 @@ const MypageModifyMemberInfo = () => {
   const handleMembershipWithdrawalSubmit = async (event) => {
     event.preventDefault();
 
-    console.log(event);
-    console.log('회원탈퇴 클릭시 api에 요청해서 회원 삭제');
     try {
       const deleteUserUrl = `http://localhost:5000/api/user`;
-      const token = sessionStorage.getItem('token');
-      console.log('token : ', token);
+      // const token = sessionStorage.getItem('token');
+      // const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(deleteUserUrl, config);
+      await axios.delete(deleteUserUrl, withCredentials);
+      // await axios.delete(deleteUserUrl, config);
       // console.log('삭제되었습니다.:', res);
       alert('회원 탈퇴 되었습니다.');
-      sessionStorage.removeItem('token');
+      // sessionStorage.removeItem('token');
       navigate('/');
     } catch (err) {
       alert(err.response.data.reason);
