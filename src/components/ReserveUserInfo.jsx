@@ -10,9 +10,7 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
     if (!orderCheck) {
       try {
         const res = await axios.get('http://localhost:5000/api/user', {
-          headers: {
-            Authorization: `bearer ${sessionStorage.getItem('token')}`,
-          },
+          withCredentials: true,
         });
         const { name, email, phoneNumber } = res.data;
         const phoneNumberArray = phoneNumber.split('-');

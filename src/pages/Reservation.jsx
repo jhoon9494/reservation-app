@@ -49,11 +49,7 @@ const Reservation = () => {
       try {
         const res = await axios.get(
           'http://localhost:5000/api/booking/confirm',
-          {
-            headers: {
-              Authorization: `bearer ${sessionStorage.getItem('token')}`,
-            },
-          },
+          { withCredentials: true },
           {
             params: {
               startDate: JSON.stringify(date.startDate),
