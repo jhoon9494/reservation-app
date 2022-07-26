@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
-import Navbar from '../components/Navbar';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -33,8 +32,7 @@ const Home = () => {
   }, [currentSlide]);
 
   return (
-    <Container>
-      <Navbar home />
+    <>
       <Slider ref={slideRef}>
         <BackgroundImage1 />
         <BackgroundImage2 />
@@ -44,18 +42,11 @@ const Home = () => {
         <HomeButton onClick={handleSiteClick}>둘러보기</HomeButton>
         <HomeButton onClick={handleReservationClick}>예약하기</HomeButton>
       </HomeButtonWrap>
-    </Container>
+    </>
   );
 };
 
 export default Home;
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-`;
 
 const Slider = styled.div`
   display: flex;
