@@ -2,8 +2,8 @@
 import styled, { css } from 'styled-components';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+// import Navbar from '../components/Navbar';
+// import Footer from '../components/Footer';
 import { AdminUserPage } from '../components/AdminUserPage';
 import { AdminBookPage } from '../components/AdminBookPage';
 
@@ -36,7 +36,10 @@ const AdminPage = () => {
   useEffect(() => {
     async function getBookList() {
       const bookData = await axios.get(
-        'http://localhost:5000/api/admin/bookExceptRequests'
+        'http://localhost:5000/api/admin/books',
+        {
+          params: { request: false },
+        }
       );
       const bookList = bookData.data;
       setBookData(bookList);
@@ -45,7 +48,10 @@ const AdminPage = () => {
 
     async function getBookRequestsList() {
       const bookRequestsData = await axios.get(
-        'http://localhost:5000/api/admin/bookRequests'
+        'http://localhost:5000/api/admin/books',
+        {
+          params: { request: true },
+        }
       );
       const bookRequestsList = bookRequestsData.data;
       setBookRequestsData(bookRequestsList);
@@ -106,17 +112,25 @@ const AdminPage = () => {
   };
   const pageCount = (data) => {
     const pageCounts = [];
-    for (let i = 1; i < data.length / dataPerPage + 1; i++) {
+    let totalPage = Math.ceil(data.length / dataPerPage);
+    let startIndex = parseInt(currentPage / 10);
+
+    if (startIndex === currentPage / 10) {
+      startIndex -= 1;
+    }
+
+    for (let i = startIndex * 10; i < (startIndex + 1) * 10; i++) {
+      if (i === totalPage) break;
       pageCounts.push(
         <PageButton
           key={i}
-          active={currentPage === i}
+          active={currentPage === i + 1}
           onClick={(e) => {
             e.preventDefault();
-            setCurrentPage(i);
+            setCurrentPage(i + 1);
           }}
         >
-          {i}
+          {i + 1}
         </PageButton>
       );
     }
@@ -125,7 +139,6 @@ const AdminPage = () => {
 
   return (
     <>
-      <Navbar />
       <Container>
         <Body>
           <ManageBar>
@@ -191,7 +204,6 @@ const AdminPage = () => {
           )}
         </Body>
       </Container>
-      <Footer />
     </>
   );
 };
@@ -202,16 +214,14 @@ const Container = styled.main`
   margin-top: 30px;
 `;
 const Body = styled.div`
-  height: 67.2vh;
+  height: 62vh;
 `;
 
 const ManageBar = styled.div`
   padding: 10px;
   width: 850px;
   height: 45px;
-
   margin: auto;
-
   display: flex;
   align-items: center;
   border-bottom: 1px black solid;
@@ -252,7 +262,7 @@ const ManageUserSpan = styled.span`
   line-height: 29px;
   padding: 0px 8px 6px 8px;
   border-bottom: ${(props) =>
-    props.management == 'user' ? '3px #524fa1 solid' : ''};
+    props.management == 'user' ? '3px #8AA8CD solid' : ''};
 `;
 
 const ManageBookSpan = styled.span`
@@ -263,7 +273,7 @@ const ManageBookSpan = styled.span`
   line-height: 29px;
   padding: 0px 8px 6px 8px;
   border-bottom: ${(props) =>
-    props.management == 'book' ? '3px #524fa1 solid' : ''};
+    props.management == 'book' ? '3px #8AA8CD solid' : ''};
 `;
 
 const NameInput = styled.input`
@@ -284,7 +294,7 @@ const SearchButton = styled.button`
   font-size: 16px;
   line-height: 20px;
   color: white;
-  background-color: #524fa1;
+  background-color: #8aa8cd;
   border: none;
   width: 71px;
   height: 36px;
@@ -310,7 +320,7 @@ const PageButton = styled.button`
   ${(props) =>
     props.active &&
     css`
-      background-color: #524fa1;
+      background-color: #8aa8cd;
       color: #f9fafc;
     `}
 `;
