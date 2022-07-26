@@ -10,11 +10,11 @@ export const ShowBookExceptRequests = ({ data, setChangeBookStatus }) => {
 
     if (window.confirm(`${data.name} 예약자 님의 예약을 취소 하시겠습니까?`)) {
       try {
-        await axios.patch('http://localhost:5000/api/admin/book', {
+        await axios.delete('http://localhost:5000/api/admin/book', {
           data: {
             bookingID: data._id,
-            status: '예약 취소',
           },
+          withCredentials: true,
         });
       } catch (e) {
         alert('예약 취소에 실패하였습니다.');
@@ -38,23 +38,8 @@ export const ShowBookExceptRequests = ({ data, setChangeBookStatus }) => {
       <BookListSpan>{data.roomID.name}</BookListSpan>
       <BookListSpan>{data.peopleNumber}명</BookListSpan>
       <BookListSpan>
-        {data.status === '예약 완료' ? (
-          <>
-            {data.status}
-            <BookCancelBtn onClick={(e) => bookCancel(e)}>
-              예약 취소
-            </BookCancelBtn>
-          </>
-        ) : data.status === '취소 요청' ? (
-          <>
-            {data.status}
-            <BookCancelBtn onClick={(e) => bookCancel(e)}>
-              예약 취소
-            </BookCancelBtn>
-          </>
-        ) : (
-          <>{data.status}됨</>
-        )}
+        {data.status}
+        <BookCancelBtn onClick={(e) => bookCancel(e)}>예약 취소</BookCancelBtn>
       </BookListSpan>
     </BookList>
   );

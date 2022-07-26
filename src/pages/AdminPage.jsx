@@ -6,6 +6,7 @@ import axios from 'axios';
 // import Footer from '../components/Footer';
 import { AdminUserPage } from '../components/AdminUserPage';
 import { AdminBookPage } from '../components/AdminBookPage';
+import { useNavigate } from 'react-router-dom';
 
 // 관리자 페이지
 const AdminPage = () => {
@@ -22,10 +23,24 @@ const AdminPage = () => {
   const [deleteUser, setDeleteUser] = useState(false);
   const [changeBookStatus, setChangeBookStatus] = useState(false);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getCookieValue = (name) =>
+      document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() ||
+      '';
+    if (getCookieValue('userRole') !== 'admin') {
+      navigate('/');
+    }
+  }, []);
+
   // 첫 유저 데이터
   useEffect(() => {
     async function getUserList() {
-      const userData = await axios.get('http://localhost:5000/api/admin/users');
+      const userData = await axios.get(
+        'http://localhost:5000/api/admin/users',
+        { withCredentials: true }
+      );
       const userList = userData.data;
       setUserData(userList);
     }
@@ -39,6 +54,7 @@ const AdminPage = () => {
         'http://localhost:5000/api/admin/books',
         {
           params: { request: false },
+          withCredentials: true,
         }
       );
       const bookList = bookData.data;
@@ -51,6 +67,7 @@ const AdminPage = () => {
         'http://localhost:5000/api/admin/books',
         {
           params: { request: true },
+          withCredentials: true,
         }
       );
       const bookRequestsList = bookRequestsData.data;
@@ -78,6 +95,7 @@ const AdminPage = () => {
           'http://localhost:5000/api/admin/user',
           {
             params: { name: searchingName },
+            withCredentials: true,
           }
         );
         const userList = userData.data;
