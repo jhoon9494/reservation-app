@@ -24,6 +24,7 @@ export default Footer;
 
 const Container = styled.footer`
   display: flex;
+  width: 100%;
   border-top: 1px solid lightgray;
   margin-top: 4rem;
   padding: 1rem 4rem;
