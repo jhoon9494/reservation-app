@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import '../styles/modal.css';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import RoomTabs from './RoomTabs';
