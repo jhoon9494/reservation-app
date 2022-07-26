@@ -30,19 +30,23 @@ const LoginForm = (props) => {
       try {
         setError('');
         const { email, password } = values;
-        const loginInfo = await axios.post('http://localhost:5000/api/login', {
-          email,
-          password,
-        });
-
-        sessionStorage.clear();
-        sessionStorage.setItem('token', loginInfo.data.token.token);
-        sessionStorage.setItem('role', loginInfo.data.token.role);
+        const loginInfo = await axios.post(
+          'http://localhost:5000/api/login',
+          {
+            email,
+            password,
+          },
+          { withCredentials: true }
+        );
+        // sessionStorage.clear();
+        // sessionStorage.setItem('token', loginInfo.data.token.token);
+        // sessionStorage.setItem('role', loginInfo.data.token.role);
 
         alert('로그인 되었습니다.');
         close();
       } catch (error) {
-        setError(error.response.data);
+        // setError(error.response.data);
+        console.error(error);
       }
     },
   });
