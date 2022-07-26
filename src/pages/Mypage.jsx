@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
+import { useNavigate } from 'react-router-dom';
 
 //components
 import MypageReservationCheck from '../components/MypageReservationCheck';
@@ -9,6 +10,17 @@ import MypageModifyMemberInfo from '../components/MypageModifyMemberInfo';
 
 const MyPage = () => {
   const [checkPw, setCheckPw] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getCookieValue = (name) =>
+      document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() ||
+      '';
+    if (getCookieValue('userRole') !== 'user') {
+      navigate('/');
+    }
+  }, []);
 
   // modal 제어
   const [modalShow, setModalShow] = useState(false);
