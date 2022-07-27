@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import baseStyle from '../styles/baseStyle';
@@ -12,17 +12,23 @@ const withCredentials = {
 };
 
 const MypageModal = (props) => {
-  // console.log(props);
   // modalShow : modal창 true값으로 받고 창 뜸,
   // setModalShow : modal창 false로 만들고 닫기 위함
   // modalSelect : modal클릭한 종류, width,height, room값이 들어있음
-  const { modalShow, setModalShow, modalSelect, setCheckPw } = props;
+  const {
+    modalShow,
+    setModalShow,
+    modalSelect,
+    setCheckPw,
+    setCurrTab,
+    setCurrPage,
+  } = props;
 
   // modal option값에 따라 창 다르게 띄워주기
   const viewContent = () => {
     // console.log('modalSelect :', modalSelect);
     switch (modalSelect.option) {
-      // 예약조회 창
+      // 예약취소 창
       case 'ModalReservationCancellation':
         return (
           <ModalReservationCancellation>
@@ -30,6 +36,7 @@ const MypageModal = (props) => {
               room={modalSelect.room}
               bookingid={modalSelect.bookingid}
               setModalShow={setModalShow}
+              setCurrPage={setCurrPage}
             />
           </ModalReservationCancellation>
         );
@@ -39,6 +46,7 @@ const MypageModal = (props) => {
           <ModalWriteReview>
             <ContentWriteReview
               setModalShow={setModalShow}
+              setCurrPage={setCurrPage}
               bookingid={modalSelect.bookingid}
               roomid={modalSelect.roomid}
               userName={modalSelect.userName}
@@ -62,6 +70,7 @@ const MypageModal = (props) => {
             <ContentCheckPassword
               setModalShow={setModalShow}
               setCheckPw={setCheckPw}
+              setCurrTab={setCurrTab}
             />
           </ModalCheckPassword>
         );
@@ -91,7 +100,7 @@ export default MypageModal;
 // 비번 검증 모달창
 const ContentCheckPassword = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // 비번 검증
   const checkedPw = () => {
@@ -107,14 +116,16 @@ const ContentCheckPassword = (props) => {
       } catch (err) {
         props.setCheckPw(false);
         props.setModalShow(false);
+        props.setCurrTab('예약조회');
         alert(err.response.data.reason);
-        navigate('/');
+        // navigate('/');
       }
     }
     confirmUserPw(confirmPassword);
 
     // true = confirmUserPw(confirmPassword)
     // 비번 검증에 따라 모달창 바로 닫힘
+
     props.setCheckPw(true);
     props.setModalShow(false);
   };
@@ -122,6 +133,7 @@ const ContentCheckPassword = (props) => {
   return (
     <>
       <h2>현재 비밀번호 확인</h2>
+      <p>카카오 로그인 사용자는 이용할 수 없습니다.</p>
       <input
         type="password"
         value={confirmPassword || ''}
@@ -164,6 +176,8 @@ const ContentReservationCancellation = (props) => {
       // await axios.patch(reservationCancelUrl, JSON.stringify(body), config);
       alert('취소 신청이 되었습니다.');
       props.setModalShow();
+      window.location.reload();
+      // props.setCurrPage(1);
       console.log('취소가 되었습니다:', res);
     } catch (err) {
       console.log(err);
@@ -235,6 +249,8 @@ const ContentWriteReview = (props) => {
       await changeReviewState();
 
       // console.log('리뷰 작성 완료', res);
+      props.setModalShow();
+      window.location.reload();
     } catch (err) {
       alert(err.response.data.reason);
       props.setModalShow();
@@ -687,12 +703,18 @@ const ModalCheckPassword = styled.section`
   line-height: 30px;
   text-align: center;
 
+  & p {
+    font-size: ${baseStyle.contentFontSize};
+  }
+
   & input {
-    margin: 50px auto 55px;
+    margin: 10px auto 20px;
     border: 1px solid ${baseStyle.mainColor};
     border-radius: 10px;
     width: 306px;
     height: 38px;
+    padding: 15px;
+    font-size: ${baseStyle.subTitleFontSize};
   }
 
   .checkBtn {

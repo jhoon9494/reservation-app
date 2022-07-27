@@ -11,7 +11,7 @@ const withCredentials = {
   withCredentials: true,
 };
 
-const MypageModifyMemberInfo = () => {
+const MypageModifyMemberInfo = (props) => {
   const [getUser, setGetUser] = useState({});
   // console.log('getUser : ', getUser);
   const [password, setPassword] = useState('');
@@ -22,7 +22,7 @@ const MypageModifyMemberInfo = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log('회원정보 불러옴');
+    console.log('회원정보 불러옴');
 
     async function fetchUser() {
       try {
@@ -38,7 +38,7 @@ const MypageModifyMemberInfo = () => {
         setPhoneNumber(res.data.phoneNumber);
         // console.log(getUser);
       } catch (err) {
-        alert(err);
+        alert(err.response.data.reason);
       }
     }
     fetchUser();
@@ -81,7 +81,10 @@ const MypageModifyMemberInfo = () => {
 
       // await axios.patch(editUserUrl, JSON.stringify(body), config);
       console.log(res);
-      alert('회원 정보가 업데이트 되었습니다..');
+      alert('회원 정보가 업데이트 되었습니다.');
+      // 정보수정 내용을 초기화 함
+      props.setCheckPw(false);
+      props.setCurrTab('예약조회');
       // navigate('/');
     } catch (err) {
       alert(err.response.data.reason);
@@ -121,17 +124,19 @@ const MypageModifyMemberInfo = () => {
       <input
         name="password"
         type="password"
+        maxLength={20}
         onChange={(e) => setPassword(e.target.value)}
       />
       <div>
         {password.length + 1 <= 8 && password.length > 0
-          ? '비밀번호를 8자리 이상 입력해야합니다.'
+          ? '비밀번호를 8자리이상, 20자이하 입력해야합니다.'
           : ''}
       </div>
       <label>신규비밀번호 확인</label>
       <input
         name="confirmPassword"
         type="password"
+        maxLength={20}
         onChange={(e) => setConfirmPassword(e.target.value)}
         disabled={password.length + 1 <= 8}
       ></input>
@@ -193,6 +198,9 @@ const Form = styled.form`
     border: 1px solid #000000;
     border-radius: 7px;
     margin-top: 30px;
+
+    padding: 15px;
+    font-size: ${baseStyle.subTitleFontSize};
 
     &:disabled {
       background: rgba(169, 187, 210, 0.7);

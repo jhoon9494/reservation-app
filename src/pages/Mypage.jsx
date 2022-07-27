@@ -66,13 +66,17 @@ const MyPage = () => {
       {currTab === '예약조회' ? (
         <MypageReservationCheck />
       ) : currTab === '정보수정' && checkPw ? (
-        <MypageModifyMemberInfo />
+        <MypageModifyMemberInfo
+          setCurrTab={setCurrTab}
+          setCheckPw={setCheckPw}
+        />
       ) : null}
       <MypageModal
         modalShow={modalShow}
         setModalShow={() => setModalShow(false)}
         modalSelect={modalSelect}
         setCheckPw={setCheckPw}
+        setCurrTab={setCurrTab}
       />
     </Container>
   );
