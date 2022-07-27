@@ -1,11 +1,15 @@
 import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button } from 'react-bootstrap';
 import baseStyle from '../styles/baseStyle';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const ChangePassword = () => {
+  const navigate = useNavigate();
+  const { email, redisKey } = useParams();
   const [error, setError] = useState('');
   const formik = useFormik({
     initialValues: {
@@ -25,10 +29,19 @@ const ChangePassword = () => {
       try {
         setError('');
         const { password } = values;
-        // TODO: 비밀번호 변경 API
-        alert(`비밀번호를 ${password}로 변경하였습니다.`);
+        await axios.patch(
+          'http://localhost:5000/api/password',
+          {
+            email,
+            redisKey,
+            password,
+          },
+          { withCredentials: true }
+        );
+        alert(`비밀번호를 정상적으로 변경하였습니다.`);
+        navigate('/');
       } catch (error) {
-        setError(error.response.data.reason);
+        setError(error);
       }
     },
   });
