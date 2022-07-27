@@ -9,9 +9,12 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
   const handleOrderCheckbox = async () => {
     if (!orderCheck) {
       try {
-        const res = await axios.get('http://localhost:5000/api/user', {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/user',
+          {
+            withCredentials: true,
+          }
+        );
         const { name, email, phoneNumber } = res.data;
         const phoneNumberArray = phoneNumber.split('-');
         setUserInfo((prev) => ({

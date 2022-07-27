@@ -31,7 +31,7 @@ const FindEmail = () => {
         // TODO: 이메일 찾기 API
         // query-params에 휴대폰 번호 추가
         const findEmailInfo = await axios.get(
-          'http://localhost:5000/api/findEmail',
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/findEmail',
           {
             params: { name },
           },

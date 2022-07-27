@@ -30,7 +30,7 @@ const ChangePassword = () => {
         setError('');
         const { password } = values;
         await axios.patch(
-          'http://localhost:5000/api/password',
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/password',
           {
             email,
             redisKey,

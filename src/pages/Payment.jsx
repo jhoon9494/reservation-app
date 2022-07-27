@@ -45,7 +45,7 @@ const Payment = () => {
     };
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/booking/create',
+        'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/create',
         JSON.stringify(reserveData),
         {
           headers: {

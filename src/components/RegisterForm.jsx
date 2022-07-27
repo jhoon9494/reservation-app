@@ -46,7 +46,7 @@ const RegisterForm = (props) => {
         setError('');
         const { email, password, name, phoneNumber } = values;
         await axios.post(
-          'http://localhost:5000/api/register',
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/register',
           {
             email,
             password,

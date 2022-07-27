@@ -20,7 +20,7 @@ export const RoomDetail = ({ roomID }) => {
       if (roomID !== '') {
         try {
           const res = await axios.get(
-            `http://localhost:5000/api/room/${roomID}`
+            `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/room/${roomID}`
           );
           setRoomContent(res.data);
         } catch (e) {

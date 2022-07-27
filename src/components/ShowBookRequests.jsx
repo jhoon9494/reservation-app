@@ -11,7 +11,7 @@ export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
     ) {
       try {
         await axios.patch(
-          'http://localhost:5000/api/admin/book',
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/book',
           {
             data: {
               bookingID: data._id,
@@ -37,12 +37,15 @@ export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
 
     if (window.confirm(`${data.name} 예약자 님의 예약을 취소 하시겠습니까?`)) {
       try {
-        await axios.delete('http://localhost:5000/api/admin/book', {
-          data: {
-            bookingID: data._id,
-          },
-          withCredentials: true,
-        });
+        await axios.delete(
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/book',
+          {
+            data: {
+              bookingID: data._id,
+            },
+            withCredentials: true,
+          }
+        );
       } catch (e) {
         alert('예약 취소에 실패하였습니다.');
         console.log(e.response.data);

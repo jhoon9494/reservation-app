@@ -12,9 +12,12 @@ const RoomReviews = ({ roomID }) => {
   useEffect(() => {
     async function getDefaultReview() {
       try {
-        const res = await axios.get('http://localhost:5000/api/review', {
-          params: { roomID: roomID, page: currPage, perPage: 5 },
-        });
+        const res = await axios.get(
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/review',
+          {
+            params: { roomID: roomID, page: currPage, perPage: 5 },
+          }
+        );
         setReviews(res.data.reviews);
         setTotalPage(res.data.totalPage);
       } catch (e) {

@@ -36,7 +36,7 @@ const MypageReservationCheck = () => {
     // 예약 리스트 요청
     async function fetchBooking() {
       try {
-        const urlBookingList = `http://localhost:5000/api/booking/user?page=${currPage}&perPage=5`;
+        const urlBookingList = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/user?page=${currPage}&perPage=5`;
         // const token = sessionStorage.getItem('token');
         // const config = { headers: { Authorization: `Bearer ${token}` } };
         // const res = await axios.get(urlBookingList, config);
@@ -273,7 +273,6 @@ const BookListLi = styled.li`
 `;
 
 const BookListSpan = styled.span`
-
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 400;
@@ -281,9 +280,8 @@ const BookListSpan = styled.span`
   line-height: 21px;
 
   margin: auto;
-  & + &{
+  & + & {
   }
-}
 `;
 
 const BookStateBtn = styled.button`

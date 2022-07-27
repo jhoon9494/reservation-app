@@ -34,9 +34,12 @@ const Navbar = () => {
   // 로그아웃
   const handleLogoutClick = async () => {
     try {
-      await axios.get('http://localhost:5000/api/logout', {
-        withCredentials: true,
-      });
+      await axios.get(
+        'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/logout',
+        {
+          withCredentials: true,
+        }
+      );
     } catch (error) {
       console.error(error);
     } finally {

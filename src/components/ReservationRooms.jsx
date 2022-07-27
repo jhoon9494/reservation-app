@@ -18,7 +18,9 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
   useEffect(() => {
     async function getAllRooms() {
       try {
-        const res = await axios.get('http://localhost:5000/api/room');
+        const res = await axios.get(
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/room'
+        );
         setAllRooms(res.data);
       } catch (e) {
         console.error('객실정보를 받아올 수 없습니다.');
@@ -35,7 +37,7 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
       if (people && selectedDate?.startDate && selectedDate?.endDate) {
         try {
           const res = await axios.get(
-            'http://localhost:5000/api/booking/byDates',
+            'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/byDates',
             {
               params: {
                 startDate: selectedDate.startDate,

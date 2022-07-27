@@ -22,7 +22,7 @@ const Reservation = () => {
       if (roomInfo !== '') {
         try {
           const res = await axios.get(
-            `http://localhost:5000/api/room/${roomInfo}`
+            `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/room/${roomInfo}`
           );
 
           setRoomContent(res.data);
@@ -48,7 +48,7 @@ const Reservation = () => {
 
       try {
         const res = await axios.get(
-          'http://localhost:5000/api/booking/confirm',
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/confirm',
           { withCredentials: true },
           {
             params: {

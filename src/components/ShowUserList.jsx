@@ -11,12 +11,15 @@ export const ShowUserList = ({ data, setDeleteUser }) => {
       window.confirm(`${data.name} 회원님의 정보를 정말로 삭제 하시겠습니까?`)
     ) {
       try {
-        await axios.delete('http://localhost:5000/api/admin/user', {
-          data: {
-            userId: data._id,
-          },
-          withCredentials: true,
-        });
+        await axios.delete(
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/user',
+          {
+            data: {
+              userId: data._id,
+            },
+            withCredentials: true,
+          }
+        );
       } catch (e) {
         alert('회원 탈퇴에 실패하였습니다.');
         console.log(e);

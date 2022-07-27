@@ -27,7 +27,7 @@ const FindPassword = () => {
         setError('');
         const { email, name } = values;
         await axios.post(
-          'http://localhost:5000/api/newPassword',
+          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/newPassword',
           { email, name },
           { withCredentials: true }
         );

@@ -16,7 +16,7 @@ const DateRangePick = ({ setDate, roomID }) => {
           // 둘러보기 페이지에서 객실을 선택하고 들어온 경우
           // roomID를 통해 api호출 후 해당 객실의 예약된 날짜를 받아서 예약 불가능 표시
           const res = await axios.get(
-            'http://localhost:5000/api/booking/byRoom',
+            'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/byRoom',
             {
               params: { roomID: roomID },
             }

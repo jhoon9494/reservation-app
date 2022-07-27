@@ -97,7 +97,7 @@ const ContentCheckPassword = (props) => {
   const checkedPw = () => {
     async function confirmUserPw(confirmPassword) {
       try {
-        const confirmUrl = `http://localhost:5000/api/confirmPW?password=${confirmPassword}`;
+        const confirmUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/confirmPW?password=${confirmPassword}`;
 
         // const token = sessionStorage.getItem('token');
         // const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -142,7 +142,7 @@ const ContentReservationCancellation = (props) => {
     // console.log('취소요청보냄', props.bookingid);
 
     try {
-      const reservationCancelUrl = `http://localhost:5000/api/booking/cancel`;
+      const reservationCancelUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/cancel`;
       // const token = sessionStorage.getItem('token');
       // const config = {
       //   headers: {
@@ -207,7 +207,7 @@ const ContentWriteReview = (props) => {
       if (!content) return alert('내용을 입력해주세요.');
 
       // 리뷰 작성 요청하는 api
-      const loadReviewUrl = `http://localhost:5000/api/review/create`;
+      const loadReviewUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/review/create`;
 
       // const token = sessionStorage.getItem('token');
       // const config = {
@@ -244,7 +244,7 @@ const ContentWriteReview = (props) => {
   //리뷰 상태 변경하는 요청
   const changeReviewState = async () => {
     try {
-      const changeReviewStateUrl = `http://localhost:5000/api/booking/review`;
+      const changeReviewStateUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/review`;
       // const config = {
       //   headers: {
       //     'Content-Type': `application/json`,
@@ -327,7 +327,7 @@ const ContentModifiedReview = (props) => {
       // console.log('loadReviewContent');
       // console.log(setLoadReview);
       try {
-        const loadReviewUrl = `http://localhost:5000/api/review/booking?bookingID=${props.bookingid}`;
+        const loadReviewUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/review/booking?bookingID=${props.bookingid}`;
 
         const res = await axios.get(loadReviewUrl, withCredentials);
 
@@ -357,7 +357,7 @@ const ContentModifiedReview = (props) => {
       if (!content) return alert('내용을 입력해주세요.');
 
       // 요청하는 api
-      const editReviewUrl = `http://localhost:5000/api/review/${loadReview._id}`;
+      const editReviewUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/review/${loadReview._id}`;
       // const token = sessionStorage.getItem('token');
       // const config = {
       //   headers: {
@@ -506,7 +506,7 @@ const ModalWriteReview = styled.section`
   padding: 60px 80px;
   display: flex;
   flex-direction: column;
-  align-items: stretch
+  align-items: stretch;
 
   font-family: 'Noto Sans KR';
   font-size: 14px;
@@ -524,7 +524,7 @@ const ModalWriteReview = styled.section`
     margin-top: 38px;
     align-items: center;
 
-    &.titleLine{
+    &.titleLine {
       & label {
         font-size: 16px;
         line-height: 24px;
@@ -544,13 +544,13 @@ const ModalWriteReview = styled.section`
     }
 
     & input {
-      margin-right:20px;
+      margin-right: 20px;
       width: 306px;
       height: 38px;
     }
 
     &.contentsLine {
-      display:flex;
+      display: flex;
       align-items: flex-start;
     }
     & textarea {
@@ -558,8 +558,8 @@ const ModalWriteReview = styled.section`
       height: 151px;
     }
 
-    &.btnLine{
-      justify-content: center
+    &.btnLine {
+      justify-content: center;
     }
     & button {
       font-weight: bold;
@@ -579,7 +579,7 @@ const ModalWriteReview = styled.section`
     }
     .cancelBtn {
       color: #ffffff;
-      border : 1px solid ${baseStyle.mainColor};
+      border: 1px solid ${baseStyle.mainColor};
       background: ${baseStyle.mainColor};
       margin-left: 100px;
     }
@@ -591,14 +591,13 @@ const ModalModifiedReview = styled.section`
   padding: 60px 80px;
   display: flex;
   flex-direction: column;
-  align-items: stretch
+  align-items: stretch;
 
   font-family: 'Noto Sans KR';
   font-size: 14px;
   line-height: 21px;
   & section {
-    padding:0px;
-
+    padding: 0px;
   }
 
   & h2 {
@@ -613,7 +612,7 @@ const ModalModifiedReview = styled.section`
     margin-top: 38px;
     align-items: center;
 
-    &.titleLine{
+    &.titleLine {
       & label {
         font-size: 16px;
         line-height: 24px;
@@ -627,19 +626,19 @@ const ModalModifiedReview = styled.section`
     }
     & input,
     textarea {
-      margin-left:20px;
+      margin-left: 20px;
       border: 1px solid #000000;
       border-radius: 10px;
     }
 
     & input {
-      margin-right:20px;
+      margin-right: 20px;
       width: 306px;
       height: 38px;
     }
 
     &.contentsLine {
-      display:flex;
+      display: flex;
       align-items: flex-start;
     }
     & textarea {
@@ -647,8 +646,8 @@ const ModalModifiedReview = styled.section`
       height: 151px;
     }
 
-    &.btnLine{
-      justify-content: center
+    &.btnLine {
+      justify-content: center;
     }
     & button {
       font-weight: bold;
@@ -668,7 +667,7 @@ const ModalModifiedReview = styled.section`
     }
     .cancelBtn {
       color: #ffffff;
-      border : 1px solid ${baseStyle.mainColor};
+      border: 1px solid ${baseStyle.mainColor};
       background: ${baseStyle.mainColor};
       margin-left: 100px;
     }
@@ -677,37 +676,37 @@ const ModalModifiedReview = styled.section`
 
 // 정보수정 비밀번호확인 창과 css 제어
 const ModalCheckPassword = styled.section`
-padding: 25px;
-display: flex;
-flex-direction: column;
-align-items: center
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-font-family: 'Noto Sans KR';
-font-weight: bold;
-font-size: 20px;
-line-height: 30px;
-text-align: center;
-
-& input {
-  margin: 50px auto 55px;
-  border: 1px solid ${baseStyle.mainColor};
-  border-radius: 10px;
-  width: 306px;
-  height: 38px;
-}
-
-.checkBtn {
+  font-family: 'Noto Sans KR';
   font-weight: bold;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 20px;
+  line-height: 30px;
   text-align: center;
-  
-  width: 142px;
-  height: 36px;
-  border: 1px solid ${baseStyle.mainColor};
-  border-radius: 50px;
-  color: #ffffff;
-  background: ${baseStyle.mainColor};
-  margin: auto;
-}
+
+  & input {
+    margin: 50px auto 55px;
+    border: 1px solid ${baseStyle.mainColor};
+    border-radius: 10px;
+    width: 306px;
+    height: 38px;
+  }
+
+  .checkBtn {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+
+    width: 142px;
+    height: 36px;
+    border: 1px solid ${baseStyle.mainColor};
+    border-radius: 50px;
+    color: #ffffff;
+    background: ${baseStyle.mainColor};
+    margin: auto;
+  }
 `;
