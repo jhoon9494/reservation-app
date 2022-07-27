@@ -38,7 +38,7 @@ const AdminPage = () => {
   useEffect(() => {
     async function getUserList() {
       const userData = await axios.get(
-        'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/users',
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/users`,
         { withCredentials: true }
       );
       const userList = userData.data;
@@ -51,7 +51,7 @@ const AdminPage = () => {
   useEffect(() => {
     async function getBookList() {
       const bookData = await axios.get(
-        'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/books',
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/books`,
         {
           params: { request: false },
           withCredentials: true,
@@ -64,7 +64,7 @@ const AdminPage = () => {
 
     async function getBookRequestsList() {
       const bookRequestsData = await axios.get(
-        'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/books',
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/books`,
         {
           params: { request: true },
           withCredentials: true,
@@ -92,7 +92,7 @@ const AdminPage = () => {
       // 유저 데이터
       async function findUsersByName() {
         const userData = await axios.get(
-          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/user',
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/user`,
           {
             params: { name: searchingName },
             withCredentials: true,

@@ -36,7 +36,7 @@ const MypageReservationCheck = () => {
     // 예약 리스트 요청
     async function fetchBooking() {
       try {
-        const urlBookingList = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/user?page=${currPage}&perPage=5`;
+        const urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=5`;
         // const token = sessionStorage.getItem('token');
         // const config = { headers: { Authorization: `Bearer ${token}` } };
         // const res = await axios.get(urlBookingList, config);

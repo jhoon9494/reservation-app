@@ -27,7 +27,7 @@ const LoginForm = (props) => {
         setError('');
         const { email, password } = values;
         await axios.post(
-          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/login',
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/login`,
           {
             email,
             password,
@@ -66,7 +66,9 @@ const LoginForm = (props) => {
       {error ? <ErrorMessage>{error}</ErrorMessage> : null}
       <SubmitButton type="submit">로그인</SubmitButton>
       <Line />
-      <KakaoLoginButton href="http://kdt-sw2-busan-team03.elicecoding.com:5000/api/kakao">
+      <KakaoLoginButton
+        href={`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/kakao`}
+      >
         <KakaoIcon src="images/kakao-icon.png" />
         카카오 로그인
       </KakaoLoginButton>

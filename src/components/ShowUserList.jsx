@@ -12,7 +12,7 @@ export const ShowUserList = ({ data, setDeleteUser }) => {
     ) {
       try {
         await axios.delete(
-          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/user',
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/user`,
           {
             data: {
               userId: data._id,

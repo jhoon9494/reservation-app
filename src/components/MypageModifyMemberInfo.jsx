@@ -26,7 +26,7 @@ const MypageModifyMemberInfo = () => {
 
     async function fetchUser() {
       try {
-        const urlUser = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/user`;
+        const urlUser = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/user`;
         // const token = sessionStorage.getItem('token');
         // const config = { headers: { Authorization: `Bearer ${token}` } };
         // const res = await axios.get(urlUser, config);
@@ -54,7 +54,7 @@ const MypageModifyMemberInfo = () => {
       return alert('휴대폰 번호 형식이 맞지않습니다.');
 
     try {
-      const editUserUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/user`;
+      const editUserUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/user`;
       // const token = sessionStorage.getItem('token');
       // const config = {
       //   headers: {
@@ -93,7 +93,7 @@ const MypageModifyMemberInfo = () => {
     event.preventDefault();
 
     try {
-      const deleteUserUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/user`;
+      const deleteUserUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/user`;
       // const token = sessionStorage.getItem('token');
       // const config = { headers: { Authorization: `Bearer ${token}` } };
 

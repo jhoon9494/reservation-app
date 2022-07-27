@@ -46,7 +46,7 @@ const RegisterForm = (props) => {
         setError('');
         const { email, password, name, phoneNumber } = values;
         await axios.post(
-          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/register',
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/register`,
           {
             email,
             password,
