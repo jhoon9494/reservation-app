@@ -15,7 +15,6 @@ const withCredentials = {
 
 const MypageReservationCheck = () => {
   const [getBooking, setGetBooking] = useState([]);
-  // console.log('getBooking : ', getBooking);
 
   // 페이징네이션
   const [totalPage, setTotalPage] = useState(0);
@@ -36,13 +35,8 @@ const MypageReservationCheck = () => {
     // 예약 리스트 요청
     async function fetchBooking() {
       try {
-        const urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=5`;
-        // const token = sessionStorage.getItem('token');
-        // const config = { headers: { Authorization: `Bearer ${token}` } };
-        // const res = await axios.get(urlBookingList, config);
+        const urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=3`;
         const res = await axios.get(urlBookingList, withCredentials);
-        // console.log(res.data);
-        // console.log(res);
         setGetBooking(res.data.bookingInfos);
         setTotalPage(res.data.totalPage);
       } catch (err) {
@@ -51,7 +45,6 @@ const MypageReservationCheck = () => {
     }
 
     fetchBooking();
-    // console.log(currPage);
   }, [currPage]);
 
   // '예약 상태'에 따라 '예약 취소' 버튼을 활성화 시킨다
@@ -153,7 +146,9 @@ const MypageReservationCheck = () => {
                     )} ~ ${list.endDate.substring(0, 10)}`}</BookListSpan>
                     <BookListSpan>{list.roomID.name}</BookListSpan>
                     <BookListSpan>{list.peopleNumber}</BookListSpan>
-                    <BookListSpan>{list.price}</BookListSpan>
+                    <BookListSpan>
+                      {list.price.toLocaleString()} 원
+                    </BookListSpan>
                     <BookListSpan>{list.status}</BookListSpan>
                     <BookListSpan>
                       <BookStateBtn
@@ -220,6 +215,7 @@ const MypageReservationCheck = () => {
               modalShow={modalShow}
               setModalShow={() => setModalShow(false)}
               modalSelect={modalSelect}
+              setCurrPage={setCurrPage}
             />
           </>
         ) : (
