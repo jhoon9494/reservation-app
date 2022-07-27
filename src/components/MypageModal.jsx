@@ -97,7 +97,7 @@ const ContentCheckPassword = (props) => {
   const checkedPw = () => {
     async function confirmUserPw(confirmPassword) {
       try {
-        const confirmUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/confirmPW?password=${confirmPassword}`;
+        const confirmUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/confirmPW?password=${confirmPassword}`;
 
         // const token = sessionStorage.getItem('token');
         // const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -142,7 +142,7 @@ const ContentReservationCancellation = (props) => {
     // console.log('취소요청보냄', props.bookingid);
 
     try {
-      const reservationCancelUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/cancel`;
+      const reservationCancelUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/cancel`;
       // const token = sessionStorage.getItem('token');
       // const config = {
       //   headers: {
@@ -207,7 +207,7 @@ const ContentWriteReview = (props) => {
       if (!content) return alert('내용을 입력해주세요.');
 
       // 리뷰 작성 요청하는 api
-      const loadReviewUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/review/create`;
+      const loadReviewUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/review/create`;
 
       // const token = sessionStorage.getItem('token');
       // const config = {
@@ -244,7 +244,7 @@ const ContentWriteReview = (props) => {
   //리뷰 상태 변경하는 요청
   const changeReviewState = async () => {
     try {
-      const changeReviewStateUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/review`;
+      const changeReviewStateUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/review`;
       // const config = {
       //   headers: {
       //     'Content-Type': `application/json`,
@@ -327,7 +327,7 @@ const ContentModifiedReview = (props) => {
       // console.log('loadReviewContent');
       // console.log(setLoadReview);
       try {
-        const loadReviewUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/review/booking?bookingID=${props.bookingid}`;
+        const loadReviewUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/review/booking?bookingID=${props.bookingid}`;
 
         const res = await axios.get(loadReviewUrl, withCredentials);
 
@@ -357,7 +357,7 @@ const ContentModifiedReview = (props) => {
       if (!content) return alert('내용을 입력해주세요.');
 
       // 요청하는 api
-      const editReviewUrl = `http://kdt-sw2-busan-team03.elicecoding.com:5000/api/review/${loadReview._id}`;
+      const editReviewUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/review/${loadReview._id}`;
       // const token = sessionStorage.getItem('token');
       // const config = {
       //   headers: {

@@ -19,7 +19,7 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
     async function getAllRooms() {
       try {
         const res = await axios.get(
-          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/room'
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/room`
         );
         setAllRooms(res.data);
       } catch (e) {
@@ -37,7 +37,7 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
       if (people && selectedDate?.startDate && selectedDate?.endDate) {
         try {
           const res = await axios.get(
-            'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/booking/byDates',
+            `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/byDates`,
             {
               params: {
                 startDate: selectedDate.startDate,

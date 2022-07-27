@@ -35,7 +35,7 @@ const Navbar = () => {
   const handleLogoutClick = async () => {
     try {
       await axios.get(
-        'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/logout',
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/logout`,
         {
           withCredentials: true,
         }

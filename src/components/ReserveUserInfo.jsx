@@ -10,7 +10,7 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
     if (!orderCheck) {
       try {
         const res = await axios.get(
-          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/user',
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/user`,
           {
             withCredentials: true,
           }
