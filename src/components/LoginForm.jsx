@@ -37,7 +37,7 @@ const LoginForm = (props) => {
         alert('로그인 되었습니다.');
         close();
       } catch (error) {
-        console.error(error);
+        alert(error.response.data.reason);
       }
     },
   });

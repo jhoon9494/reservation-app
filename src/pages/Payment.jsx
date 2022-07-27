@@ -24,6 +24,10 @@ const Payment = () => {
   const roomData = JSON.parse(data);
 
   const handlePayment = async () => {
+    const stayDate = moment(roomData.endDate).diff(
+      moment(roomData.startDate),
+      'days'
+    );
     const reserveData = {
       startDate: moment(roomData.startDate)._d,
       endDate: moment(roomData.endDate)._d,
@@ -31,7 +35,7 @@ const Payment = () => {
       roomID: roomData.roomID,
       peopleNumber: roomData.people,
       requirements: userInfo.require,
-      price: roomData.price,
+      price: stayDate * roomData.price,
       email: userInfo.email,
       phoneNumber: [
         userInfo.startPhoneNumber,

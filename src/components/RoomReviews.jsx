@@ -79,7 +79,7 @@ const RoomReviews = ({ roomID }) => {
                   <span>예약자명</span>
                   <br />
                   {/* FIXME 유저명 찾도록 백엔드 코드 바뀌면 변경하기 */}
-                  김아무개
+                  {data.userID.name}
                 </p>
                 <p>
                   <span>평점</span>

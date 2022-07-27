@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Modal from '../components/Modal';
 import LoginForm from './LoginForm';
@@ -9,6 +9,7 @@ import axios from 'axios';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -60,8 +61,14 @@ const Navbar = () => {
         navigate('/admin');
       }
     });
+    if (!cookies[0]) {
+      setIsLogin(false);
+      setIsAdmin(false);
+      if (location.pathname === '/mypage' || location.pathname === '/admin') {
+        navigate('/');
+      }
+    }
   }, [document.cookie]);
-
   const handleLogoClick = () => {
     navigate('/');
   };
