@@ -11,7 +11,7 @@ export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
     ) {
       try {
         await axios.patch(
-          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/book',
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/book`,
           {
             data: {
               bookingID: data._id,
@@ -38,7 +38,7 @@ export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
     if (window.confirm(`${data.name} 예약자 님의 예약을 취소 하시겠습니까?`)) {
       try {
         await axios.delete(
-          'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/admin/book',
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/book`,
           {
             data: {
               bookingID: data._id,
