@@ -10,22 +10,31 @@ export const ShowUserList = ({ data, setDeleteUser }) => {
     if (
       window.confirm(`${data.name} 회원님의 정보를 정말로 삭제 하시겠습니까?`)
     ) {
-      await axios.delete('http://localhost:5000/api/admin/user', {
-        data: {
-          userId: data._id,
-        },
-      });
+      try {
+        await axios.delete('http://localhost:5000/api/admin/user', {
+          data: {
+            userId: data._id,
+          },
+          withCredentials: true,
+        });
+      } catch (e) {
+        alert('회원 탈퇴에 실패하였습니다.');
+        console.log(e);
+        return;
+      }
       alert(`${data.name} 회원님의 정보를 삭제 하였습니다.`);
       setDeleteUser((current) => !current);
     }
   }
 
   return (
-    <UserList key={data.ObjectId}>
+    <UserList>
       <UserListSpan>{data.name}</UserListSpan>
       <UserListSpan>{data.email}</UserListSpan>
       <UserListSpan>{data.phoneNumber}</UserListSpan>
-      <DeleteUserBtn onClick={(e) => withDrawal(e)}>회원 탈퇴</DeleteUserBtn>
+      <UserListSpan>
+        <DeleteUserBtn onClick={(e) => withDrawal(e)}>회원 탈퇴</DeleteUserBtn>
+      </UserListSpan>
     </UserList>
   );
 };
@@ -38,6 +47,7 @@ const UserList = styled.div`
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   border-bottom: 1px solid black;
+  padding: 10px 0px;
 `;
 
 const UserListSpan = styled.span`
@@ -48,21 +58,15 @@ const UserListSpan = styled.span`
   line-height: 20px;
   display: flex;
   justify-content: center;
-  width: 65px;
-  & + & {
-    // margin-left: 50px;
-    width: 230px;
-  }
-  & + & + & {
-    margin-left: 0px;
-    width: 200px;
-  }
+  align-items: center;
+  width: 210px;
+  margin: auto;
 `;
 const DeleteUserBtn = styled.button`
   width: 100px;
-  height: 30px;
-  border: 1px solid #ff0000;
+  height: 40px;
+  border: 2px solid #ff0000;
   display: flex;
   justify-content: center;
-  // margin-left: 80px;
+  align-items: center;
 `;

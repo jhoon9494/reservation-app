@@ -133,8 +133,8 @@ const Caravan = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   left: ${(props) => props.left}%;
-  width: 60px;
-  height: 40px;
+  width: 5rem;
+  height: 3rem;
 
   :hover {
     cursor: pointer;
@@ -145,8 +145,8 @@ const Tent = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   right: ${(props) => props.right}%;
-  width: 40px;
-  height: 35px;
+  width: 3rem;
+  height: 3rem;
 
   :hover {
     cursor: pointer;
@@ -157,8 +157,8 @@ const Glamp = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   right: ${(props) => props.right}%;
-  width: 45px;
-  height: 40px;
+  width: 3.5rem;
+  height: 3.5rem;
 
   :hover {
     cursor: pointer;
@@ -167,17 +167,17 @@ const Glamp = styled.div`
 
 const CheckRoom = styled(BsCheckLg)`
   color: ${baseStyle.mainColor};
-  transform: scale(3) translate(5px);
+  transform: scale(3) translate(7px, 2px);
 `;
 
 const SelectableCaravan = styled(VscCircleLargeOutline)`
   color: #0000ffa0;
-  transform: scale(4) translate(5px, 1px);
+  transform: scale(4) translate(5px, 3px);
 `;
 
 const NonSelectableCaravan = styled(VscChromeClose)`
   color: #ff0000a0;
-  transform: scale(4) translate(5px, 1px);
+  transform: scale(4) translate(5px, 3px);
 
   :hover {
     cursor: not-allowed;
@@ -186,12 +186,12 @@ const NonSelectableCaravan = styled(VscChromeClose)`
 
 const SelectableTentAndGlamp = styled(VscCircleLargeOutline)`
   color: #0000ffa0;
-  transform: scale(3) translate(5px, 3px);
+  transform: scale(3) translate(7px, 4px);
 `;
 
 const NonSelectableTentAndGlamp = styled(VscChromeClose)`
   color: #ff0000a0;
-  transform: scale(3) translate(5px, 3px);
+  transform: scale(3) translate(7px, 4px);
 
   :hover {
     cursor: not-allowed;

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import '../styles/modal.css';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import RoomTabs from './RoomTabs';
@@ -75,6 +74,12 @@ const ContentContainer = styled.div`
 const ReserveBtn = styled(Button)`
   display: block;
   background-color: ${baseStyle.mainColor};
+  border: 1px solid ${baseStyle.mainColor};
   width: 140px;
   margin: 17px auto 38px;
+
+  &:hover {
+    background-color: ${baseStyle.mainHoverColor};
+    border: 1px solid ${baseStyle.mainHoverColor};
+  }
 `;

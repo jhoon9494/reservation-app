@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import baseStyle from '../styles/baseStyle';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 //components
-import Navbar from '../components/Navbar';
 import MypageReservationCheck from '../components/MypageReservationCheck';
 import MypageModal from '../components/MypageModal';
 import MypageModifyMemberInfo from '../components/MypageModifyMemberInfo';
 
 const MyPage = () => {
-  const [getUser, setGetUser] = useState({});
-  const [getBooking, setGetBooking] = useState([]);
-
   const [checkPw, setCheckPw] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getCookieValue = (name) =>
+      document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() ||
+      '';
+    if (getCookieValue('userRole') !== 'user') {
+      navigate('/');
+    }
+  }, []);
 
   // modal 제어
   const [modalShow, setModalShow] = useState(false);
@@ -25,38 +33,6 @@ const MyPage = () => {
   });
   // tab제어
   const [currTab, setCurrTab] = useState('예약조회');
-
-  useEffect(() => {
-    console.log('useEffect');
-    const urlUser = `http://localhost:5000/api/user`;
-    const urlBookingList = `http://localhost:5000/api/booking/user`;
-    async function fetchBooking() {
-      const token = sessionStorage.getItem('token');
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get(urlBookingList, config, {
-        perPage: 1,
-        page: 1,
-      });
-      setGetBooking(res.data.bookingInfos);
-      // setGetBooking(() => [...getBookings]);
-    }
-    async function fetchUser() {
-      try {
-        // const token =
-        //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQxOTRhYjE1ZWJlMDg2YmIzZWQxOGQiLCJyb2xlIjoidXNlciIsImlhdCI6MTY1ODM4ODY1Nn0.4ETF84HQFNOTB7Grq0v6VJFt6oaYM0Cc8oCVJAfwIXA';
-        const token = sessionStorage.getItem('token');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.get(urlUser, config);
-        const getUsers = await res.data;
-        setGetUser(() => ({ ...getUsers }));
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    fetchBooking();
-    fetchUser();
-  }, []);
 
   // tab
   const tabs = ['예약조회', '정보수정'];
@@ -74,7 +50,6 @@ const MyPage = () => {
 
   return (
     <Container>
-      <Navbar />
       <TabContainer>
         {tabs.map((tab, i) => {
           return (
@@ -89,9 +64,9 @@ const MyPage = () => {
         })}
       </TabContainer>
       {currTab === '예약조회' ? (
-        <MypageReservationCheck getBooking={getBooking} />
+        <MypageReservationCheck />
       ) : currTab === '정보수정' && checkPw ? (
-        <MypageModifyMemberInfo getUser={getUser} />
+        <MypageModifyMemberInfo />
       ) : null}
       <MypageModal
         modalShow={modalShow}
@@ -139,9 +114,9 @@ const EactTab = styled.p`
   ${(props) =>
     props.active &&
     css`
-      color: #524fa1;
+      color: ${baseStyle.mainColor};
       font-weight: bold;
-      background: rgba(230, 230, 230, 0.0001);
-      border-bottom: 5px solid #524fa1;
+      background: rgba(138, 168, 205, 0.0001);
+      border-bottom: 5px solid ${baseStyle.mainColor};
     `}
 `;

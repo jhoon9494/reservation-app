@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import CheckPeople from '../components/CheckPeople';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import DateRangePick from '../components/DateRangePick';
 import ReservationRooms from '../components/ReservationRooms';
 import baseStyle from '../styles/baseStyle';
@@ -29,7 +27,7 @@ const Reservation = () => {
 
           setRoomContent(res.data);
         } catch (e) {
-          console.error('객실정보를 받아올 수 없습니다.');
+          alert('객실정보를 받아올 수 없습니다.');
         }
       }
     }
@@ -47,31 +45,36 @@ const Reservation = () => {
         roomName: roomContent.name,
         roomImg: roomContent.imgSrc[0],
       });
-      sessionStorage.setItem('reserveData', reserveData);
-      navigate('/payment');
-    }
 
-    // FIXME 추후 api 연결하면 수정하기
-    // try {
-    // const res = await axios.get('http://localhost:5000/api/booking/confirm', {
-    //   params: {
-    //     startDate: JSON.stringify(date.startDate),
-    //     endDate: JSON.stringify(date.endDate),
-    //     roomID: JSON.stringify(roomInfo),
-    //   },
-    // });
-    //   if (res.status === 200) {
-    //     console.log('중복된 예약이 없습니다.');
-    //   }
-    // } catch (e) {
-    //   if (e.response.status === 403) {
-    //     alert('로그인한 유저만 예약할 수 있습니다');
-    //   }
-    // }
+      try {
+        const res = await axios.get(
+          'http://localhost:5000/api/booking/confirm',
+          { withCredentials: true },
+          {
+            params: {
+              startDate: JSON.stringify(date.startDate),
+              endDate: JSON.stringify(date.endDate),
+              roomID: JSON.stringify(roomInfo),
+            },
+          }
+        );
+        if (res.status === 200) {
+          sessionStorage.setItem('reserveData', reserveData);
+          navigate('/payment');
+        }
+      } catch (e) {
+        if (e.response.status === 400) {
+          return alert(e.response.data);
+        }
+        // 로그인하지 않고 접근했을 경우에 에러
+        if (e.response.status === 403) {
+          alert(e.response.data.reason);
+        }
+      }
+    }
   };
   return (
-    <>
-      <Navbar />
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Container roomID={roomID}>
         <CheckPeople
           setPeople={setPeople}
@@ -95,8 +98,7 @@ const Reservation = () => {
         </MapContainer>
       )}
       <ReserveBtn onClick={handleReserve}>예약하기</ReserveBtn>
-      <Footer />
-    </>
+    </div>
   );
 };
 
@@ -106,12 +108,12 @@ const Container = styled.div`
   display: flex;
   justify-content: space-around;
   width: 932px;
-  margin: ${(props) => (props.roomID ? '157px auto auto' : '60px auto auto')};
+  margin: ${(props) => (props.roomID ? '157px auto 0' : '60px auto 0')};
 `;
 
 const MapContainer = styled.div`
-  width: 932px;
-  height: 637px;
+  width: 65rem;
+  height: 50rem;
   margin: 50px auto auto;
   position: relative;
 `;
@@ -125,8 +127,14 @@ const MapImg = styled.img`
 const ReserveBtn = styled(Button)`
   display: block;
   background-color: ${baseStyle.mainColor};
+  border: 1px solid ${baseStyle.mainColor};
   width: 140px;
-  margin: 50px auto 38px;
+  margin: 30px auto auto;
+
+  &:hover {
+    background-color: ${baseStyle.mainHoverColor};
+    border: 1px solid ${baseStyle.mainHoverColor};
+  }
 `;
 
 const SelectedRoomName = styled.div`

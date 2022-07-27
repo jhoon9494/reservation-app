@@ -5,10 +5,12 @@ import Modal from '../components/Modal';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import baseStyle from '../styles/baseStyle';
+import axios from 'axios';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const handleLoginClick = () => {
     setLoginModalOpen(true);
@@ -22,18 +24,43 @@ const Navbar = () => {
   const handleMyPageClick = () => {
     navigate('/mypage');
   };
+
+  // 관리자
+  const handleAdminClick = () => {
+    navigate('/admin');
+  };
+
   // 로그아웃
-  const handleLogoutClick = () => {
-    sessionStorage.clear();
-    setIsLogin(false);
-    alert('로그아웃 되었습니다.');
+  const handleLogoutClick = async () => {
+    try {
+      await axios.get('http://localhost:5000/api/logout', {
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLogin(false);
+      setIsAdmin(false);
+
+      alert('로그아웃 되었습니다.');
+    }
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem('token') !== null) {
-      setIsLogin(true);
-    }
-  });
+    const cookies = document.cookie.split(';');
+    cookies.forEach((cookie) => {
+      if (cookie.includes('userRole=user')) {
+        setIsLogin(true);
+        setIsAdmin(false);
+      }
+      if (cookie.includes('userRole=admin')) {
+        setIsLogin(true);
+        setIsAdmin(true);
+
+        navigate('/admin');
+      }
+    });
+  }, [document.cookie]);
 
   const handleLogoClick = () => {
     navigate('/');
@@ -50,7 +77,7 @@ const Navbar = () => {
       <NavigationBarWrap>
         <NavigationBar>
           <LogoWrap>
-            <Logo src="images/logo.png" alt="logo" onClick={handleLogoClick} />
+            <Logo src="/images/logo.png" alt="logo" onClick={handleLogoClick} />
           </LogoWrap>
           <NavigationMenuWrap>
             <NavigationMunu>
@@ -66,7 +93,11 @@ const Navbar = () => {
           <SignWrap>
             {isLogin ? (
               <>
-                <Sign onClick={handleMyPageClick}>MyPage</Sign>
+                {isAdmin ? (
+                  <Sign onClick={handleAdminClick}>Admin</Sign>
+                ) : (
+                  <Sign onClick={handleMyPageClick}>MyPage</Sign>
+                )}
                 <Sign onClick={handleLogoutClick}>Logout</Sign>
               </>
             ) : (
@@ -108,9 +139,11 @@ const NavigationBar = styled.nav`
 
 const LogoWrap = styled.div`
   width: 200px;
+  height: 85px;
 `;
 
 const Logo = styled.img`
+  height: 100%;
   &:hover {
     cursor: pointer;
   }
