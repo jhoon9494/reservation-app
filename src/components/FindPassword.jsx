@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const FindPassword = () => {
   const [error, setError] = useState('');
@@ -25,11 +26,15 @@ const FindPassword = () => {
       try {
         setError('');
         const { email, name } = values;
-        // TODO: 메일 API 연결
+        await axios.post(
+          'http://localhost:5000/api/newPassword',
+          { email, name },
+          { withCredentials: true }
+        );
         alert(
           `${name}님의 본인 확인을 위해 ${email} 주소로 비밀번호 변경 메일을 발송했습니다. 이메일을 확인해주세요.`
         );
-        navigate('/changePassword');
+        navigate('/');
       } catch (error) {
         setError(error.response.data);
       }
