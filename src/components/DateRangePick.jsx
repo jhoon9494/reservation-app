@@ -42,12 +42,16 @@ const DateRangePick = ({ setDate, roomID }) => {
   }, [roomID]);
 
   const disabledDate = (current) => {
-    return reservedDates.some((date) => {
-      return current.isBetween(
-        moment(date).startOf('day'),
-        moment(date).endOf('day')
-      );
-    });
+    if (
+      reservedDates.some((date) => {
+        return current.isBetween(
+          moment(date).startOf('day'),
+          moment(date).endOf('day')
+        );
+      }) ||
+      current < moment().startOf('day')
+    )
+      return true;
   };
   const handleDate = (date) => {
     const startDate = moment(date[0], 'YYYY-MM-DD');
