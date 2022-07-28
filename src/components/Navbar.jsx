@@ -65,6 +65,9 @@ const Navbar = () => {
   }, [document.cookie]);
 
   useEffect(() => {
+    if (location.pathname === '/') {
+      setCurrentPage('home');
+    }
     if (location.pathname.includes('/about')) {
       setCurrentPage('about');
     }
