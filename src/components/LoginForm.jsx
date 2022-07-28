@@ -15,6 +15,7 @@ const LoginForm = (props) => {
     initialValues: {
       email: '',
       password: '',
+      autoLogin: false,
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -25,12 +26,13 @@ const LoginForm = (props) => {
     onSubmit: async (values) => {
       try {
         setError('');
-        const { email, password } = values;
+        const { email, password, autoLogin } = values;
         await axios.post(
           `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/login`,
           {
             email,
             password,
+            autoLogin,
           },
           { withCredentials: true }
         );
@@ -72,11 +74,28 @@ const LoginForm = (props) => {
         <KakaoIcon src="images/kakao-icon.png" />
         카카오 로그인
       </KakaoLoginButton>
-      <FindEmailPasswordWrap>
+      <EtcWrap>
+        <AutoLoginWrap>
+          <AutoLoginCheck
+            id="autoLogin"
+            type="checkbox"
+            onChange={(value) => {
+              if (value.target.checked) {
+                alert(
+                  '공공장소에서 이용하실 경우 아이디가 도용될 우려가 있으니 조심해주시길 바랍니다.'
+                );
+              }
+              formik.handleChange(value);
+            }}
+            onBlur={formik.handleBlur}
+            value={formik.values.autoLogin}
+          />
+          <AutoLoginLabel htmlFor="autoLogin">자동 로그인</AutoLoginLabel>
+        </AutoLoginWrap>
         <StyledLink to="/findAccount" onClick={close}>
           이메일 찾기 / 비밀번호 찾기
         </StyledLink>
-      </FindEmailPasswordWrap>
+      </EtcWrap>
     </ModalForm>
   );
 };
@@ -160,9 +179,23 @@ const KakaoIcon = styled.img`
   margin-right: 0.25rem;
 `;
 
-const FindEmailPasswordWrap = styled.div`
+const EtcWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
   font-size: 0.8rem;
-  margin: 0 0 1rem 0.25rem;
+`;
+
+const AutoLoginWrap = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const AutoLoginCheck = styled.input``;
+
+const AutoLoginLabel = styled.label`
+  padding-left: 0.25rem;
 `;
 
 const StyledLink = styled(Link)`
