@@ -32,7 +32,7 @@ export const RoomDetail = ({ roomID }) => {
   }, [roomID]);
 
   return (
-    <div style={{ width: '750px' }}>
+    <div style={{ width: '600px' }}>
       <Header id="roomTitle">{roomContent.name}</Header>
       <RoomImageSlider roomContent={roomContent} />
       <ContentContainer>
@@ -58,14 +58,14 @@ export const RoomDetail = ({ roomID }) => {
 const Header = styled.div`
   width: 222px;
   font-size: ${baseStyle.titleFontSize};
-  margin: 54px auto auto;
+  margin: 0 auto;
   text-align: center;
 `;
 
 const ContentContainer = styled.div`
-  width: 650px;
-  height: 388px;
-  margin: 23px auto auto;
+  width: 550px;
+  height: 250px;
+  margin: 15px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -76,7 +76,7 @@ const ReserveBtn = styled(Button)`
   background-color: ${baseStyle.mainColor};
   border: 1px solid ${baseStyle.mainColor};
   width: 140px;
-  margin: 17px auto 38px;
+  margin: auto;
 
   &:hover {
     background-color: ${baseStyle.mainHoverColor};

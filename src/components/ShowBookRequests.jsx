@@ -83,9 +83,8 @@ export const ShowBookRequests = ({ data, setChangeBookStatus }) => {
 };
 
 const BookListSpan = styled.span`
-  font-family: 'Noto Sans KR';
   font-style: normal;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 14px;
   line-height: 20px;
   display: flex;

@@ -35,6 +35,14 @@ const Reservation = () => {
   }, [roomInfo]);
 
   const handleReserve = async () => {
+    if (!people || !date.startDate || !date.endDate) {
+      return alert('일정 혹은 인원수를 확인해주세요.');
+    }
+
+    if (!roomInfo) {
+      return alert('객실이 선택되지 않았습니다.');
+    }
+
     if (people > 0 && roomInfo && date.startDate && date.endDate) {
       const reserveData = JSON.stringify({
         roomID: roomInfo,
@@ -97,9 +105,19 @@ export default Reservation;
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-around;
-  width: 932px;
+  justify-content: center;
+  width: 600px;
   margin: ${(props) => (props.roomID ? '157px auto 0' : '60px auto 0')};
+
+  > div:last-child {
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid black;
+
+    :hover {
+      border-bottom: 2px solid black;
+    }
+  }
 `;
 
 const MapContainer = styled.div`
