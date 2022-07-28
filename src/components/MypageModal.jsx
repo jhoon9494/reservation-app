@@ -130,6 +130,7 @@ const ContentCheckPassword = (props) => {
   return (
     <>
       <h2>현재 비밀번호 확인</h2>
+      <p>카카오 로그인 사용자는 이용할 수 없습니다.</p>
       <input
         type="password"
         value={confirmPassword || ''}
@@ -630,7 +631,6 @@ const ModalModifiedReview = styled.section`
 // 정보수정 비밀번호확인 창과 css 제어
 const ModalCheckPassword = styled.section`
   padding: 25px;
-  padding-top: 35px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -646,7 +646,7 @@ const ModalCheckPassword = styled.section`
   }
 
   & input {
-    margin: 20px auto 30px;
+    margin: 10px auto 20px;
     border: 1px solid ${baseStyle.mainColor};
     border-radius: 10px;
     width: 306px;

@@ -79,34 +79,19 @@ const RoomReviews = ({ roomID }) => {
             return (
               <ReviewContainer key={`${data.objectId} - ${idx}`}>
                 <p>
-                  <span>
-                    <strong>예약자명</strong>
-                  </span>
+                  <span>예약자명</span>
                   <br />
                   {data.userID?.name}
                 </p>
                 <p>
-                  <span>
-                    <strong>평점</strong>
-                  </span>
+                  <span>평점</span>
                   <br />
                   {data.grade}점
                 </p>
-                <p
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
-                  <span
-                    style={{
-                      borderBottom: '1px solid lightgray',
-                      marginBottom: '5px',
-                    }}
-                  >
-                    <strong>{data.title}</strong>
-                  </span>
+                <p>
+                  <span>제목 : </span>
+                  {data.title}
+                  <br />
                   {data.content}
                 </p>
               </ReviewContainer>
@@ -156,7 +141,7 @@ const ReviewContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   display: flex;
   justify-content: center;
 `;

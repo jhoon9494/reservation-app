@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import axios from 'axios';
@@ -9,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 const LoginForm = (props) => {
   const { close } = props;
+  const href = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/kakao`;
 
   const [error, setError] = useState('');
   const formik = useFormik({
@@ -68,12 +68,12 @@ const LoginForm = (props) => {
       {error ? <ErrorMessage>{error}</ErrorMessage> : null}
       <SubmitButton type="submit">로그인</SubmitButton>
       <Line />
-      <KakaoLoginButton
-        href={`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/kakao`}
-      >
-        <KakaoIcon src="/images/kakao-icon.png" />
-        카카오 로그인
-      </KakaoLoginButton>
+      <a href={href}>
+        <KakaoLoginButton type="button">
+          <KakaoIcon src="/images/kakao-icon.png" />
+          카카오 로그인
+        </KakaoLoginButton>
+      </a>
       <EtcWrap>
         <AutoLoginWrap>
           <AutoLoginCheck
@@ -142,15 +142,18 @@ const ErrorMessage = styled.div`
   color: red;
 `;
 
-const SubmitButton = styled(Button)`
+const SubmitButton = styled.button`
   width: 100%;
+  height: 40px;
   margin: 2rem 0 1rem;
-  padding: 0.5rem;
-  background-color: ${baseStyle.mainColor};
-
-  &:hover {
-    background-color: ${baseStyle.mainColor};
-  }
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  color: ${baseStyle.mainColor};
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #222;
 `;
 
 const Line = styled.div`
@@ -158,20 +161,18 @@ const Line = styled.div`
   border-bottom: 1px solid rgb(233, 233, 233);
 `;
 
-const KakaoLoginButton = styled(Button)`
+const KakaoLoginButton = styled.button`
   width: 100%;
+  height: 40px;
   margin: 1rem 0;
-  padding: 0.5rem;
-  background-color: rgba(254, 229, 0, 1);
-  color: #191919;
-  border: 1px solid rgba(254, 229, 0, 1);
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  color: #222;
   font-weight: bold;
-
-  &:hover {
-    color: #191919;
-    background-color: rgba(254, 229, 0, 1);
-    border: 1px solid rgba(254, 229, 0, 1);
-  }
+  font-size: 1rem;
+  background-color: #fee500;
 `;
 
 const KakaoIcon = styled.img`
