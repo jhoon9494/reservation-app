@@ -26,8 +26,17 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
           endPhoneNumber: phoneNumberArray[2],
         }));
       } catch (e) {
-        console.error('유저정보를 불러올 수 없습니다.');
+        alert(e.response.data.reason);
       }
+    } else {
+      setUserInfo({
+        name: '',
+        startPhoneNumber: '010',
+        midPhoneNumber: '',
+        endPhoneNumber: '',
+        email: '',
+        require: '',
+      });
     }
     setOrderCheck((bool) => !bool);
   };
