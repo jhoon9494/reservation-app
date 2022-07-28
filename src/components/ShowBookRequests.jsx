@@ -93,7 +93,7 @@ const BookListSpan = styled.span`
 `;
 
 const BookList = styled.div`
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: grid;
   grid-template-columns: 0.5fr 1fr 1.5fr 0.5fr 0.5fr 1fr;
   grid-template-rows: 1fr;

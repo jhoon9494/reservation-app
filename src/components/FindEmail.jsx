@@ -27,13 +27,11 @@ const FindEmail = () => {
     onSubmit: async (values) => {
       try {
         setError('');
-        const { name } = values;
-        // TODO: 이메일 찾기 API
-        // query-params에 휴대폰 번호 추가
+        const { name, phoneNumber } = values;
         const findEmailInfo = await axios.get(
           `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/findEmail`,
           {
-            params: { name },
+            params: { name, phoneNumber },
           },
           { withCredentials: true }
         );
