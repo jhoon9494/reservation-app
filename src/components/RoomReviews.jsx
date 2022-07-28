@@ -79,12 +79,16 @@ const RoomReviews = ({ roomID }) => {
             return (
               <ReviewContainer key={`${data.objectId} - ${idx}`}>
                 <p>
-                  <span>예약자명</span>
+                  <span>
+                    <strong>예약자명</strong>
+                  </span>
                   <br />
                   {data.userID?.name}
                 </p>
                 <p>
-                  <span>평점</span>
+                  <span>
+                    <strong>평점</strong>
+                  </span>
                   <br />
                   {data.grade}점
                 </p>
