@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 
@@ -88,14 +87,22 @@ const HomeButtonWrap = styled.div`
   justify-content: space-between;
 `;
 
-const HomeButton = styled(Button)`
+const HomeButton = styled.button`
   width: 200px;
-  padding: 8px 28px;
-  background-color: ${baseStyle.mainColor};
-  border: 1px solid ${baseStyle.mainColor};
+  height: 3rem;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  color: ${baseStyle.mainColor};
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #222;
+  box-shadow: 0 0.5rem 1rem rgba(34, 34, 34, 0.8);
+  transition: all 0.25s ease-in-out;
 
   &:hover {
-    background-color: ${baseStyle.mainHoverColor};
-    border: 1px solid ${baseStyle.mainHoverColor};
+    color: #222;
+    background-color: ${baseStyle.mainColor};
   }
 `;
