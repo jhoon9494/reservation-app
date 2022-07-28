@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
-  const { email, redisKey } = useParams();
+  const { redisKey } = useParams();
   const [error, setError] = useState('');
   const formik = useFormik({
     initialValues: {
@@ -32,7 +32,6 @@ const ChangePassword = () => {
         await axios.patch(
           `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/password`,
           {
-            email,
             redisKey,
             password,
           },

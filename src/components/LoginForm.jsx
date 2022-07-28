@@ -71,7 +71,7 @@ const LoginForm = (props) => {
       <KakaoLoginButton
         href={`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/kakao`}
       >
-        <KakaoIcon src="images/kakao-icon.png" />
+        <KakaoIcon src="/images/kakao-icon.png" />
         카카오 로그인
       </KakaoLoginButton>
       <EtcWrap>
