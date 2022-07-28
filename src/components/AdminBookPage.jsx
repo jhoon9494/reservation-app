@@ -129,7 +129,7 @@ export const AdminBookPage = ({
             setCurrentPage((current) => current - 1);
           }}
         >
-          <FiArrowLeft /> 이전
+          <LeftArrow /> 이전
         </ArrowButton>
 
         {bookMenu === 'approve'
@@ -157,7 +157,7 @@ export const AdminBookPage = ({
             setCurrentPage((current) => current + 1);
           }}
         >
-          다음 <FiArrowRight />
+          다음 <RightArrow />
         </ArrowButton>
       </PageWrap>
     </BookWrap>
@@ -196,7 +196,7 @@ const PageWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  //   margin-top: 50px;
 `;
 
 const ArrowButton = styled.button`
@@ -209,6 +209,9 @@ const ArrowButton = styled.button`
   align-items: center;
   > svg {
     display: block;
+  }
+  &:disabled {
+    color: rgba(0, 0, 0, 0.3);
   }
 `;
 
@@ -256,4 +259,11 @@ const ManageSpan = styled.span`
   color: ${(props) => {
     return props.bookMenu === 'approve' ? 'gray' : 'red';
   }};
+`;
+
+const LeftArrow = styled(FiArrowLeft)`
+  margin-right: 5px;
+`;
+const RightArrow = styled(FiArrowRight)`
+  margin-left: 5px;
 `;
