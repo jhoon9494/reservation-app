@@ -16,15 +16,26 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
           }
         );
         const { name, email } = res.data;
-        const phoneNumberArray = res.data.phoneNumber?.split('-');
-        setUserInfo((prev) => ({
-          ...prev,
-          name,
-          email,
-          startPhoneNumber: res.data.phoneNumber ? phoneNumberArray[0] : '',
-          midPhoneNumber: res.data.phoneNumber ? phoneNumberArray[1] : '',
-          endPhoneNumber: res.data.phoneNumber ? phoneNumberArray[2] : '',
-        }));
+        if (res.data.provider) {
+          setUserInfo((prev) => ({
+            ...prev,
+            name,
+            email: '',
+            startPhoneNumber: '010',
+            midPhoneNumber: '',
+            endPhoneNumber: '',
+          }));
+        } else {
+          const phoneNumberArray = res.data.phoneNumber.split('-');
+          setUserInfo((prev) => ({
+            ...prev,
+            name,
+            email,
+            startPhoneNumber: phoneNumberArray[0],
+            midPhoneNumber: phoneNumberArray[1],
+            endPhoneNumber: phoneNumberArray[2],
+          }));
+        }
       } catch (e) {
         alert(e.response.data.reason);
       }
