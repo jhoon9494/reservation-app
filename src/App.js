@@ -27,10 +27,7 @@ function App() {
           <Route path="/findAccount" element={<FindAccount />} />
           <Route path="/payment" element={<Payment />} />
         </Route>
-        <Route
-          path="/changePassword/:email/:redisKey"
-          element={<ChangePassword />}
-        />
+        <Route path="/changePassword/:redisKey" element={<ChangePassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
