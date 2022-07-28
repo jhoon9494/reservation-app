@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Modal from '../components/Modal';
 import LoginForm from './LoginForm';
@@ -13,22 +13,13 @@ const Navbar = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState('home');
   const handleLoginClick = () => {
     setLoginModalOpen(true);
   };
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const handleRegisterClick = () => {
     setRegisterModalOpen(true);
-  };
-
-  // 마이페이지
-  const handleMyPageClick = () => {
-    navigate('/mypage');
-  };
-
-  // 관리자
-  const handleAdminClick = () => {
-    navigate('/admin');
   };
 
   // 로그아웃
@@ -72,9 +63,18 @@ const Navbar = () => {
       }
     }
   }, [document.cookie]);
-  const handleLogoClick = () => {
-    navigate('/');
-  };
+
+  useEffect(() => {
+    if (location.pathname.includes('/about')) {
+      setCurrentPage('about');
+    }
+    if (location.pathname.includes('/site')) {
+      setCurrentPage('site');
+    }
+    if (location.pathname.includes('/reservation')) {
+      setCurrentPage('reservation');
+    }
+  });
 
   return (
     <>
@@ -87,26 +87,39 @@ const Navbar = () => {
       <NavigationBarWrap>
         <NavigationBar>
           <LogoWrap>
-            <Logo src="/images/logo.png" alt="logo" onClick={handleLogoClick} />
+            <Logo
+              src="/images/logo.png"
+              alt="logo"
+              onClick={() => navigate('/')}
+            />
           </LogoWrap>
           <NavigationMenuWrap>
-            <NavigationMunu>
-              <StyledLink to="/about">About</StyledLink>
+            <NavigationMunu
+              active={currentPage === 'about'}
+              onClick={() => navigate('/about')}
+            >
+              About
             </NavigationMunu>
-            <NavigationMunu>
-              <StyledLink to="/site">Cabins</StyledLink>
+            <NavigationMunu
+              active={currentPage === 'site'}
+              onClick={() => navigate('/site')}
+            >
+              Cabins
             </NavigationMunu>
-            <NavigationMunu>
-              <StyledLink to="/reservation">Reservation</StyledLink>
+            <NavigationMunu
+              active={currentPage === 'reservation'}
+              onClick={() => navigate('/reservation')}
+            >
+              Reservation
             </NavigationMunu>
           </NavigationMenuWrap>
           <SignWrap>
             {isLogin ? (
               <>
                 {isAdmin ? (
-                  <Sign onClick={handleAdminClick}>Admin</Sign>
+                  <Sign onClick={() => navigate('/admin')}>Admin</Sign>
                 ) : (
-                  <Sign onClick={handleMyPageClick}>MyPage</Sign>
+                  <Sign onClick={() => navigate('/mypage')}>MyPage</Sign>
                 )}
                 <Sign onClick={handleLogoutClick}>Logout</Sign>
               </>
@@ -127,7 +140,7 @@ export default Navbar;
 
 const NavigationBarWrap = styled.header`
   width: 100%;
-  height: 90px;
+  height: 65px;
   border-bottom: 1px solid darkgray;
   display: flex;
   justify-content: center;
@@ -141,6 +154,7 @@ const NavigationBarWrap = styled.header`
 
 const NavigationBar = styled.nav`
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -149,7 +163,7 @@ const NavigationBar = styled.nav`
 
 const LogoWrap = styled.div`
   width: 200px;
-  height: 85px;
+  height: 90%;
 `;
 
 const Logo = styled.img`
@@ -161,32 +175,22 @@ const Logo = styled.img`
 
 const NavigationMenuWrap = styled.ul`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin: 0;
   padding: 0;
   list-style: none;
-  justify-content: center;
-  align-items: center;
 `;
 
 const NavigationMunu = styled.li`
-  & + & {
-    margin-left: 3rem;
-  }
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
+  height: 100%;
+  padding: 1rem 1.5rem;
+  margin: 0 0.5rem;
+  text-align: center;
   font-size: ${baseStyle.navbarFontSize};
   color: ${baseStyle.navbarColor};
-  transition: color 0.5s;
-
-  &:focus,
-  &:hover,
-  &:visited,
-  &:link,
-  &:active {
-    text-decoration: none;
-  }
+  border-bottom: 4px solid
+    ${(props) => (props.active ? baseStyle.mainColor : 'white')};
 
   &:hover {
     cursor: pointer;
