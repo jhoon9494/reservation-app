@@ -50,7 +50,7 @@ export const AdminUserPage = ({
             setCurrentPage((current) => current - 1);
           }}
         >
-          <FiArrowLeft style={{ marginRight: '5px' }} /> 이전
+          <LeftArrow /> 이전
         </ArrowButton>
 
         {filteredUserData.length === 0
@@ -70,7 +70,7 @@ export const AdminUserPage = ({
           }}
         >
           다음
-          <FiArrowRight style={{ marginLeft: '5px' }} />
+          <RightArrow />
         </ArrowButton>
       </PageWrap>
     </UserDiv>
@@ -113,7 +113,7 @@ const PageWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  //   margin-top: 50px;
 `;
 
 const ArrowButton = styled.button`
@@ -127,4 +127,14 @@ const ArrowButton = styled.button`
   > svg {
     display: block;
   }
+  &:disabled {
+    color: rgba(0, 0, 0, 0.3);
+  }
+`;
+
+const LeftArrow = styled(FiArrowLeft)`
+  margin-right: 5px;
+`;
+const RightArrow = styled(FiArrowRight)`
+  margin-left: 5px;
 `;

@@ -49,9 +49,8 @@ export const ShowBookExceptRequests = ({ data, setChangeBookStatus }) => {
 };
 
 const BookListSpan = styled.span`
-  font-family: 'Noto Sans KR';
   font-style: normal;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 14px;
   line-height: 20px;
   display: flex;
@@ -65,11 +64,11 @@ const BookList = styled.div`
   grid-template-columns: 0.5fr 1fr 1.5fr 0.5fr 0.5fr 1fr;
   grid-template-rows: 1fr;
   border-bottom: 1px solid black;
-  height: 60px;
+  height: 63px;
 `;
 
 const BookCancelBtn = styled.button`
-  width: 40px;
+  width: 50px;
   margin-left: 10px;
   background-color: yellow;
   border: 0px;
