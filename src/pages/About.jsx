@@ -77,7 +77,7 @@ const SubTitle = styled.h2`
   margin: 4rem 0 2rem;
 `;
 
-const Notice = styled.p`
+const Notice = styled.div`
   padding-left: 2rem;
 `;
 
