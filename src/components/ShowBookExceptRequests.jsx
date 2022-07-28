@@ -63,7 +63,7 @@ const BookList = styled.div`
   display: grid;
   grid-template-columns: 0.5fr 1fr 1.5fr 0.5fr 0.5fr 1fr;
   grid-template-rows: 1fr;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   height: 63px;
 `;
 

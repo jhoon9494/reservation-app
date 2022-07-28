@@ -85,7 +85,7 @@ const UserDiv = styled.div`
 `;
 
 const UserBar = styled.div`
-  border-bottom: 1px solid #595959;
+  border-bottom: 2px solid black;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
@@ -113,7 +113,6 @@ const PageWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  //   margin-top: 50px;
 `;
 
 const ArrowButton = styled.button`
