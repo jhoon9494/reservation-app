@@ -24,6 +24,17 @@ const Payment = () => {
   const roomData = JSON.parse(data);
 
   const handlePayment = async () => {
+    // 예약자 정보 미입력시 경고창
+    if (
+      !userInfo.name ||
+      !userInfo.email ||
+      !userInfo.midPhoneNumber ||
+      !userInfo.endPhoneNumber
+    ) {
+      alert('예약자 정보를 먼저 입력해주세요.');
+      return;
+    }
+
     const stayDate = moment(roomData.endDate).diff(
       moment(roomData.startDate),
       'days'
@@ -59,15 +70,7 @@ const Payment = () => {
         return alert('예약이 완료되었습니다!');
       }
     } catch (e) {
-      if (e.response.status === 400) {
-        if (e.response.data.reason) {
-          // 이미 예약된 날짜
-          alert(e.response.data.reason);
-        } else {
-          // 과거 예약 불가
-          alert(e.response.data + ' 일정을 다시 확인해주세요.');
-        }
-      }
+      alert(e.response.data.reason);
     }
   };
 

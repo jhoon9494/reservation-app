@@ -20,26 +20,27 @@ const CheckPeople = ({ setPeople, maxPeopleNumber }) => {
     return people;
   };
   return (
-    <div>
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="checkPeopleNumber">인원수</InputLabel>
-        <Select
-          labelId="checkPeopleNumber"
-          id="peopleNumber"
-          value={number}
-          label="peopleNumber"
-          onChange={handleChange}
-        >
-          {makeArray().map((peopleNum) => {
-            return (
-              <MenuItem key={`인원수-${peopleNum}`} value={peopleNum}>
-                {peopleNum}인
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-    </div>
+    <FormControl
+      variant="standard"
+      style={{ marginRight: '100px', width: '150px' }}
+    >
+      <InputLabel id="checkPeopleNumber">인원수</InputLabel>
+      <Select
+        labelId="checkPeopleNumber"
+        id="peopleNumber"
+        value={number}
+        label="peopleNumber"
+        onChange={handleChange}
+      >
+        {makeArray().map((peopleNum) => {
+          return (
+            <MenuItem key={`인원수-${peopleNum}`} value={peopleNum}>
+              {peopleNum}인
+            </MenuItem>
+          );
+        })}
+      </Select>
+    </FormControl>
   );
 };
 
