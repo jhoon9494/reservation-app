@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import baseStyle from '../styles/baseStyle';
+// import { useNavigate } from 'react-router-dom';
 
 const withCredentials = {
   headers: {
@@ -22,11 +22,11 @@ const MypageModal = (props) => {
     setCheckPw,
     setCurrTab,
     setCurrPage,
+    setBookingListRefresh,
   } = props;
 
   // modal option값에 따라 창 다르게 띄워주기
   const viewContent = () => {
-    // console.log('modalSelect :', modalSelect);
     switch (modalSelect.option) {
       // 예약취소 창
       case 'ModalReservationCancellation':
@@ -37,9 +37,11 @@ const MypageModal = (props) => {
               bookingid={modalSelect.bookingid}
               setModalShow={setModalShow}
               setCurrPage={setCurrPage}
+              setBookingListRefresh={setBookingListRefresh}
             />
           </ModalReservationCancellation>
         );
+
       // 후기작성 창
       case 'ModalWriteReview':
         return (
@@ -50,9 +52,11 @@ const MypageModal = (props) => {
               bookingid={modalSelect.bookingid}
               roomid={modalSelect.roomid}
               userName={modalSelect.userName}
+              setBookingListRefresh={setBookingListRefresh}
             />
           </ModalWriteReview>
         );
+
       // 후기수정 창
       case 'ModalModifiedReview':
         return (
@@ -63,6 +67,7 @@ const MypageModal = (props) => {
             />
           </ModalModifiedReview>
         );
+
       // 정보수정 비번확인 창
       case 'ModalCheckPassword':
         return (
@@ -100,7 +105,6 @@ export default MypageModal;
 // 비번 검증 모달창
 const ContentCheckPassword = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
-  // const navigate = useNavigate();
 
   // 비번 검증
   const checkedPw = () => {
@@ -108,24 +112,17 @@ const ContentCheckPassword = (props) => {
       try {
         const confirmUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/confirmPW?password=${confirmPassword}`;
 
-        // const token = sessionStorage.getItem('token');
-        // const config = { headers: { Authorization: `Bearer ${token}` } };
-
         await axios.get(confirmUrl, withCredentials);
-        // await axios.get(confirmUrl, config);
       } catch (err) {
         props.setCheckPw(false);
         props.setModalShow(false);
         props.setCurrTab('예약조회');
         alert(err.response.data.reason);
-        // navigate('/');
       }
     }
     confirmUserPw(confirmPassword);
 
-    // true = confirmUserPw(confirmPassword)
-    // 비번 검증에 따라 모달창 바로 닫힘
-
+    // 비번 결과가 참
     props.setCheckPw(true);
     props.setModalShow(false);
   };
@@ -149,38 +146,25 @@ const ContentCheckPassword = (props) => {
 
 // 예약 취소 요청
 const ContentReservationCancellation = (props) => {
-  // console.log('content props:', props);
   const reservationCancellationRequest = async () => {
-    // console.log('취소요청보냄', props.bookingid);
-
     try {
       const reservationCancelUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/cancel`;
-      // const token = sessionStorage.getItem('token');
-      // const config = {
-      //   headers: {
-      //     'Content-Type': `application/json`,
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // };
 
       const body = {
         bookingID: props.bookingid,
       };
 
-      console.log('body', body);
-      const res = await axios.patch(
+      await axios.patch(
         reservationCancelUrl,
         JSON.stringify(body),
         withCredentials
       );
-      // await axios.patch(reservationCancelUrl, JSON.stringify(body), config);
       alert('취소 신청이 되었습니다.');
+      // 모달창 닫기
       props.setModalShow();
-      window.location.reload();
-      // props.setCurrPage(1);
-      console.log('취소가 되었습니다:', res);
+      // 리스트 다시 불러오기
+      props.setBookingListRefresh((current) => !current);
     } catch (err) {
-      console.log(err);
       alert(err.response.data.reason);
       props.setModalShow();
     }
@@ -207,29 +191,20 @@ const ContentReservationCancellation = (props) => {
 
 // 후기 작성 요청
 const ContentWriteReview = (props) => {
-  // console.log('createReviewContent : ', props);
   const [grade, setGrade] = useState();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
+  // 리뷰 작성 요청하는 api
   const createReviewContent = async () => {
-    // console.log('createReviewContent');
     try {
       // 빈 공란 경고메세지
       if (!title) return alert('제목을 입력해주세요.');
       if (!grade) return alert('점수를 선택해주세요.');
       if (!content) return alert('내용을 입력해주세요.');
 
-      // 리뷰 작성 요청하는 api
       const loadReviewUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/review/create`;
 
-      // const token = sessionStorage.getItem('token');
-      // const config = {
-      //   headers: {
-      //     'Content-Type': `application/json`,
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // };
       const body = {
         bookingID: props.bookingid,
         roomID: props.roomid,
@@ -239,18 +214,14 @@ const ContentWriteReview = (props) => {
         content: content,
       };
 
-      console.log('body', body);
-      // console.log('json 형태 : ', token, JSON.stringify(body));
-
       await axios.post(loadReviewUrl, JSON.stringify(body), withCredentials);
 
-      // await axios.post(loadReviewUrl, JSON.stringify(body), config);
-
+      // 리뷰 상태 변경 함수 호출
       await changeReviewState();
-
-      // console.log('리뷰 작성 완료', res);
+      // 모달창 닫기
       props.setModalShow();
-      window.location.reload();
+      // 리스트 다시 불러오기
+      props.setBookingListRefresh((current) => !current);
     } catch (err) {
       alert(err.response.data.reason);
       props.setModalShow();
@@ -261,25 +232,14 @@ const ContentWriteReview = (props) => {
   const changeReviewState = async () => {
     try {
       const changeReviewStateUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/review`;
-      // const config = {
-      //   headers: {
-      //     'Content-Type': `application/json`,
-      //   },
-      // };
 
       await axios.patch(
         changeReviewStateUrl,
         JSON.stringify({ bookingID: props.bookingid }),
         withCredentials
       );
-      // await axios.patch(
-      //   changeReviewStateUrl,
-      //   JSON.stringify({ bookingID: props.bookingid }),
-      //   config
-      // );
 
       await alert('후기 작성 되었습니다.');
-      // console.log('리뷰 상태 변경 완료', res);
       props.setModalShow();
     } catch (err) {
       alert(err.response.data.reason);
@@ -330,8 +290,6 @@ const ContentWriteReview = (props) => {
 
 // 후기 수정
 const ContentModifiedReview = (props) => {
-  // console.log('후기수정 :', props.bookingid);
-  // const grade = loadReview.grade;
   const grade = 5;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -340,21 +298,14 @@ const ContentModifiedReview = (props) => {
   useEffect(() => {
     // 후기 조회 요청
     const loadReviewContent = async () => {
-      // console.log('loadReviewContent');
-      // console.log(setLoadReview);
       try {
         const loadReviewUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/review/booking?bookingID=${props.bookingid}`;
 
         const res = await axios.get(loadReviewUrl, withCredentials);
 
-        // const res = await axios.get(loadReviewUrl);
-
-        // console.log('loadReview 로드완료', res);
         await setLoadReview({ ...res.data });
         await setTitle(res.data.title);
         await setContent(res.data.content);
-
-        // console.log('loadReview 로드완료', loadReview);
       } catch (err) {
         alert(err.response.data.reason);
         props.setModalShow();
@@ -365,35 +316,22 @@ const ContentModifiedReview = (props) => {
 
   // 후기 수정 후 작성 요청
   const editReviewContent = async () => {
-    // console.log('editReviewContent');
-    // console.log('loadReview._id:', loadReview._id);
     try {
       // 빈 공란 경고메세지
       if (!title) return alert('제목을 입력해주세요.');
       if (!content) return alert('내용을 입력해주세요.');
 
-      // 요청하는 api
       const editReviewUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/review/${loadReview._id}`;
-      // const token = sessionStorage.getItem('token');
-      // const config = {
-      //   headers: {
-      //     'Content-Type': `application/json`,
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // };
 
       const body = {
         grade: grade,
         title: title,
         content: content,
       };
-      // console.log('json보내는 형식 : ', token, JSON.stringify(body));
 
       await axios.patch(editReviewUrl, JSON.stringify(body), withCredentials);
-      // await axios.patch(editReviewUrl, JSON.stringify(body), config);
 
       alert('후기 수정을 완료했습니다.');
-      // console.log('리뷰 수정 작성 완료', res);
       props.setModalShow();
     } catch (err) {
       alert(err.response.data.reason);
