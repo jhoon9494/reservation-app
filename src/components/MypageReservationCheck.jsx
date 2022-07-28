@@ -36,7 +36,7 @@ const MypageReservationCheck = () => {
     // 예약 리스트 요청
     async function fetchBooking() {
       try {
-        const urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=3`;
+        const urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=10`;
         const res = await axios.get(urlBookingList, withCredentials);
         setGetBooking(res.data.bookingInfos);
         setTotalPage(res.data.totalPage);

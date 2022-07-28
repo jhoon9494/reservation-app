@@ -172,7 +172,7 @@ const BookWrap = styled.div`
 `;
 
 const BookBar = styled.div`
-  border-bottom: 1px solid #595959;
+  border-bottom: 2px solid black;
   display: grid;
   grid-template-columns: 0.5fr 1fr 1.5fr 0.5fr 0.5fr 1fr;
   grid-template-rows: 1fr;
