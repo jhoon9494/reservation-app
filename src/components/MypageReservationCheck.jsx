@@ -15,6 +15,7 @@ const withCredentials = {
 
 const MypageReservationCheck = () => {
   const [getBooking, setGetBooking] = useState([]);
+  const [checkPassed, setCheckPassed] = useState([]);
 
   const [bookingListRefresh, setBookingListRefresh] = useState(true);
 
@@ -39,6 +40,7 @@ const MypageReservationCheck = () => {
         const urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=10`;
         const res = await axios.get(urlBookingList, withCredentials);
         setGetBooking(res.data.bookingInfos);
+        setCheckPassed(res.data.checkPassed);
         setTotalPage(res.data.totalPage);
       } catch (err) {
         alert(err.response.data.reason);
@@ -144,7 +146,9 @@ const MypageReservationCheck = () => {
                     <BookListSpan>
                       {list.price.toLocaleString()} 원
                     </BookListSpan>
-                    <BookListSpan>{list.status}</BookListSpan>
+                    <BookListSpan>
+                      {checkPassed[i].isPassed ? '예약 만료' : list.status}
+                    </BookListSpan>
                     <BookListSpan>
                       <BookStateBtn
                         onClick={handlButton}
