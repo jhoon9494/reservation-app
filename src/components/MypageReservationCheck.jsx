@@ -16,6 +16,8 @@ const withCredentials = {
 const MypageReservationCheck = () => {
   const [getBooking, setGetBooking] = useState([]);
 
+  const [bookingListRefresh, setBookingListRefresh] = useState(true);
+
   // 페이징네이션
   const [totalPage, setTotalPage] = useState(0);
   const [currPage, setCurrPage] = useState(1);
@@ -31,7 +33,6 @@ const MypageReservationCheck = () => {
   });
 
   useEffect(() => {
-    //kdt-sw2-busan-team03.elicecoding.com:5000/
     // 예약 리스트 요청
     async function fetchBooking() {
       try {
@@ -45,7 +46,7 @@ const MypageReservationCheck = () => {
     }
 
     fetchBooking();
-  }, [currPage]);
+  }, [currPage, bookingListRefresh]);
 
   // '예약 상태'에 따라 '예약 취소' 버튼을 활성화 시킨다
   const checkingStatus = (status, startDate) => {
@@ -66,7 +67,6 @@ const MypageReservationCheck = () => {
     const text = e.target.innerText;
     switch (text) {
       case '예약 취소':
-        // console.log('예약 취소');
         setModalSelect({
           option: 'ModalReservationCancellation',
           width: 600,
@@ -77,8 +77,6 @@ const MypageReservationCheck = () => {
         setModalShow(true);
         break;
       case '후기 작성':
-        // console.log('후기 작성');
-        // console.log('e.target.dataset.name', e.target.dataset.username);
         setModalSelect({
           option: 'ModalWriteReview',
           width: 700,
@@ -90,7 +88,6 @@ const MypageReservationCheck = () => {
         setModalShow(true);
         break;
       case '후기 수정':
-        // console.log('후기 수정');
         setModalSelect({
           option: 'ModalModifiedReview',
           width: 700,
@@ -100,7 +97,6 @@ const MypageReservationCheck = () => {
         setModalShow(true);
         break;
       default:
-      // console.log('버튼 클릭');
     }
   };
 
@@ -109,7 +105,6 @@ const MypageReservationCheck = () => {
     let startIndex = parseInt(currPage / 10);
     // currPage가 10의 배수인 경우에 버튼을 누르자마자 다음 페이지로 넘어가는 것을 방지하기 위함
     if (startIndex === currPage / 10) {
-      console.log('startIndex', startIndex);
       startIndex -= 1;
     }
     const page = [];
@@ -216,6 +211,7 @@ const MypageReservationCheck = () => {
               setModalShow={() => setModalShow(false)}
               modalSelect={modalSelect}
               setCurrPage={setCurrPage}
+              setBookingListRefresh={setBookingListRefresh}
             />
           </>
         ) : (
