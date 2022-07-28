@@ -65,9 +65,6 @@ const Navbar = () => {
   }, [document.cookie]);
 
   useEffect(() => {
-    if (location.pathname === '/') {
-      setCurrentPage('home');
-    }
     if (location.pathname.includes('/about')) {
       setCurrentPage('about');
     }
@@ -177,6 +174,7 @@ const Logo = styled.img`
 `;
 
 const NavigationMenuWrap = styled.ul`
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

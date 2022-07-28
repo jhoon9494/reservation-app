@@ -143,7 +143,7 @@ const ReviewContainer = styled.div`
   margin: 0 auto 15px;
 
   & > p {
-    flex-basis: 50px;
+    flex-basis: 60px;
   }
 
   & > p:last-child {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import FindPassword from '../components/FindPassword';
 import FindEmail from '../components/FindEmail';
@@ -47,21 +47,9 @@ const Tab = styled.div`
   align-items: center;
   font-size: ${baseStyle.titleFontSize};
   font-weight: bold;
-  margin-bottom: 0.25rem;
-  box-sizing: content-box;
-
-  ${(props) =>
-    props.active &&
-    css`
-      color: ${baseStyle.mainColor};
-      font-weight: bold;
-      background: rgba(230, 230, 230, 0.0001);
-      border-bottom: 5px solid #524fa1;
-    `}
-
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
+  border-bottom: 4px solid
+    ${(props) => (props.active ? baseStyle.mainColor : 'white')};
 
   & + & {
     border-left: 1px solid black;
