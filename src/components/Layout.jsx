@@ -12,7 +12,7 @@ const Layout = () => {
       <Main role="main">
         <Outlet />
       </Main>
-      {location !== '/' && <Footer />}
+      {location.pathname !== '/' && <Footer />}
     </Container>
   );
 };

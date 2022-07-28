@@ -7,8 +7,7 @@ const baseStyle = {
   contentFontSize: '14px',
   remarkFontSize: '12px',
   navbarFontSize: '16px',
-  navbarColor: 'rgba(73, 73, 73, 1)',
-  navbarHoverColor: 'rgba(82, 79, 161, 1)',
+  navbarColor: '#494949',
 };
 
 export default baseStyle;

@@ -4,14 +4,11 @@ import baseStyle from '../styles/baseStyle';
 
 const Footer = () => {
   const navigate = useNavigate();
-  const handleLogoClick = () => {
-    navigate('/');
-  };
 
   return (
     <Container>
       <LogoWrap>
-        <Logo src="/images/logo.png" alt="Logo" onClick={handleLogoClick} />
+        <Logo src="/images/logo.png" alt="Logo" onClick={() => navigate('/')} />
       </LogoWrap>
       <ContentWrap>
         <Content>캠핑장 주소 : 12345 부산시 XX구 XXX로 XX</Content>

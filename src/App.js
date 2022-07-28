@@ -10,6 +10,7 @@ import FindAccount from './pages/FindAccount';
 import ChangePassword from './pages/ChangePassword';
 import Payment from './pages/Payment';
 import Layout from './components/Layout';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           path="/changePassword/:email/:redisKey"
           element={<ChangePassword />}
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
