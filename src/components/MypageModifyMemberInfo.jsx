@@ -13,7 +13,6 @@ const withCredentials = {
 
 const MypageModifyMemberInfo = (props) => {
   const [getUser, setGetUser] = useState({});
-  // console.log('getUser : ', getUser);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
@@ -22,21 +21,15 @@ const MypageModifyMemberInfo = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('회원정보 불러옴');
-
+    // 회원 정보 불러오기
     async function fetchUser() {
       try {
         const urlUser = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/user`;
-        // const token = sessionStorage.getItem('token');
-        // const config = { headers: { Authorization: `Bearer ${token}` } };
-        // const res = await axios.get(urlUser, config);
-
         const res = await axios.get(urlUser, withCredentials);
 
         setGetUser({ ...res.data });
         setName(res.data.name);
         setPhoneNumber(res.data.phoneNumber);
-        // console.log(getUser);
       } catch (err) {
         alert(err.response.data.reason);
       }
@@ -55,37 +48,24 @@ const MypageModifyMemberInfo = (props) => {
 
     try {
       const editUserUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/user`;
-      // const token = sessionStorage.getItem('token');
-      // const config = {
-      //   headers: {
-      //     'Content-Type': `application/json`,
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // };
+
       let body = {
         name: name.length < 1 ? getUser.name : name,
         phoneNumber: phoneNumber,
       };
 
+      // 비밀번호에 인풋값이 있으면 추가
       if (password.length >= 1) {
         body.password = password;
       }
 
-      console.log('body', body);
+      await axios.patch(editUserUrl, JSON.stringify(body), withCredentials);
 
-      const res = await axios.patch(
-        editUserUrl,
-        JSON.stringify(body),
-        withCredentials
-      );
-
-      // await axios.patch(editUserUrl, JSON.stringify(body), config);
-      console.log(res);
       alert('회원 정보가 업데이트 되었습니다.');
+
       // 정보수정 내용을 초기화 함
       props.setCheckPw(false);
       props.setCurrTab('예약조회');
-      // navigate('/');
     } catch (err) {
       alert(err.response.data.reason);
     }
@@ -97,14 +77,9 @@ const MypageModifyMemberInfo = (props) => {
 
     try {
       const deleteUserUrl = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/user`;
-      // const token = sessionStorage.getItem('token');
-      // const config = { headers: { Authorization: `Bearer ${token}` } };
 
       await axios.delete(deleteUserUrl, withCredentials);
-      // await axios.delete(deleteUserUrl, config);
-      // console.log('삭제되었습니다.:', res);
       alert('회원 탈퇴 되었습니다.');
-      // sessionStorage.removeItem('token');
       navigate('/');
     } catch (err) {
       alert(err.response.data.reason);
