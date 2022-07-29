@@ -92,6 +92,7 @@
 <img alt="styled--components" src ="https://img.shields.io/badge/styled -- components-DB7093.svg?&style=for-the-badge&logo=styled-components&logoColor=333333"/>&nbsp;
 <img alt="bootstrap" src ="https://img.shields.io/badge/react--bootstrap-7952B3.svg?&style=for-the-badge&logo=bootstrap&logoColor=ffffff"/>&nbsp;
 <img alt="MUI" src ="https://img.shields.io/badge/material--UI-007FFF.svg?&style=for-the-badge&logo=MUI&logoColor=ffffff"/>&nbsp;
+<img alt="antdesign" src ="https://img.shields.io/badge/Ant Design-0170FE.svg?&style=for-the-badge&logo=Ant Design&logoColor=ffffff"/>&nbsp;
 
 <br />
 
@@ -135,6 +136,8 @@
 
 ## 🎥 데모 영상
 <br /><br />
+![객실상세보기고](/uploads/b975b32838e3a196a0d3a97979299a88/객실상세보기고.mp4)
+![객실_예약하기](/uploads/40de2d8e4e12f2704c1a46bd6c649a57/객실_예약하기.mp4)
 
 ## 👪 구성원 역할
 <br />
