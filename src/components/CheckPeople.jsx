@@ -24,7 +24,9 @@ const CheckPeople = ({ setPeople, maxPeopleNumber }) => {
       variant="standard"
       style={{ marginRight: '100px', width: '150px' }}
     >
-      <InputLabel id="checkPeopleNumber">인원수</InputLabel>
+      <InputLabel id="checkPeopleNumber" style={{ color: '#a9a9a9' }}>
+        인원수
+      </InputLabel>
       <Select
         labelId="checkPeopleNumber"
         id="peopleNumber"
