@@ -2,8 +2,11 @@
 
 import styled from 'styled-components';
 import axios from 'axios';
+import Modal from './Modal';
+import { useState } from 'react';
 // 예약 리스트
 export const ShowBookExceptRequests = ({ data, setChangeBookStatus }) => {
+  const [modalShow, setModalShow] = useState(false);
   // 예약 취소 함수
   async function bookCancel(e) {
     e.preventDefault();
@@ -29,6 +32,10 @@ export const ShowBookExceptRequests = ({ data, setChangeBookStatus }) => {
     }
   }
 
+  const showModal = () => {
+    setModalShow(true);
+  };
+
   return (
     <BookList>
       <BookListSpan>{data.name}</BookListSpan>
@@ -41,9 +48,27 @@ export const ShowBookExceptRequests = ({ data, setChangeBookStatus }) => {
       <BookListSpan>{data.roomID.name}</BookListSpan>
       <BookListSpan>{data.peopleNumber}명</BookListSpan>
       <BookListSpan>
-        {data.status}
+        <RequireBtn
+          onClick={() => {
+            showModal();
+          }}
+        >
+          요청사항
+        </RequireBtn>
         <BookCancelBtn onClick={(e) => bookCancel(e)}>예약 취소</BookCancelBtn>
       </BookListSpan>
+      <Modal open={modalShow} close={() => setModalShow(false)}>
+        <RequireDiv>
+          <RequireP>요청사항</RequireP>
+          <RequireContentDiv>
+            {data.requirements !== '' ? (
+              <RequireContentSpan>{data.requirements}</RequireContentSpan>
+            ) : (
+              <RequireContentSpan>요청 사항이 없습니다.</RequireContentSpan>
+            )}
+          </RequireContentDiv>
+        </RequireDiv>
+      </Modal>
     </BookList>
   );
 };
@@ -72,4 +97,30 @@ const BookCancelBtn = styled.button`
   margin-left: 10px;
   background-color: yellow;
   border: 0px;
+`;
+
+const RequireBtn = styled.button`
+  width: 50px;
+  margin-left: 10px;
+  background-color: pink;
+  border: 0px;
+`;
+
+const RequireDiv = styled.div`
+  width: 300px;
+  height: 300px;
+`;
+
+const RequireP = styled.p`
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const RequireContentDiv = styled.div`
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+  padding-top: 10px;
+`;
+
+const RequireContentSpan = styled.span`
+  font-size: 15px;
 `;
