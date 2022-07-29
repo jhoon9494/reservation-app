@@ -69,11 +69,7 @@ export const AdminBookPage = ({
         <BookBarSpan>예약 기간</BookBarSpan>
         <BookBarSpan>객실명</BookBarSpan>
         <BookBarSpan>인원</BookBarSpan>
-        {bookMenu === 'approve' ? (
-          <BookBarSpan></BookBarSpan>
-        ) : (
-          <BookBarSpan>예약 상태</BookBarSpan>
-        )}
+        <BookBarSpan></BookBarSpan>
       </BookBar>
       {bookMenu === 'approve' ? (
         <BookLists>
