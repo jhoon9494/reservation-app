@@ -3,6 +3,7 @@ import axios from 'axios';
 import { DatePicker } from 'antd';
 import 'antd/dist/antd.min.css';
 import moment from 'moment';
+import styled from 'styled-components';
 const { RangePicker } = DatePicker;
 
 const DateRangePick = ({ setDate, roomID }) => {
@@ -79,7 +80,7 @@ const DateRangePick = ({ setDate, roomID }) => {
   };
   return (
     <>
-      <RangePicker
+      <CustomRangePicker
         disabledDate={disabledDate}
         size={'large'}
         onChange={handleDate}
@@ -90,3 +91,9 @@ const DateRangePick = ({ setDate, roomID }) => {
 };
 
 export default DateRangePick;
+
+const CustomRangePicker = styled(RangePicker)`
+  input::placeholder {
+    color: #a9a9a9;
+  }
+`;

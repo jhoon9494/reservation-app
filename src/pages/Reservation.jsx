@@ -112,7 +112,7 @@ const Container = styled.div`
   > div:last-child {
     border: none;
     border-radius: 0;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #949494;
 
     :hover {
       border-bottom: 2px solid black;
