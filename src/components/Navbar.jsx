@@ -68,17 +68,14 @@ const Navbar = () => {
   }, [document.cookie]);
 
   useEffect(() => {
-    if (location.pathname === '/') {
-      setCurrentPage('home');
-    }
     if (location.pathname.includes('/about')) {
       setCurrentPage('about');
-    }
-    if (location.pathname.includes('/site')) {
+    } else if (location.pathname.includes('/site')) {
       setCurrentPage('site');
-    }
-    if (location.pathname.includes('/reservation')) {
+    } else if (location.pathname.includes('/reservation')) {
       setCurrentPage('reservation');
+    } else {
+      setCurrentPage('');
     }
   });
 
