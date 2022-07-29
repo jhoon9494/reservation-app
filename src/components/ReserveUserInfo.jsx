@@ -15,16 +15,27 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
             withCredentials: true,
           }
         );
-        const { name, email, phoneNumber } = res.data;
-        const phoneNumberArray = phoneNumber.split('-');
-        setUserInfo((prev) => ({
-          ...prev,
-          name,
-          email,
-          startPhoneNumber: phoneNumberArray[0],
-          midPhoneNumber: phoneNumberArray[1],
-          endPhoneNumber: phoneNumberArray[2],
-        }));
+        const { name, email } = res.data;
+        if (res.data.provider) {
+          setUserInfo((prev) => ({
+            ...prev,
+            name,
+            email: '',
+            startPhoneNumber: '010',
+            midPhoneNumber: '',
+            endPhoneNumber: '',
+          }));
+        } else {
+          const phoneNumberArray = res.data.phoneNumber.split('-');
+          setUserInfo((prev) => ({
+            ...prev,
+            name,
+            email,
+            startPhoneNumber: phoneNumberArray[0],
+            midPhoneNumber: phoneNumberArray[1],
+            endPhoneNumber: phoneNumberArray[2],
+          }));
+        }
       } catch (e) {
         alert(e.response.data.reason);
       }
@@ -47,7 +58,7 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
   return (
     <>
       <Header>
-        <h2>예약자 정보</h2>
+        <h2 style={{ margin: '0' }}>예약자 정보</h2>
         <input
           type={'checkbox'}
           onChange={handleOrderCheckbox}
@@ -107,14 +118,10 @@ export default ReserveUserInfo;
 
 const Header = styled.div`
   display: flex;
-
-  > h2 {
-    margin: 0;
-  }
+  align-items: center;
 
   > input {
-    margin-left: 20px;
-    width: 18px;
+    margin-left: 10px;
   }
 
   > span {

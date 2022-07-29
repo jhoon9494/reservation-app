@@ -252,8 +252,6 @@ const UserManage = styled.div`
   font-size: 20px;
   line-height: 29px;
   height: 30px;
-  border-right: 1px solid black;
-  padding-right: 10px;
   :hover {
     cursor: pointer;
   }
@@ -266,7 +264,6 @@ const BookManage = styled.div`
   font-size: 20px;
   line-height: 29px;
   height: 30px;
-  padding-left: 10px;
   :hover {
     cursor: pointer;
   }
@@ -281,6 +278,8 @@ const ManageUserSpan = styled.span`
   padding: 0px 8px 6px 8px;
   border-bottom: ${(props) =>
     props.management == 'user' ? '3px #8AA8CD solid' : ''};
+  border-right: ${(props) =>
+    props.management == 'user' ? '1px solid black' : ''};
 `;
 
 const ManageBookSpan = styled.span`
@@ -292,6 +291,8 @@ const ManageBookSpan = styled.span`
   padding: 0px 8px 6px 8px;
   border-bottom: ${(props) =>
     props.management == 'book' ? '3px #8AA8CD solid' : ''};
+  border-left: ${(props) =>
+    props.management == 'book' ? '1px solid black' : ''};
 `;
 
 const NameInput = styled.input`

@@ -58,13 +58,19 @@ const Navbar = () => {
     if (!cookies[0]) {
       setIsLogin(false);
       setIsAdmin(false);
-      if (location.pathname === '/mypage' || location.pathname === '/admin') {
+      if (
+        location.pathname.includes('/mypage') ||
+        location.pathname.includes('/admin')
+      ) {
         navigate('/');
       }
     }
   }, [document.cookie]);
 
   useEffect(() => {
+    if (location.pathname === '/') {
+      setCurrentPage('home');
+    }
     if (location.pathname.includes('/about')) {
       setCurrentPage('about');
     }
@@ -174,6 +180,7 @@ const Logo = styled.img`
 `;
 
 const NavigationMenuWrap = styled.ul`
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
