@@ -18,23 +18,23 @@ export const AdminUserPage = ({
         <UserBarSpan>이름</UserBarSpan>
         <UserBarSpan>E-Mail</UserBarSpan>
         <UserBarSpan>전화번호</UserBarSpan>
-        <UserBarSpan>회원탈퇴</UserBarSpan>
+        <UserBarSpan></UserBarSpan>
       </UserBar>
       <UserLists>
-        {filteredUserData == ''
-          ? currentData(userData).map((data, index) => {
+        {filteredUserData.length === 0
+          ? currentData(userData).map((data) => {
               return (
                 <ShowUserList
-                  key={index}
+                  key={data._id}
                   data={data}
                   setDeleteUser={() => setDeleteUser()}
                 />
               );
             })
-          : currentData(filteredUserData).map((data, index) => {
+          : currentData(filteredUserData).map((data) => {
               return (
                 <ShowUserList
-                  key={index}
+                  key={data._id}
                   data={data}
                   setDeleteUser={() => setDeleteUser()}
                 />
@@ -50,17 +50,17 @@ export const AdminUserPage = ({
             setCurrentPage((current) => current - 1);
           }}
         >
-          <FiArrowLeft style={{ marginRight: '5px' }} /> 이전
+          <LeftArrow /> 이전
         </ArrowButton>
 
-        {filteredUserData == ''
+        {filteredUserData.length === 0
           ? pageCount(userData)
           : pageCount(filteredUserData)}
 
         <ArrowButton
           style={{ marginLeft: '15px' }}
           disabled={
-            filteredUserData == ''
+            filteredUserData.length === 0
               ? currentPage == Math.ceil(userData.length / dataPerPage)
               : currentPage == Math.ceil(filteredUserData.length / dataPerPage)
           }
@@ -70,7 +70,7 @@ export const AdminUserPage = ({
           }}
         >
           다음
-          <FiArrowRight style={{ marginLeft: '5px' }} />
+          <RightArrow />
         </ArrowButton>
       </PageWrap>
     </UserDiv>
@@ -85,21 +85,24 @@ const UserDiv = styled.div`
 `;
 
 const UserBar = styled.div`
-  border-bottom: 1px solid #595959;
-  //   display: flex;
+  border-bottom: 2px solid black;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
+  padding-bottom: 10px;
 `;
 
 const UserBarSpan = styled.span`
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: bold;
-  font-size: 18px;
-  line-height: 23px;
+  font-size: 16px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 210px;
   margin: auto;
-  padding: 10px 0;
 `;
 
 const UserLists = styled.div`
@@ -110,7 +113,6 @@ const PageWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
 `;
 
 const ArrowButton = styled.button`
@@ -124,4 +126,14 @@ const ArrowButton = styled.button`
   > svg {
     display: block;
   }
+  &:disabled {
+    color: rgba(0, 0, 0, 0.3);
+  }
+`;
+
+const LeftArrow = styled(FiArrowLeft)`
+  margin-right: 5px;
+`;
+const RightArrow = styled(FiArrowRight)`
+  margin-left: 5px;
 `;

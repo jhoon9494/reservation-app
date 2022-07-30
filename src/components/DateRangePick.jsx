@@ -3,6 +3,7 @@ import axios from 'axios';
 import { DatePicker } from 'antd';
 import 'antd/dist/antd.min.css';
 import moment from 'moment';
+import styled from 'styled-components';
 const { RangePicker } = DatePicker;
 
 const DateRangePick = ({ setDate, roomID }) => {
@@ -16,7 +17,7 @@ const DateRangePick = ({ setDate, roomID }) => {
           // 둘러보기 페이지에서 객실을 선택하고 들어온 경우
           // roomID를 통해 api호출 후 해당 객실의 예약된 날짜를 받아서 예약 불가능 표시
           const res = await axios.get(
-            'http://localhost:5000/api/booking/byRoom',
+            `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/byRoom`,
             {
               params: { roomID: roomID },
             }
@@ -42,12 +43,16 @@ const DateRangePick = ({ setDate, roomID }) => {
   }, [roomID]);
 
   const disabledDate = (current) => {
-    return reservedDates.some((date) => {
-      return current.isBetween(
-        moment(date).startOf('day'),
-        moment(date).endOf('day')
-      );
-    });
+    if (
+      reservedDates.some((date) => {
+        return current.isBetween(
+          moment(date).startOf('day'),
+          moment(date).endOf('day')
+        );
+      }) ||
+      current < moment().startOf('day')
+    )
+      return true;
   };
   const handleDate = (date) => {
     const startDate = moment(date[0], 'YYYY-MM-DD');
@@ -75,7 +80,7 @@ const DateRangePick = ({ setDate, roomID }) => {
   };
   return (
     <>
-      <RangePicker
+      <CustomRangePicker
         disabledDate={disabledDate}
         size={'large'}
         onChange={handleDate}
@@ -86,3 +91,9 @@ const DateRangePick = ({ setDate, roomID }) => {
 };
 
 export default DateRangePick;
+
+const CustomRangePicker = styled(RangePicker)`
+  input::placeholder {
+    color: #a9a9a9;
+  }
+`;

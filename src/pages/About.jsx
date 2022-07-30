@@ -1,7 +1,5 @@
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import styled from 'styled-components';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 
 const center = {
   lat: 35.8324,
@@ -16,51 +14,57 @@ const About = () => {
 
   return (
     <>
-      <Navbar />
-      <Container role="main">
-        <Body>
-          <SubTitle>공지사항</SubTitle>
-          <Notice>
-            로렘 입숨(lorem ipsum; 줄여서 립숨, lipsum)은 출판이나 그래픽 디자인
-            분야에서 폰트, 타이포그래피, 레이아웃 같은 그래픽 요소나 시각적
-            연출을 보여줄 때 사용하는 표준 채우기 텍스트로, 최종 결과물에
-            들어가는 실제적인 문장 내용이 채워지기 전에 시각 디자인 프로젝트
-            모형의 채움 글로도 이용된다. 이런 용도로 사용할 때 로렘 입숨을
-            그리킹(greeking)이라고도 부르며, 때로 로렘 입숨은 공간만 차지하는
-            무언가를 지칭하는 용어로도 사용된다. 로렘 입숨은 전통 라틴어와 닮은
-            점 때문에 종종 호기심을 유발하기도 하지만 그 이상의 의미를 담지는
-            않는다. 문서에서 텍스트가 보이면 사람들은 전체적인
-            프레젠테이션보다는 텍스트에 담긴 뜻에 집중하는 경향이 있어서
-            출판사들은 서체나 디자인을 보일 때는 프레젠테이션 자체에 초점을
-            맞추기 위해 로렘 입숨을 사용한다. 로렘 입숨은 영어에서 사용하는
-            문자들의 전형적인 분포에 근접하다고도 하는데, 이 점 때문에
-            프레젠테이션으로 초점을 이동하는 데에도 도움을 준다.
-          </Notice>
-          <SubTitle>오시는길</SubTitle>
-          <GoogleMapWrap>
-            {isLoaded && (
-              <GoogleMap
-                mapContainerStyle={{ width: '800px', height: '800px' }}
-                center={center}
-                zoom={18}
-              />
-            )}
-          </GoogleMapWrap>
-        </Body>
-      </Container>
-      <Footer />
+      <Body>
+        <SubTitle>Welcome</SubTitle>
+        <Notice>
+          딩굴딩굴 굴러다니며 놀 수 있는 딩굴딩굴 캠핑장에 오신것을 환영합니다.
+        </Notice>
+        <Notice>
+          저희 딩굴딩굴 캠핑장은 부산광역시 XX구 XXX로 XX에 위치 하고 있어서
+          도심과 가까워 접근성이 좋고 현대인들의 지친 일상을 힐링 할 수 있는
+          곳입니다.
+        </Notice>
+        <br />
+        <Notice>
+          넓고 넉넉한 오토캠핑 사이트와 더불어 몸만 준비해오면 되는 글램핑 또한
+          준비되어 있습니다.
+        </Notice>
+        <Notice>원하시는 기간과 캠핑 장소를 한 눈에 확인 해보세요.</Notice>
+        <Notice>
+          딩굴딩굴 캠핑장에서 일상의 피로와 스트레스를 자연과 함께 날려버리시길
+          바랍니다.
+        </Notice>
+        <br />
+        <Notice>딩굴딩굴 캠핑장</Notice>
+        <Notice>대표 전화 : 010-1234-5678</Notice>
+        <SubTitle>오시는길</SubTitle>
+        <GoogleMapWrap>
+          {isLoaded && (
+            <GoogleMap
+              mapContainerStyle={{ width: '1250px', height: '600px' }}
+              center={center}
+              zoom={18}
+            >
+              <Marker position={center} />
+            </GoogleMap>
+          )}
+        </GoogleMapWrap>
+        <br />
+        <Transportation>
+          <img
+            src="https://cdn.icon-icons.com/icons2/38/PNG/512/bustransport_bus_4984.png"
+            width="25px"
+          ></img>{' '}
+          <TransportationDescription>
+            724번, 349번, 937번 / 딩굴딩굴 캠핑장 앞 역
+          </TransportationDescription>
+        </Transportation>
+      </Body>
     </>
   );
 };
 
 export default About;
-
-const Container = styled.main`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding: 2rem 0;
-`;
 
 const Body = styled.div`
   width: 1280px;
@@ -73,9 +77,20 @@ const SubTitle = styled.h2`
 `;
 
 const Notice = styled.p`
-  padding-left: 2rem;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
 `;
 
 const GoogleMapWrap = styled.div`
+  padding-left: 1.5rem;
+`;
+
+const Transportation = styled.div`
   padding-left: 2rem;
+  display: flex;
+  align-items: center;
+`;
+
+const TransportationDescription = styled.span`
+  margin-left: 20px;
 `;

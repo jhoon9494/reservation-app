@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import axios from 'axios';
@@ -45,13 +44,16 @@ const RegisterForm = (props) => {
       try {
         setError('');
         const { email, password, name, phoneNumber } = values;
-        await axios.post('http://localhost:5000/api/register', {
-          email,
-          password,
-          name,
-          phoneNumber,
-        });
-
+        await axios.post(
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/register`,
+          {
+            email,
+            password,
+            name,
+            phoneNumber,
+          },
+          { withCredentials: true }
+        );
         alert('회원가입이 완료되었습니다. 로그인 해주세요.');
         close();
       } catch (error) {
@@ -176,13 +178,16 @@ const ErrorMessage = styled.div`
   color: red;
 `;
 
-const SubmitButton = styled(Button)`
+const SubmitButton = styled.button`
   width: 100%;
+  height: 40px;
   margin: 2rem 0;
-  padding: 0.5rem;
-  background-color: ${baseStyle.mainColor};
-
-  &:hover {
-    background-color: ${baseStyle.mainColor};
-  }
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  color: ${baseStyle.mainColor};
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #222;
 `;

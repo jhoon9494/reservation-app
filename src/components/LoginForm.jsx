@@ -1,24 +1,21 @@
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const REACT_APP_REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-const REDIRECT_URI = 'http://localhost:5000/api/oauth';
-const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${REACT_APP_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-
 const LoginForm = (props) => {
   const { close } = props;
+  const href = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/kakao`;
 
   const [error, setError] = useState('');
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
+      autoLogin: false,
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -29,20 +26,20 @@ const LoginForm = (props) => {
     onSubmit: async (values) => {
       try {
         setError('');
-        const { email, password } = values;
-        const loginInfo = await axios.post('http://localhost:5000/api/login', {
-          email,
-          password,
-        });
-
-        sessionStorage.clear();
-        sessionStorage.setItem('token', loginInfo.data.token.token);
-        sessionStorage.setItem('role', loginInfo.data.token.role);
-
+        const { email, password, autoLogin } = values;
+        await axios.post(
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/login`,
+          {
+            email,
+            password,
+            autoLogin,
+          },
+          { withCredentials: true }
+        );
         alert('로그인 되었습니다.');
         close();
       } catch (error) {
-        setError(error.response.data);
+        alert(error.response.data.reason);
       }
     },
   });
@@ -71,14 +68,34 @@ const LoginForm = (props) => {
       {error ? <ErrorMessage>{error}</ErrorMessage> : null}
       <SubmitButton type="submit">로그인</SubmitButton>
       <Line />
-      {/* TODO: 인가코드 전달 및 토큰 저장 */}
-      <KakaoLoginButton href={KAKAO_AUTH_URI}>
-        <KakaoIcon src="images/kakao-icon.png" />
-        카카오 로그인
-      </KakaoLoginButton>
-      <FindEmailPasswordWrap>
-        <StyledLink to="/findAccount">이메일 찾기 / 비밀번호 찾기</StyledLink>
-      </FindEmailPasswordWrap>
+      <a href={href}>
+        <KakaoLoginButton type="button">
+          <KakaoIcon src="/images/kakao-icon.png" />
+          카카오 로그인
+        </KakaoLoginButton>
+      </a>
+      <EtcWrap>
+        <AutoLoginWrap>
+          <AutoLoginCheck
+            id="autoLogin"
+            type="checkbox"
+            onChange={(value) => {
+              if (value.target.checked) {
+                alert(
+                  '공공장소에서 이용하실 경우 아이디가 도용될 우려가 있으니 조심해주시길 바랍니다.'
+                );
+              }
+              formik.handleChange(value);
+            }}
+            onBlur={formik.handleBlur}
+            value={formik.values.autoLogin}
+          />
+          <AutoLoginLabel htmlFor="autoLogin">자동 로그인</AutoLoginLabel>
+        </AutoLoginWrap>
+        <StyledLink to="/findAccount" onClick={close}>
+          이메일 찾기 / 비밀번호 찾기
+        </StyledLink>
+      </EtcWrap>
     </ModalForm>
   );
 };
@@ -125,15 +142,18 @@ const ErrorMessage = styled.div`
   color: red;
 `;
 
-const SubmitButton = styled(Button)`
+const SubmitButton = styled.button`
   width: 100%;
+  height: 40px;
   margin: 2rem 0 1rem;
-  padding: 0.5rem;
-  background-color: ${baseStyle.mainColor};
-
-  &:hover {
-    background-color: ${baseStyle.mainColor};
-  }
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  color: ${baseStyle.mainColor};
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #222;
 `;
 
 const Line = styled.div`
@@ -141,20 +161,18 @@ const Line = styled.div`
   border-bottom: 1px solid rgb(233, 233, 233);
 `;
 
-const KakaoLoginButton = styled(Button)`
+const KakaoLoginButton = styled.button`
   width: 100%;
+  height: 40px;
   margin: 1rem 0;
-  padding: 0.5rem;
-  background-color: rgba(254, 229, 0, 1);
-  color: #191919;
-  border: 1px solid rgba(254, 229, 0, 1);
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  color: #222;
   font-weight: bold;
-
-  &:hover {
-    color: #191919;
-    background-color: rgba(254, 229, 0, 1);
-    border: 1px solid rgba(254, 229, 0, 1);
-  }
+  font-size: 1rem;
+  background-color: #fee500;
 `;
 
 const KakaoIcon = styled.img`
@@ -162,9 +180,23 @@ const KakaoIcon = styled.img`
   margin-right: 0.25rem;
 `;
 
-const FindEmailPasswordWrap = styled.div`
+const EtcWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
   font-size: 0.8rem;
-  margin: 0 0 1rem 0.25rem;
+`;
+
+const AutoLoginWrap = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const AutoLoginCheck = styled.input``;
+
+const AutoLoginLabel = styled.label`
+  padding-left: 0.25rem;
 `;
 
 const StyledLink = styled(Link)`
