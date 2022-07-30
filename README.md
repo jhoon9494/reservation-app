@@ -25,8 +25,7 @@
 - <font size="4">주제 : 캠핑 예약 사이트</font>
 - <font size="3">메인 기능</font>
   <details>
-  <summary> 1.  예약 기능</summary>
-  
+  <summary> 1.  예약 기능</summary>  
       <ul>
           <li>예약 하기</li>
           <li>예약 취소</li>
@@ -48,7 +47,6 @@
     </details>
   <details>
   <summary> 3.  관리자 기능</summary>
-  
       <ul>
           <li>회원 관리</li>
           <li>예약 승인</li>
@@ -57,7 +55,6 @@
     </details>
   <details>
   <summary> 4.  리뷰 기능</summary>
-  
       <ul>
           <li>리뷰 조회</li>
           <li>리뷰 작성</li>
@@ -126,9 +123,10 @@
 
 | [🔗유저 시나리오 및 API 명세서](https://www.figma.com/file/NstxG3reXALAHqt0wEtrIf/Untitled?node-id=0%3A1)
 
+| [🔗API 문서](https://documenter.getpostman.com/view/21028820/UzR1K2iz)
+
 | 🔗서비스 구성도
-
-
+<br /><img src="/uploads/6de42a38466aa35deb7c801abf677c4f/image.png" alt="서비스 구성도" width="1000px" height="500px">
 
 
 <br />
@@ -167,8 +165,8 @@
 | 이름 | 역할 | 구현 기능 | 
 | ------ | ------ | ------ |
 |  김재영   |  프론트엔드(팀장)   | MyPage   |
-|  정승우   |  프론트엔드   | AdminPage  |
-|  최정훈   |  프론트엔드   | ReservationPage  |
+|  정승우   |  프론트엔드,백엔드   | AdminPage  |
+|  최정훈   |  프론트엔드   | Reservation,payment  |
 |  박우람   |  프론트엔드   | Main, Login  |
-|  김채홍   |  백엔드   |  Back  |
+|  김채홍   |  백엔드   |  Backend API  |
 
