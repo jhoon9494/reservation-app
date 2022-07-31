@@ -2,11 +2,11 @@
 import styled, { css } from 'styled-components';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+// import Navbar from '../components/Navbar';
+// import Footer from '../components/Footer';
 import { AdminUserPage } from '../components/AdminUserPage';
 import { AdminBookPage } from '../components/AdminBookPage';
+import { useNavigate } from 'react-router-dom';
 
 // 관리자 페이지
 const AdminPage = () => {
@@ -20,19 +20,29 @@ const AdminPage = () => {
   const [filteredBookRequestsData, setFilteredBookRequestsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage, setDataPerPage] = useState(6);
-
   const [deleteUser, setDeleteUser] = useState(false);
   const [changeBookStatus, setChangeBookStatus] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getCookieValue = (name) =>
+      document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() ||
+      '';
+    if (getCookieValue('userRole') !== 'admin') {
+      navigate('/');
+    }
+  }, []);
 
   // 첫 유저 데이터
   useEffect(() => {
     async function getUserList() {
-      const userData = await axios.get('http://localhost:5000/api/admin/user');
+      const userData = await axios.get(
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/users`,
+        { withCredentials: true }
+      );
       const userList = userData.data;
       setUserData(userList);
-      // 필터링 된 유저데이터 초기화
-      // setSearchingName('');
-      // setFilteredUserData('');
     }
     getUserList();
   }, [deleteUser]);
@@ -41,7 +51,11 @@ const AdminPage = () => {
   useEffect(() => {
     async function getBookList() {
       const bookData = await axios.get(
-        'http://localhost:5000/api/admin/bookExceptRequests'
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/books`,
+        {
+          params: { request: false },
+          withCredentials: true,
+        }
       );
       const bookList = bookData.data;
       setBookData(bookList);
@@ -50,7 +64,11 @@ const AdminPage = () => {
 
     async function getBookRequestsList() {
       const bookRequestsData = await axios.get(
-        'http://localhost:5000/api/admin/bookRequests'
+        `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/books`,
+        {
+          params: { request: true },
+          withCredentials: true,
+        }
       );
       const bookRequestsList = bookRequestsData.data;
       setBookRequestsData(bookRequestsList);
@@ -70,13 +88,14 @@ const AdminPage = () => {
 
   // 이름으로 찾기
   const searchByName = (e) => {
-    if (management == 'user') {
+    if (management === 'user') {
       // 유저 데이터
       async function findUsersByName() {
         const userData = await axios.get(
-          'http://localhost:5000/api/admin/userByName',
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/admin/user`,
           {
             params: { name: searchingName },
+            withCredentials: true,
           }
         );
         const userList = userData.data;
@@ -111,17 +130,25 @@ const AdminPage = () => {
   };
   const pageCount = (data) => {
     const pageCounts = [];
-    for (let i = 1; i < data.length / dataPerPage + 1; i++) {
+    let totalPage = Math.ceil(data.length / dataPerPage);
+    let startIndex = parseInt(currentPage / 10);
+
+    if (startIndex === currentPage / 10) {
+      startIndex -= 1;
+    }
+
+    for (let i = startIndex * 10; i < (startIndex + 1) * 10; i++) {
+      if (i === totalPage) break;
       pageCounts.push(
         <PageButton
           key={i}
-          active={currentPage === i}
+          active={currentPage === i + 1}
           onClick={(e) => {
             e.preventDefault();
-            setCurrentPage(i);
+            setCurrentPage(i + 1);
           }}
         >
-          {i}
+          {i + 1}
         </PageButton>
       );
     }
@@ -130,7 +157,6 @@ const AdminPage = () => {
 
   return (
     <>
-      <Navbar />
       <Container>
         <Body>
           <ManageBar>
@@ -166,7 +192,7 @@ const AdminPage = () => {
             />
             <SearchButton onClick={(e) => searchByName(e)}>검색</SearchButton>
           </ManageBar>
-          {management == 'user' ? (
+          {management === 'user' ? (
             <AdminUserPage
               filteredUserData={filteredUserData}
               setDeleteUser={setDeleteUser}
@@ -196,7 +222,6 @@ const AdminPage = () => {
           )}
         </Body>
       </Container>
-      <Footer />
     </>
   );
 };
@@ -207,16 +232,14 @@ const Container = styled.main`
   margin-top: 30px;
 `;
 const Body = styled.div`
-  height: 67.2vh;
+  height: 62vh;
 `;
 
 const ManageBar = styled.div`
   padding: 10px;
   width: 850px;
   height: 45px;
-
   margin: auto;
-
   display: flex;
   align-items: center;
   border-bottom: 1px black solid;
@@ -229,8 +252,6 @@ const UserManage = styled.div`
   font-size: 20px;
   line-height: 29px;
   height: 30px;
-  border-right: 1px solid black;
-  padding-right: 10px;
   :hover {
     cursor: pointer;
   }
@@ -243,7 +264,6 @@ const BookManage = styled.div`
   font-size: 20px;
   line-height: 29px;
   height: 30px;
-  padding-left: 10px;
   :hover {
     cursor: pointer;
   }
@@ -257,7 +277,9 @@ const ManageUserSpan = styled.span`
   line-height: 29px;
   padding: 0px 8px 6px 8px;
   border-bottom: ${(props) =>
-    props.management == 'user' ? '3px #524fa1 solid' : ''};
+    props.management == 'user' ? '3px #8AA8CD solid' : ''};
+  border-right: ${(props) =>
+    props.management == 'user' ? '1px solid black' : ''};
 `;
 
 const ManageBookSpan = styled.span`
@@ -268,7 +290,9 @@ const ManageBookSpan = styled.span`
   line-height: 29px;
   padding: 0px 8px 6px 8px;
   border-bottom: ${(props) =>
-    props.management == 'book' ? '3px #524fa1 solid' : ''};
+    props.management == 'book' ? '3px #8AA8CD solid' : ''};
+  border-left: ${(props) =>
+    props.management == 'book' ? '1px solid black' : ''};
 `;
 
 const NameInput = styled.input`
@@ -289,7 +313,7 @@ const SearchButton = styled.button`
   font-size: 16px;
   line-height: 20px;
   color: white;
-  background-color: #524fa1;
+  background-color: #8aa8cd;
   border: none;
   width: 71px;
   height: 36px;
@@ -315,7 +339,7 @@ const PageButton = styled.button`
   ${(props) =>
     props.active &&
     css`
-      background-color: #524fa1;
+      background-color: #8aa8cd;
       color: #f9fafc;
     `}
 `;

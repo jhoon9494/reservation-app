@@ -18,7 +18,9 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
   useEffect(() => {
     async function getAllRooms() {
       try {
-        const res = await axios.get('http://localhost:5000/api/room');
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/room`
+        );
         setAllRooms(res.data);
       } catch (e) {
         console.error('객실정보를 받아올 수 없습니다.');
@@ -35,7 +37,7 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
       if (people && selectedDate?.startDate && selectedDate?.endDate) {
         try {
           const res = await axios.get(
-            'http://localhost:5000/api/booking/byDates',
+            `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/byDates`,
             {
               params: {
                 startDate: selectedDate.startDate,
@@ -133,8 +135,8 @@ const Caravan = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   left: ${(props) => props.left}%;
-  width: 60px;
-  height: 40px;
+  width: 5rem;
+  height: 3rem;
 
   :hover {
     cursor: pointer;
@@ -145,8 +147,8 @@ const Tent = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   right: ${(props) => props.right}%;
-  width: 40px;
-  height: 35px;
+  width: 3rem;
+  height: 3rem;
 
   :hover {
     cursor: pointer;
@@ -157,8 +159,8 @@ const Glamp = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   right: ${(props) => props.right}%;
-  width: 45px;
-  height: 40px;
+  width: 3.5rem;
+  height: 3.5rem;
 
   :hover {
     cursor: pointer;
@@ -167,17 +169,17 @@ const Glamp = styled.div`
 
 const CheckRoom = styled(BsCheckLg)`
   color: ${baseStyle.mainColor};
-  transform: scale(3) translate(5px);
+  transform: scale(3) translate(7px, 2px);
 `;
 
 const SelectableCaravan = styled(VscCircleLargeOutline)`
   color: #0000ffa0;
-  transform: scale(4) translate(5px, 1px);
+  transform: scale(4) translate(5px, 3px);
 `;
 
 const NonSelectableCaravan = styled(VscChromeClose)`
   color: #ff0000a0;
-  transform: scale(4) translate(5px, 1px);
+  transform: scale(4) translate(5px, 3px);
 
   :hover {
     cursor: not-allowed;
@@ -186,12 +188,12 @@ const NonSelectableCaravan = styled(VscChromeClose)`
 
 const SelectableTentAndGlamp = styled(VscCircleLargeOutline)`
   color: #0000ffa0;
-  transform: scale(3) translate(5px, 3px);
+  transform: scale(3) translate(7px, 4px);
 `;
 
 const NonSelectableTentAndGlamp = styled(VscChromeClose)`
   color: #ff0000a0;
-  transform: scale(3) translate(5px, 3px);
+  transform: scale(3) translate(7px, 4px);
 
   :hover {
     cursor: not-allowed;

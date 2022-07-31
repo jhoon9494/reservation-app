@@ -1,28 +1,45 @@
 import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
 import styled from 'styled-components';
-import { useRef } from 'react';
+import baseStyle from '../styles/baseStyle';
+import { useRef, useState } from 'react';
 
 const RoomImageSlider = ({ roomContent }) => {
   const containerRef = useRef();
+  const [imgIndex, setImgIndex] = useState(0);
 
   const handleImageMoveLeft = () => {
     const currentMargin = parseInt(containerRef.current.style.marginLeft);
-    const nextMargin = currentMargin + 600;
+    const nextMargin = currentMargin + 550;
     if (nextMargin > 0) return;
     containerRef.current.style.marginLeft = `${nextMargin}px`;
+    setImgIndex((curr) => curr - 1);
   };
 
   const handleImageMoveRight = () => {
     const currentMargin = parseInt(containerRef.current.style.marginLeft)
       ? parseInt(containerRef.current.style.marginLeft)
       : 0;
-    const nextMargin = currentMargin - 600;
-    if (nextMargin < -(roomContent.imgSrc?.length - 1) * 600) return;
+    const nextMargin = currentMargin - 550;
+    if (nextMargin < -(roomContent.imgSrc?.length - 1) * 550) return;
     containerRef.current.style.marginLeft = `${nextMargin}px`;
+    setImgIndex((curr) => curr + 1);
   };
 
   return (
     <Container>
+      <ImgIndicators>
+        {Array(roomContent.imgSrc?.length)
+          .fill('idx')
+          .map((item, idx) => {
+            return (
+              <Indicator
+                key={`${item}-${idx}`}
+                active={imgIndex === idx}
+              ></Indicator>
+            );
+          })}
+      </ImgIndicators>
+
       <LeftArrowBtn onClick={handleImageMoveLeft} />
       <SliderContainer>
         <ImageContainer ref={containerRef}>
@@ -47,31 +64,47 @@ const RoomImageSlider = ({ roomContent }) => {
 export default RoomImageSlider;
 
 const Container = styled.div`
-  width: 600px;
+  width: 550px;
   display: flex;
   margin: 21px auto auto;
   justify-content: center;
   position: relative;
 `;
+const ImgIndicators = styled.div`
+  display: flex;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translate(-50%);
+`;
+
+const Indicator = styled.div`
+  background-color: ${(props) =>
+    props.active ? `${baseStyle.mainColor}` : 'white'};
+  border-radius: 5px;
+  width: 15px;
+  height: 5px;
+  margin: 5px;
+`;
 
 const SliderContainer = styled.div`
-  width: 600px;
-  height: 350px;
+  width: 550px;
+  height: 300px;
   display: flex;
   overflow: hidden;
   border-radius: 10px;
 `;
 
 const ImageContainer = styled.div`
-  width: 1800px;
-  height: 350px;
+  width: 1650px;
+  height: 300px;
   display: flex;
   transition: all 0.6s ease;
 `;
 
 const Image = styled.img`
-  width: 600px;
-  height: 350px;
+  width: 550px;
+  height: 300px;
 
   :hover {
     cursor: pointer;

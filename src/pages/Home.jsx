@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
-import Navbar from '../components/Navbar';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -33,8 +31,7 @@ const Home = () => {
   }, [currentSlide]);
 
   return (
-    <Container>
-      <Navbar home />
+    <>
       <Slider ref={slideRef}>
         <BackgroundImage1 />
         <BackgroundImage2 />
@@ -44,18 +41,11 @@ const Home = () => {
         <HomeButton onClick={handleSiteClick}>둘러보기</HomeButton>
         <HomeButton onClick={handleReservationClick}>예약하기</HomeButton>
       </HomeButtonWrap>
-    </Container>
+    </>
   );
 };
 
 export default Home;
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-`;
 
 const Slider = styled.div`
   display: flex;
@@ -68,21 +58,21 @@ const Slider = styled.div`
 
 const BackgroundImage1 = styled.div`
   width: 100%;
-  background-image: url('images/main1.jpg');
+  background-image: url('/images/main1.jpg');
   background-size: cover;
   background-position: center;
 `;
 
 const BackgroundImage2 = styled.div`
   width: 100%;
-  background-image: url('images/main2.jpg');
+  background-image: url('/images/main2.jpg');
   background-size: cover;
   background-position: center;
 `;
 
 const BackgroundImage3 = styled.div`
   width: 100%;
-  background-image: url('images/main3.jpg');
+  background-image: url('/images/main3.jpg');
   background-size: cover;
   background-position: center;
 `;
@@ -97,14 +87,22 @@ const HomeButtonWrap = styled.div`
   justify-content: space-between;
 `;
 
-const HomeButton = styled(Button)`
+const HomeButton = styled.button`
   width: 200px;
-  padding: 8px 28px;
-  background-color: ${baseStyle.mainColor};
-  border: 1px solid ${baseStyle.mainColor};
+  height: 3rem;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  color: ${baseStyle.mainColor};
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #222;
+  box-shadow: 0 0.5rem 1rem rgba(34, 34, 34, 0.8);
+  transition: all 0.25s ease-in-out;
 
   &:hover {
-    background-color: ${baseStyle.mainHoverColor};
-    border: 1px solid ${baseStyle.mainHoverColor};
+    color: #222;
+    background-color: ${baseStyle.mainColor};
   }
 `;

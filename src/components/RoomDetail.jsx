@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import '../styles/modal.css';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import RoomTabs from './RoomTabs';
@@ -21,7 +20,7 @@ export const RoomDetail = ({ roomID }) => {
       if (roomID !== '') {
         try {
           const res = await axios.get(
-            `http://localhost:5000/api/room/${roomID}`
+            `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/room/${roomID}`
           );
           setRoomContent(res.data);
         } catch (e) {
@@ -33,7 +32,7 @@ export const RoomDetail = ({ roomID }) => {
   }, [roomID]);
 
   return (
-    <div style={{ width: '750px' }}>
+    <div style={{ width: '600px' }}>
       <Header id="roomTitle">{roomContent.name}</Header>
       <RoomImageSlider roomContent={roomContent} />
       <ContentContainer>
@@ -59,14 +58,14 @@ export const RoomDetail = ({ roomID }) => {
 const Header = styled.div`
   width: 222px;
   font-size: ${baseStyle.titleFontSize};
-  margin: 54px auto auto;
+  margin: 0 auto;
   text-align: center;
 `;
 
 const ContentContainer = styled.div`
-  width: 650px;
-  height: 388px;
-  margin: 23px auto auto;
+  width: 550px;
+  height: 250px;
+  margin: 15px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -75,6 +74,12 @@ const ContentContainer = styled.div`
 const ReserveBtn = styled(Button)`
   display: block;
   background-color: ${baseStyle.mainColor};
+  border: 1px solid ${baseStyle.mainColor};
   width: 140px;
-  margin: 17px auto 38px;
+  margin: auto;
+
+  &:hover {
+    background-color: ${baseStyle.mainHoverColor};
+    border: 1px solid ${baseStyle.mainHoverColor};
+  }
 `;

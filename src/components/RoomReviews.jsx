@@ -12,9 +12,12 @@ const RoomReviews = ({ roomID }) => {
   useEffect(() => {
     async function getDefaultReview() {
       try {
-        const res = await axios.get('http://localhost:5000/api/review', {
-          params: { roomID: roomID, page: currPage, perPage: 5 },
-        });
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/review`,
+          {
+            params: { roomID: roomID, page: currPage, perPage: 5 },
+          }
+        );
         setReviews(res.data.reviews);
         setTotalPage(res.data.totalPage);
       } catch (e) {
@@ -76,20 +79,34 @@ const RoomReviews = ({ roomID }) => {
             return (
               <ReviewContainer key={`${data.objectId} - ${idx}`}>
                 <p>
-                  <span>예약자명</span>
+                  <span>
+                    <strong>예약자명</strong>
+                  </span>
                   <br />
-                  {/* FIXME 유저명 찾도록 백엔드 코드 바뀌면 변경하기 */}
-                  김아무개
+                  {data.userID?.name}
                 </p>
                 <p>
-                  <span>평점</span>
+                  <span>
+                    <strong>평점</strong>
+                  </span>
                   <br />
                   {data.grade}점
                 </p>
-                <p>
-                  <span>제목 : </span>
-                  {data.title}
-                  <br />
+                <p
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span
+                    style={{
+                      borderBottom: '1px solid lightgray',
+                      marginBottom: '5px',
+                    }}
+                  >
+                    <strong>{data.title}</strong>
+                  </span>
                   {data.content}
                 </p>
               </ReviewContainer>
@@ -109,12 +126,13 @@ export default RoomReviews;
 
 const Container = styled.div`
   width: 100%;
+  height: 100%;
   padding: 20px 0;
-  overflow-y: auto;
+  overflow-y: scroll;
 `;
 
 const ReviewContainer = styled.div`
-  width: 95%;
+  width: 98%;
   text-align: center;
   display: flex;
   justify-content: space-around;
@@ -125,7 +143,7 @@ const ReviewContainer = styled.div`
   margin: 0 auto 15px;
 
   & > p {
-    flex-basis: 50px;
+    flex-basis: 60px;
   }
 
   & > p:last-child {
@@ -138,7 +156,7 @@ const ReviewContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
 `;
@@ -146,11 +164,19 @@ const ButtonContainer = styled.div`
 const LeftArrow = styled(VscChevronLeft)`
   width: 30px;
   height: 30px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const RigthArrow = styled(VscChevronRight)`
   width: 30px;
   height: 30px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const PageNationBtn = styled.button`

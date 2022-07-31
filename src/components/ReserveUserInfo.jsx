@@ -9,24 +9,45 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
   const handleOrderCheckbox = async () => {
     if (!orderCheck) {
       try {
-        const res = await axios.get('http://localhost:5000/api/user', {
-          headers: {
-            Authorization: `bearer ${sessionStorage.getItem('token')}`,
-          },
-        });
-        const { name, email, phoneNumber } = res.data;
-        const phoneNumberArray = phoneNumber.split('-');
-        setUserInfo((prev) => ({
-          ...prev,
-          name,
-          email,
-          startPhoneNumber: phoneNumberArray[0],
-          midPhoneNumber: phoneNumberArray[1],
-          endPhoneNumber: phoneNumberArray[2],
-        }));
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/user`,
+          {
+            withCredentials: true,
+          }
+        );
+        const { name, email } = res.data;
+        if (res.data.provider) {
+          setUserInfo((prev) => ({
+            ...prev,
+            name,
+            email: '',
+            startPhoneNumber: '010',
+            midPhoneNumber: '',
+            endPhoneNumber: '',
+          }));
+        } else {
+          const phoneNumberArray = res.data.phoneNumber.split('-');
+          setUserInfo((prev) => ({
+            ...prev,
+            name,
+            email,
+            startPhoneNumber: phoneNumberArray[0],
+            midPhoneNumber: phoneNumberArray[1],
+            endPhoneNumber: phoneNumberArray[2],
+          }));
+        }
       } catch (e) {
-        console.error('유저정보를 불러올 수 없습니다.');
+        alert(e.response.data.reason);
       }
+    } else {
+      setUserInfo({
+        name: '',
+        startPhoneNumber: '010',
+        midPhoneNumber: '',
+        endPhoneNumber: '',
+        email: '',
+        require: '',
+      });
     }
     setOrderCheck((bool) => !bool);
   };
@@ -37,7 +58,7 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
   return (
     <>
       <Header>
-        <h2>예약자 정보</h2>
+        <h2 style={{ margin: '0' }}>예약자 정보</h2>
         <input
           type={'checkbox'}
           onChange={handleOrderCheckbox}
@@ -97,14 +118,10 @@ export default ReserveUserInfo;
 
 const Header = styled.div`
   display: flex;
-
-  > h2 {
-    margin: 0;
-  }
+  align-items: center;
 
   > input {
-    margin-left: 20px;
-    width: 18px;
+    margin-left: 10px;
   }
 
   > span {
