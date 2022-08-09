@@ -126,7 +126,8 @@
 | [🔗API 문서](https://documenter.getpostman.com/view/21028820/UzR1K2iz)
 
 | 🔗서비스 구성도
-<br /><img src="/uploads/6de42a38466aa35deb7c801abf677c4f/image.png" alt="서비스 구성도" width="1000px" height="500px">
+<br />![서비스구성도](https://user-images.githubusercontent.com/82688516/183544079-096b0fa2-c87b-4bfc-8201-712abe7df99b.png)
+
 
 
 <br />
@@ -137,25 +138,25 @@
 
 ### 회원가입, 로그인, 로그아웃
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker](/uploads/90b1b2891ba31d02662aade66372dfa2/ezgif.com-gif-maker.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![회원가입,로그인,로그아웃](https://user-images.githubusercontent.com/82688516/183544154-96ec79f2-382f-4322-9260-91ad16286405.gif)
 ### 유저 이메일 찾기, 패스워드 찾기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__2_](/uploads/8e63b23c986f6706e65b8262d6a9f613/ezgif.com-gif-maker__2_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![유저이메일,패스워드찾기](https://user-images.githubusercontent.com/82688516/183544280-3a4dba7e-8c2b-46ec-81ec-e82a981494f1.gif)
 ### 객실 상세 보기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__3_](/uploads/46be4899c39fddc5716d988b3e836a84/ezgif.com-gif-maker__3_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![객실상세보기](https://user-images.githubusercontent.com/82688516/183544400-e4edb462-6fa3-4227-9255-cb7a2dc96257.gif)
 ### 객실 예약 하기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__4_](/uploads/eb4cfa874c4539ff916e433f923d94cb/ezgif.com-gif-maker__4_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![객실예약하기](https://user-images.githubusercontent.com/82688516/183544473-e20993ce-272d-42b4-9892-d013cf088506.gif)
 ### 유저 예약 조회
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__5_](/uploads/7f836a5582247d50c23d9392516d9d5e/ezgif.com-gif-maker__5_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![유저예약조회](https://user-images.githubusercontent.com/82688516/183544646-7334fed1-7c71-4e96-a9c6-af6c800969de.gif)
 ### 유저 정보 조회
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__6_](/uploads/5befc0f4dccbc14c0c0eedb2a16d4d7d/ezgif.com-gif-maker__6_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![유저정보조회](https://user-images.githubusercontent.com/82688516/183544574-fa00e23f-7d73-46ac-b086-3711eef41760.gif)
 ### 관리자 페이지
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__7_](/uploads/8cffefd4dd3fbe12cbce8c32c11eb9c7/ezgif.com-gif-maker__7_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![관리자페이지](https://user-images.githubusercontent.com/82688516/183544705-85bd1f13-061a-4ca2-981f-b14d4e193ca7.gif)
 
 
 
@@ -166,7 +167,7 @@
 | ------ | ------ | ------ |
 |  김재영   |  프론트엔드(팀장)   | MyPage   |
 |  정승우   |  프론트엔드,백엔드   | AdminPage  |
-|  최정훈   |  프론트엔드   | Reservation,payment  |
+|  최정훈   |  프론트엔드   | Reservation  |
 |  박우람   |  프론트엔드   | Main, Login  |
 |  김채홍   |  백엔드   |  Backend API  |
 
