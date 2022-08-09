@@ -117,15 +117,17 @@
 
 <br/>
 
+| [🔗프로토타입(Prototype)](https://www.figma.com/file/NstxG3reXALAHqt0wEtrIf/Untitled?node-id=0%3A1)
+
+| [🔗API 문서](https://documenter.getpostman.com/view/21028820/UzR1K2iz)
+
 | [🔗와이어프레임(Wireframe)]
 <br /> &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/82688516/183603499-65a2a760-d69c-42e9-86ec-560c72a9ee0b.jpeg" width="450" height="600"/>
 <img src="https://user-images.githubusercontent.com/82688516/183603800-b9984edd-ec07-4171-b7eb-dc37dc2de184.jpeg" width="450" height="600"/>
 
-| [🔗프로토타입(Prototype)](https://www.figma.com/file/NstxG3reXALAHqt0wEtrIf/Untitled?node-id=0%3A1)
+| [🔗페이지 구조도]
+<br />&nbsp;&nbsp;&nbsp;&nbsp;<img width="600" alt="페이지 구조도" src="https://user-images.githubusercontent.com/82688516/183605819-ec3d0410-91c4-4794-b592-4468f8c0dbb4.png">
 
-| [🔗페이지 구조도](https://github.com/jhoon9494/reservation-app/files/9288668/default.pdf)
-
-| [🔗API 문서](https://documenter.getpostman.com/view/21028820/UzR1K2iz)
 
 | 🔗서비스 구성도
 <br /> &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/82688516/183544079-096b0fa2-c87b-4bfc-8201-712abe7df99b.png" width="600"/>
