@@ -86,7 +86,7 @@ export default MyPage;
 
 const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 90vh;
   position: relative;
 `;
 
@@ -96,6 +96,11 @@ const TabContainer = styled.div`
   border-bottom: 1px solid #000;
   width: 80%;
   margin: 0 auto;
+
+  @media screen and (max-width: 768px) {
+    width: 560px;
+    background-color: yellow;
+  }
 `;
 
 const EactTab = styled.p`

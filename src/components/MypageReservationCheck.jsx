@@ -36,8 +36,15 @@ const MypageReservationCheck = () => {
   useEffect(() => {
     // 예약 리스트 요청
     async function fetchBooking() {
+      console.log(window.innerWidth);
       try {
-        const urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=10`;
+        let urlBookingList;
+        // 반응형 768px 브라우저 화면 너비일때 4개씩 보인다.
+        if (window.innerWidth <= 768) {
+          urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=4`;
+        } else {
+          urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=10`;
+        }
         const res = await axios.get(urlBookingList, withCredentials);
         setGetBooking(res.data.bookingInfos);
         setCheckPassed(res.data.checkPassed);
@@ -131,6 +138,7 @@ const MypageReservationCheck = () => {
             <BookBarSpan></BookBarSpan>
           </BookBarUnderlineDiv>
         </BookBarContainerDiv>
+        {console.log(getBooking)}
         {getBooking.length > 0 ? (
           <>
             <BookListsUl>
@@ -141,7 +149,7 @@ const MypageReservationCheck = () => {
                       0,
                       10
                     )} ~ ${list.endDate.substring(0, 10)}`}</BookListSpan>
-                    <BookListSpan>{list.roomID.name}</BookListSpan>
+                    <BookListSpan>{/* {list.roomID.name} */}</BookListSpan>
                     <BookListSpan>{list.peopleNumber}</BookListSpan>
                     <BookListSpan>
                       {list.price.toLocaleString()} 원
@@ -152,7 +160,7 @@ const MypageReservationCheck = () => {
                     <BookListSpan>
                       <BookStateBtn
                         onClick={handlButton}
-                        data-room={list.roomID.name}
+                        // data-room={list.roomID.name}
                         data-bookingid={list._id}
                         disabled={checkingStatus(list.status, list.startDate)}
                       >
@@ -163,7 +171,7 @@ const MypageReservationCheck = () => {
                       <ReviewWriteBtn
                         onClick={handlButton}
                         data-bookingid={list._id}
-                        data-roomid={list.roomID._id}
+                        // data-roomid={list.roomID._id}
                         data-username={list.name}
                         data-status={list.status}
                         data-passed={checkPassed[i].isPassed}
@@ -231,9 +239,17 @@ export default MypageReservationCheck;
 const ReservationCheckContainer = styled.div`
   margin: 100px auto;
   width: 1110px;
+
+  @media screen and (max-width: 768px) {
+    margin: 0 auto;
+  }
 `;
 
-const BookBarContainerDiv = styled.div``;
+const BookBarContainerDiv = styled.div`
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`;
 const BookBarUnderlineDiv = styled.div`
   border-bottom: 1px solid #000;
   display: grid;
@@ -257,6 +273,12 @@ const BookListsUl = styled.ul`
   margin-top: 15px;
   margin-bottom: 50px;
   padding-left: 0;
+
+  @media screen and (max-width: 768px) {
+    transform: translateX(25%);
+    margin-top: 30px;
+    margin-bottom: 45px;
+  }
 `;
 
 const BookListLi = styled.li`
@@ -264,6 +286,14 @@ const BookListLi = styled.li`
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   padding-bottom: 20px;
+
+  @media screen and (max-width: 768px) {
+    width: 560px;
+    height: 200px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    margin-bottom: 30px;
+  }
 `;
 
 const BookListSpan = styled.span`
