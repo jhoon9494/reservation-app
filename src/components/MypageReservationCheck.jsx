@@ -293,6 +293,8 @@ const BookListLi = styled.li`
     background-color: #f4f4f4;
     border-radius: 10px;
     margin-bottom: 30px;
+
+    display: flex;
   }
 `;
 
@@ -305,6 +307,24 @@ const BookListSpan = styled.span`
 
   margin: auto;
   & + & {
+  }
+
+  @media screen and (max-width: 768px) {
+    &:nth-child(1) {
+      background-color: yellow;
+    }
+    &:nth-child(2) {
+      background-color: blue;
+    }
+    &:nth-child(3) {
+      background-color: red;
+    }
+    &:nth-child(4) {
+      background-color: green;
+    }
+    &:nth-child(5) {
+      background-color: cyan;
+    }
   }
 `;
 

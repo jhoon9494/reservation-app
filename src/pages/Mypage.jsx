@@ -99,7 +99,6 @@ const TabContainer = styled.div`
 
   @media screen and (max-width: 768px) {
     width: 560px;
-    background-color: yellow;
   }
 `;
 
