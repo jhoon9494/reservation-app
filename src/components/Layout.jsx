@@ -27,6 +27,10 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   min-height: 100vh;
+
+  @media (max-width: 768px) {
+    overflow-y: scroll;
+  }
 `;
 
 const Main = styled.main`

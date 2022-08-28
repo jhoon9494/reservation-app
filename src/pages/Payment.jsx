@@ -145,6 +145,10 @@ const Container = styled.div`
   input[type='number'] {
     -moz-appearance: textfield;
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const LeftContainer = styled.div`
@@ -164,6 +168,12 @@ const RightContainer = styled.div`
   > div {
     box-shadow: 3px 3px 10px lightgray;
   }
+
+  @media (max-width: 768px) {
+    width: 466px;
+    margin-top: 29px;
+    margin-right: 27px;
+  }
 `;
 
 const ContentBox = styled.div`
@@ -182,7 +192,7 @@ const ContentBox = styled.div`
 // 결제하기 버튼
 const PaymentButton = styled(Button)`
   width: 100%;
-  margin-top: 24px;
+  margin: 24px 0;
   padding: 0.5rem;
   background-color: ${baseStyle.mainColor};
   border: 1px solid ${baseStyle.mainColor};

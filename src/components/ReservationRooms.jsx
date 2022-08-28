@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
-import { caravans, tents, glamps } from '../styles/roomsCoordinate';
 import { BsCheckLg } from 'react-icons/bs';
-import { VscChromeClose } from 'react-icons/vsc';
-import { VscCircleLargeOutline } from 'react-icons/vsc';
 import axios from 'axios';
 
-const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
+const RoomsButton = ({
+  setRoomInfo,
+  selectedDate,
+  people,
+  setAvailableRooms,
+  windowSize,
+  roomInfo,
+}) => {
   // 둘러보기 페이지에서 접근 시 selectedRoom값이 자동 설정됨.
   // 예약페이지로 바로 접근 시 selectedRoom값은 공백
   const [allRooms, setAllRooms] = useState([]);
@@ -47,6 +51,10 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
             }
           );
           setReservedRoomsData(res.data);
+          const availableRooms = allRooms.filter(
+            (room) => !res.data.includes(room._id)
+          );
+          setAvailableRooms(availableRooms);
         } catch (e) {
           console.error('객실정보를 받아올 수 없습니다.');
         }
@@ -58,68 +66,91 @@ const RoomsButton = ({ setRoomInfo, selectedDate, people }) => {
     setRoomInfo('');
   }, [selectedDate, people]);
 
+  useEffect(() => {
+    setSelectedRoom(roomInfo);
+  }, [roomInfo]);
+
   const handleSelectRoom = (roomID) => {
     if (reservedRoomsData.includes(roomID)) return;
-    setSelectedRoom(roomID);
-    setRoomInfo(roomID);
+    if (people && selectedDate) {
+      setSelectedRoom(roomID);
+      setRoomInfo(roomID);
+    } else {
+      alert('인원과 일정을 먼저 선택해주세요!');
+    }
   };
 
   return (
     <>
       {allRooms.map((room) => {
         // 카라반 위치
-        if (room.name[0] === 'C') {
+        if (room.roomType === 'Caravan') {
           return (
             <Caravan
               key={room.name}
-              top={caravans[room.name].top}
-              left={caravans[room.name].left}
-              onClick={() => handleSelectRoom(room._id)}
+              top={room.position.top}
+              right={room.position.right}
+              onClick={() => windowSize > 768 && handleSelectRoom(room._id)}
             >
               {selectedRoom === room._id ? (
-                <CheckRoom />
+                <>
+                  <img src={room.icon} alt={room.name} />
+                  <CheckRoom type={room.roomType} />
+                </>
               ) : reservedRoomsData.includes(room._id) ? (
-                <NonSelectableCaravan />
+                <div style={{ cursor: 'not-allowed' }}>
+                  <img src="/images/Caravan_disabled.png" alt={room.name} />
+                </div>
               ) : (
-                <SelectableCaravan />
+                <img src={room.icon} alt={room.name} />
               )}
             </Caravan>
           );
         }
         // 텐트장 위치
-        if (room.name[0] === 'T') {
+        if (room.roomType === 'Tent') {
           return (
             <Tent
               key={room.name}
-              top={tents[room.name].top}
-              right={tents[room.name].right}
-              onClick={() => handleSelectRoom(room._id)}
+              top={room.position.top}
+              right={room.position.right}
+              onClick={() => windowSize > 768 && handleSelectRoom(room._id)}
             >
               {selectedRoom === room._id ? (
-                <CheckRoom />
+                <>
+                  <img src={room.icon} alt={room.name} />
+                  <CheckRoom type={room.roomType} />
+                </>
               ) : reservedRoomsData.includes(room._id) ? (
-                <NonSelectableTentAndGlamp />
+                <div style={{ cursor: 'not-allowed' }}>
+                  <img src="/images/Tent_disabled.png" alt={room.name} />
+                </div>
               ) : (
-                <SelectableTentAndGlamp />
+                <img src={room.icon} alt={room.name} />
               )}
             </Tent>
           );
         }
         // 글램핑장 위치
-        if (room.name[0] === 'G') {
+        if (room.roomType === 'Glamping') {
           return (
             <Glamp
               key={room.name}
-              top={glamps[room.name].top}
-              right={glamps[room.name].right}
-              onClick={() => handleSelectRoom(room._id)}
+              top={room.position.top}
+              right={room.position.right}
+              onClick={() => windowSize > 768 && handleSelectRoom(room._id)}
             >
               {selectedRoom === room._id ? (
-                <CheckRoom />
+                <>
+                  <img src={room.icon} alt={room.name} />
+                  <CheckRoom type={room.roomType} />
+                </>
               ) : reservedRoomsData.includes(room._id) ? (
-                <NonSelectableTentAndGlamp />
+                <div style={{ cursor: 'not-allowed' }}>
+                  <img src="/images/Glamping_disabled.png" alt={room.name} />
+                </div>
               ) : (
-                <SelectableTentAndGlamp />
+                <img src={room.icon} alt={room.name} />
               )}
             </Glamp>
           );
@@ -134,12 +165,28 @@ export default RoomsButton;
 const Caravan = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
-  left: ${(props) => props.left}%;
-  width: 5rem;
-  height: 3rem;
+  right: ${(props) => props.right}%;
+  width: 100px;
+  height: 70px;
+  overflow: hidden;
+
+  img {
+    width: 200px;
+    transform: translate(-55px, -30px);
+  }
 
   :hover {
     cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    width: 2.7rem;
+    height: 1.5rem;
+
+    img {
+      width: 200%;
+      transform: translate(-25px, -18px);
+    }
   }
 `;
 
@@ -147,11 +194,26 @@ const Tent = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   right: ${(props) => props.right}%;
-  width: 3rem;
-  height: 3rem;
+  width: 60px;
+  height: 50px;
+  overflow: hidden;
 
+  img {
+    width: 150px;
+    transform: translate(-50px, -20px);
+  }
   :hover {
     cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    width: 1.5rem;
+    height: 1.5rem;
+
+    img {
+      width: 250%;
+      transform: translate(-20px, -6px);
+    }
   }
 `;
 
@@ -159,43 +221,47 @@ const Glamp = styled.div`
   position: absolute;
   top: ${(props) => props.top}%;
   right: ${(props) => props.right}%;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 60px;
+  height: 50px;
+  overflow: hidden;
+
+  img {
+    width: 150px;
+    transform: translate(-43px, -22px);
+  }
 
   :hover {
     cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    width: 1.8rem;
+    height: 1.8rem;
+
+    img {
+      width: 250%;
+      transform: translate(-20px, -7px);
+    }
   }
 `;
 
 const CheckRoom = styled(BsCheckLg)`
   color: ${baseStyle.mainColor};
-  transform: scale(3) translate(7px, 2px);
-`;
+  transform: scale(3)
+    ${(props) =>
+      props.type === 'Caravan'
+        ? 'translate(10px,-40px)'
+        : props.type === 'Tent'
+        ? 'translate(8px,-30px)'
+        : 'translate(8px,-30px)'};
 
-const SelectableCaravan = styled(VscCircleLargeOutline)`
-  color: #0000ffa0;
-  transform: scale(4) translate(5px, 3px);
-`;
-
-const NonSelectableCaravan = styled(VscChromeClose)`
-  color: #ff0000a0;
-  transform: scale(4) translate(5px, 3px);
-
-  :hover {
-    cursor: not-allowed;
-  }
-`;
-
-const SelectableTentAndGlamp = styled(VscCircleLargeOutline)`
-  color: #0000ffa0;
-  transform: scale(3) translate(7px, 4px);
-`;
-
-const NonSelectableTentAndGlamp = styled(VscChromeClose)`
-  color: #ff0000a0;
-  transform: scale(3) translate(7px, 4px);
-
-  :hover {
-    cursor: not-allowed;
+  @media (max-width: 768px) {
+    transform: scale(2)
+      ${(props) =>
+        props.type === 'Caravan'
+          ? 'translate(5px, -30px)'
+          : props.type === 'Tent'
+          ? 'translate(3px, -20px)'
+          : 'translate(4px, -25px)'};
   }
 `;
