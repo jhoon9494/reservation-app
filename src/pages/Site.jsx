@@ -24,6 +24,12 @@ const MapContainer = styled.div`
   margin: 80px auto;
   position: relative;
   flex-grow: 1;
+
+  @media (max-width: 768px) {
+    width: 560px;
+    height: 400px;
+    margin: 40px auto;
+  }
 `;
 
 const MapImg = styled.img`
