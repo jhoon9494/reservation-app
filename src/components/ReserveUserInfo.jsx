@@ -67,48 +67,64 @@ const ReserveUserInfo = ({ userInfo, setUserInfo }) => {
         <span>주문자와 동일</span>
       </Header>
       <UserInfo>
-        <UserInput
-          type={'text'}
-          width={'150px'}
-          placeholder={'예약자명'}
-          onChange={() => handleUserInfo(event, 'name')}
-          value={userInfo.name}
-        />
-        <div>
+        <Label htmlFor="userName">
+          <span>예약자명</span>
           <UserInput
-            type={'number'}
-            width={'70px'}
-            onChange={() => handleUserInfo(event, 'startPhoneNumber')}
-            value={userInfo.startPhoneNumber}
+            type={'text'}
+            id={'userName'}
+            width={'150px'}
+            placeholder={'예약자명'}
+            onChange={() => handleUserInfo(event, 'name')}
+            value={userInfo.name}
           />
-          <span> - </span>
+        </Label>
+        <Label htmlFor="phoneNumber">
+          <span>휴대전화</span>
+          <div>
+            <UserInput
+              type={'number'}
+              id={'phoneNumber'}
+              width={'70px'}
+              onChange={() => handleUserInfo(event, 'startPhoneNumber')}
+              value={userInfo.startPhoneNumber}
+            />
+            <span> - </span>
+            <UserInput
+              type={'number'}
+              width={'100px'}
+              onChange={() => handleUserInfo(event, 'midPhoneNumber')}
+              value={userInfo.midPhoneNumber}
+            />
+            <span> - </span>
+            <UserInput
+              type={'number'}
+              width={'100px'}
+              onChange={() => handleUserInfo(event, 'endPhoneNumber')}
+              value={userInfo.endPhoneNumber}
+            />
+          </div>
+        </Label>
+        <Label htmlFor="email">
+          <span>이메일</span>
           <UserInput
-            type={'number'}
-            width={'100px'}
-            onChange={() => handleUserInfo(event, 'midPhoneNumber')}
-            value={userInfo.midPhoneNumber}
+            type={'text'}
+            id={'email'}
+            placeholder={'이메일'}
+            onChange={() => handleUserInfo(event, 'email')}
+            value={userInfo.email}
           />
-          <span> - </span>
+        </Label>
+        <Label htmlFor="require">
+          <span>요청사항</span>
           <UserInput
-            type={'number'}
-            width={'100px'}
-            onChange={() => handleUserInfo(event, 'endPhoneNumber')}
-            value={userInfo.endPhoneNumber}
+            type={'textarea'}
+            id={'require'}
+            placeholder={'요청사항'}
+            height={'70px'}
+            onChange={() => handleUserInfo(event, 'require')}
+            value={userInfo.require}
           />
-        </div>
-        <UserInput
-          type={'text'}
-          placeholder={'이메일'}
-          onChange={() => handleUserInfo(event, 'email')}
-          value={userInfo.email}
-        />
-        <UserInput
-          type={'textarea'}
-          placeholder={'요청사항'}
-          height={'70px'}
-          onChange={() => handleUserInfo(event, 'require')}
-          value={userInfo.require}
-        />
+        </Label>
       </UserInfo>
     </>
   );
@@ -143,4 +159,13 @@ const UserInput = styled.input`
   border-radius: 5px;
   margin-bottom: 9px;
   padding: 2px 10px;
+`;
+
+const Label = styled.label`
+  display: flex;
+  flex-direction: column;
+
+  > span {
+    margin: 0 5px 5px 0;
+  }
 `;
