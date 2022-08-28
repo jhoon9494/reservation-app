@@ -3,13 +3,12 @@ import styled from 'styled-components';
 import baseStyle from '../styles/baseStyle';
 import { useRef, useState } from 'react';
 
-const RoomImageSlider = ({ roomContent }) => {
+const RoomImageSlider = ({ roomContent, windowSize }) => {
   const containerRef = useRef();
   const [imgIndex, setImgIndex] = useState(0);
-
   const handleImageMoveLeft = () => {
     const currentMargin = parseInt(containerRef.current.style.marginLeft);
-    const nextMargin = currentMargin + 550;
+    const nextMargin = currentMargin + (windowSize > 768 ? 550 : 500);
     if (nextMargin > 0) return;
     containerRef.current.style.marginLeft = `${nextMargin}px`;
     setImgIndex((curr) => curr - 1);
@@ -19,7 +18,7 @@ const RoomImageSlider = ({ roomContent }) => {
     const currentMargin = parseInt(containerRef.current.style.marginLeft)
       ? parseInt(containerRef.current.style.marginLeft)
       : 0;
-    const nextMargin = currentMargin - 550;
+    const nextMargin = currentMargin - (windowSize > 768 ? 550 : 500);
     if (nextMargin < -(roomContent.imgSrc?.length - 1) * 550) return;
     containerRef.current.style.marginLeft = `${nextMargin}px`;
     setImgIndex((curr) => curr + 1);
@@ -69,6 +68,10 @@ const Container = styled.div`
   margin: 21px auto auto;
   justify-content: center;
   position: relative;
+
+  @media (max-width: 768px) {
+    width: 500px;
+  }
 `;
 const ImgIndicators = styled.div`
   display: flex;
@@ -93,6 +96,10 @@ const SliderContainer = styled.div`
   display: flex;
   overflow: hidden;
   border-radius: 10px;
+
+  @media (max-width: 768px) {
+    width: 500px;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -100,6 +107,10 @@ const ImageContainer = styled.div`
   height: 300px;
   display: flex;
   transition: all 0.6s ease;
+
+  @media (max-width: 768px) {
+    width: 1500px;
+  }
 `;
 
 const Image = styled.img`
@@ -108,6 +119,10 @@ const Image = styled.img`
 
   :hover {
     cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    width: 500px;
   }
 `;
 
