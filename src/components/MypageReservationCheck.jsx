@@ -36,7 +36,6 @@ const MypageReservationCheck = () => {
   useEffect(() => {
     // 예약 리스트 요청
     async function fetchBooking() {
-      console.log(window.innerWidth);
       try {
         let urlBookingList;
         // 반응형 768px 브라우저 화면 너비일때 4개씩 보인다.
@@ -138,7 +137,6 @@ const MypageReservationCheck = () => {
             <BookBarSpan></BookBarSpan>
           </BookBarUnderlineDiv>
         </BookBarContainerDiv>
-        {console.log(getBooking)}
         {getBooking.length > 0 ? (
           <>
             <BookListsUl>
@@ -149,8 +147,8 @@ const MypageReservationCheck = () => {
                       0,
                       10
                     )} ~ ${list.endDate.substring(0, 10)}`}</BookListSpan>
-                    <BookListSpan>{/* {list.roomID.name} */}</BookListSpan>
-                    <BookListSpan>{list.peopleNumber}</BookListSpan>
+                    <BookListSpan>{list.roomID.name}</BookListSpan>
+                    <BookListSpan>{list.peopleNumber} 명</BookListSpan>
                     <BookListSpan>
                       {list.price.toLocaleString()} 원
                     </BookListSpan>
@@ -160,7 +158,7 @@ const MypageReservationCheck = () => {
                     <BookListSpan>
                       <BookStateBtn
                         onClick={handlButton}
-                        // data-room={list.roomID.name}
+                        data-room={list.roomID.name}
                         data-bookingid={list._id}
                         disabled={checkingStatus(list.status, list.startDate)}
                       >
@@ -171,7 +169,7 @@ const MypageReservationCheck = () => {
                       <ReviewWriteBtn
                         onClick={handlButton}
                         data-bookingid={list._id}
-                        // data-roomid={list.roomID._id}
+                        data-roomid={list.roomID._id}
                         data-username={list.name}
                         data-status={list.status}
                         data-passed={checkPassed[i].isPassed}
@@ -295,6 +293,8 @@ const BookListLi = styled.li`
     margin-bottom: 30px;
 
     display: flex;
+    flex-wrap: wrap;
+    padding: 30px;
   }
 `;
 
@@ -312,18 +312,38 @@ const BookListSpan = styled.span`
   @media screen and (max-width: 768px) {
     &:nth-child(1) {
       background-color: yellow;
+      order: 1;
+      width: 50%;
     }
     &:nth-child(2) {
-      background-color: blue;
+      background-color: #52c41a;
+      order: 3;
+      width: 25%;
     }
     &:nth-child(3) {
       background-color: red;
+      order: 4;
+      width: 25%;
     }
     &:nth-child(4) {
       background-color: green;
+      order: 5;
+      width: 50%;
+      text-align: right;
     }
     &:nth-child(5) {
       background-color: cyan;
+      order: 2;
+      width: 50%;
+      text-align: right;
+    }
+    &:nth-child(6) {
+      order: 7;
+      text-align: right;
+    }
+    &:nth-child(7) {
+      order: 6;
+      text-align: right;
     }
   }
 `;
@@ -352,6 +372,7 @@ const ReviewWriteBtn = styled.button`
     display: inline-block;
   }
   display: none;
+  width: 0;
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 400;
