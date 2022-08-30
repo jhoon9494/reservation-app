@@ -160,6 +160,7 @@ const MypageReservationCheck = () => {
                         onClick={handlButton}
                         data-room={list.roomID.name}
                         data-bookingid={list._id}
+                        data-status={list.status}
                         disabled={checkingStatus(list.status, list.startDate)}
                       >
                         예약 취소
@@ -287,13 +288,14 @@ const BookListLi = styled.li`
 
   @media screen and (max-width: 768px) {
     width: 560px;
-    height: 200px;
+    height: 150px;
     background-color: #f4f4f4;
     border-radius: 10px;
     margin-bottom: 30px;
 
     display: flex;
     flex-wrap: wrap;
+    align-content: space-between;
     padding: 30px;
   }
 `;
@@ -310,6 +312,7 @@ const BookListSpan = styled.span`
   }
 
   @media screen and (max-width: 768px) {
+    margin: 0;
     &:nth-child(1) {
       background-color: yellow;
       order: 1;
@@ -340,10 +343,15 @@ const BookListSpan = styled.span`
     &:nth-child(6) {
       order: 7;
       text-align: right;
+      margin-right: 0;
+      margin-left: auto;
     }
     &:nth-child(7) {
       order: 6;
       text-align: right;
+      margin-right: 0;
+      margin-left: auto;
+      width: 100%;
     }
   }
 `;
@@ -364,6 +372,14 @@ const BookStateBtn = styled.button`
     color: ${baseStyle.disableColor};
     border: 1px solid transparent;
     background-color: transparent;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: ${(props) => {
+      if (props['data-status'] === '예약 취소 요청') return 'block';
+      if (props.disabled) return 'none';
+    }};
+    border-radius: 5px;
   }
 `;
 
@@ -394,6 +410,10 @@ const ReviewWriteBtn = styled.button`
   border: 1px solid ${baseStyle.mainColor};
   width: 100px;
   height: 30px;
+
+  @media screen and (max-width: 768px) {
+    border-radius: 5px;
+  }
 `;
 
 const ButtonContainer = styled.div`
