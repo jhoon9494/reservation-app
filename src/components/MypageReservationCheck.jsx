@@ -18,6 +18,7 @@ const MypageReservationCheck = () => {
   const [checkPassed, setCheckPassed] = useState([]);
 
   const [bookingListRefresh, setBookingListRefresh] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // 페이징네이션
   const [totalPage, setTotalPage] = useState(0);
@@ -33,13 +34,25 @@ const MypageReservationCheck = () => {
     room: '',
   });
 
+  // 디바운싱 기법으로 사이즈 바꾸어도 0.3초마다 구현
+  let timer;
+  const handleResize = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      setWindowWidth(window.innerWidth);
+    }, 300);
+  };
+
   useEffect(() => {
-    // 예약 리스트 요청
+    //브라우저 윈도우 사이즈감시
+    window.addEventListener('resize', handleResize);
+
+    //브라우저 윈도우 사이즈 호출
     async function fetchBooking() {
       try {
         let urlBookingList;
         // 반응형 768px 브라우저 화면 너비일때 4개씩 보인다.
-        if (window.innerWidth <= 768) {
+        if (windowWidth <= 768) {
           urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=4`;
         } else {
           urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=10`;
@@ -54,7 +67,12 @@ const MypageReservationCheck = () => {
     }
 
     fetchBooking();
-  }, [currPage, bookingListRefresh]);
+
+    //이벤트 리스너 삭제
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [currPage, bookingListRefresh, windowWidth]);
 
   // '예약 상태'에 따라 '예약 취소' 버튼을 활성화 시킨다
   const checkingStatus = (status, startDate) => {
@@ -314,28 +332,23 @@ const BookListSpan = styled.span`
   @media screen and (max-width: 768px) {
     margin: 0;
     &:nth-child(1) {
-      background-color: yellow;
       order: 1;
       width: 50%;
     }
     &:nth-child(2) {
-      background-color: #52c41a;
       order: 3;
       width: 25%;
     }
     &:nth-child(3) {
-      background-color: red;
       order: 4;
       width: 25%;
     }
     &:nth-child(4) {
-      background-color: green;
       order: 5;
       width: 50%;
       text-align: right;
     }
     &:nth-child(5) {
-      background-color: cyan;
       order: 2;
       width: 50%;
       text-align: right;

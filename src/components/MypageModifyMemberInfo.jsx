@@ -191,6 +191,19 @@ const Form = styled.form`
   & button {
     margin-top: 160px;
   }
+
+  @media screen and (max-width: 768px) {
+    width: 400px;
+    margin: 0 auto;
+
+    & input {
+      margin-top: 10px;
+    }
+
+    & button {
+      margin-top: 60px;
+    }
+  }
 `;
 
 const WithdrawalButton = styled.button`
