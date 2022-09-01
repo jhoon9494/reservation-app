@@ -2,7 +2,7 @@
   <br />
   <img src="https://i.imgur.com/iLXcSkF.png?1" title="source: imgur.com" alt="logo" width="550px" height="300px"/>
   <br />
-  <h1>:tent: 딩굴딩굴 - 캠핑장</h1>
+  <h1>:tent: <a href="https://dingulcamping.herokuapp.com/">딩굴딩굴 - 캠핑장</a></h1>
   <div style="font-size: 16px">
   엘리스 소프트웨어 트랙 2기 부산 3팀의 두번째 웹 프로젝트 입니다.<br />
   캠핑장에 대한 정보를 확인하고 예약할 수 있는 홈페이지 입니다.<br />
@@ -122,8 +122,8 @@
 | [🔗API 문서](https://documenter.getpostman.com/view/21028820/UzR1K2iz)
 
 | [🔗와이어프레임(Wireframe)]
-<br /> &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/82688516/183603499-65a2a760-d69c-42e9-86ec-560c72a9ee0b.jpeg" width="450" height="600"/>
-<img src="https://user-images.githubusercontent.com/82688516/183603800-b9984edd-ec07-4171-b7eb-dc37dc2de184.jpeg" width="450" height="600"/>
+<br /> &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/82688516/183603499-65a2a760-d69c-42e9-86ec-560c72a9ee0b.jpeg" width="300" height="500"/>
+<img src="https://user-images.githubusercontent.com/82688516/183603800-b9984edd-ec07-4171-b7eb-dc37dc2de184.jpeg" width="300" height="500"/>
 
 | [🔗페이지 구조도]
 <br />&nbsp;&nbsp;&nbsp;&nbsp;<img width="600" alt="페이지 구조도" src="https://user-images.githubusercontent.com/82688516/183605819-ec3d0410-91c4-4794-b592-4468f8c0dbb4.png">
