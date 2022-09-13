@@ -9,7 +9,7 @@ import RoomDetailContent from './RoomDetailContent';
 import RoomReviews from './RoomReviews';
 import axios from 'axios';
 
-export const RoomDetail = ({ roomID }) => {
+export const RoomDetail = ({ roomID, windowSize }) => {
   const [currTab, setCurrTab] = useState('객실 설명');
   const [roomContent, setRoomContent] = useState({});
 
@@ -32,9 +32,9 @@ export const RoomDetail = ({ roomID }) => {
   }, [roomID]);
 
   return (
-    <div style={{ width: '600px' }}>
+    <RoomWrap>
       <Header id="roomTitle">{roomContent.name}</Header>
-      <RoomImageSlider roomContent={roomContent} />
+      <RoomImageSlider roomContent={roomContent} windowSize={windowSize} />
       <ContentContainer>
         <RoomTabs currTab={currTab} setCurrTab={setCurrTab} />
         {currTab === '객실 설명' ? (
@@ -51,15 +51,28 @@ export const RoomDetail = ({ roomID }) => {
       >
         예약하기
       </ReserveBtn>
-    </div>
+    </RoomWrap>
   );
 };
+
+const RoomWrap = styled.div`
+  width: 600px;
+
+  @media (max-width: 768px) {
+    width: 500px;
+    margin: 40px auto;
+  }
+`;
 
 const Header = styled.div`
   width: 222px;
   font-size: ${baseStyle.titleFontSize};
   margin: 0 auto;
   text-align: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const ContentContainer = styled.div`
@@ -69,6 +82,12 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 768px) {
+    width: 500px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 10px #c3c3c3;
+  }
 `;
 
 const ReserveBtn = styled(Button)`
@@ -81,5 +100,10 @@ const ReserveBtn = styled(Button)`
   &:hover {
     background-color: ${baseStyle.mainHoverColor};
     border: 1px solid ${baseStyle.mainHoverColor};
+  }
+
+  @media (max-width: 768px) {
+    width: 500px;
+    margin-top: 30px;
   }
 `;

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import baseStyle from '../styles/baseStyle';
-// import { useNavigate } from 'react-router-dom';
 
 const withCredentials = {
   headers: {
@@ -402,6 +401,10 @@ const ModalContainer = styled.div`
   height: ${(props) => props.height}px;
   border-radius: 8px;
   background-color: #fff;
+
+  @media screen and (max-width: 768px) {
+    width: 500px;
+  }
 `;
 
 // 예약 조회 창과 css 제어
@@ -488,12 +491,14 @@ const ModalWriteReview = styled.section`
       height: 38px;
       border: 1px solid #000000;
       border-radius: 10px;
+      padding-left: 10px;
     }
     & input,
     textarea {
       margin-left: 20px;
       border: 1px solid #000000;
       border-radius: 10px;
+      padding: 10px;
     }
 
     & input {
@@ -535,6 +540,40 @@ const ModalWriteReview = styled.section`
       border: 1px solid ${baseStyle.mainColor};
       background: ${baseStyle.mainColor};
       margin-left: 100px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 40px 20px 20px;
+    & div {
+      flex-wrap: wrap;
+
+      &.titleLine {
+        margin-top: 30px;
+
+        & label {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        & input {
+          width: 300px;
+          margin-left: 0;
+          margin-right: 16px;
+        }
+      }
+
+      &.contentsLine {
+        margin-top: 30px;
+
+        & label {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        & textarea {
+          margin-left: 0;
+          width: 460px;
+        }
+      }
     }
   }
 `;
@@ -576,12 +615,14 @@ const ModalModifiedReview = styled.section`
       height: 38px;
       border: 1px solid #000000;
       border-radius: 10px;
+      padding-left: 10px;
     }
     & input,
     textarea {
       margin-left: 20px;
       border: 1px solid #000000;
       border-radius: 10px;
+      padding: 10px;
     }
 
     & input {
@@ -623,6 +664,40 @@ const ModalModifiedReview = styled.section`
       border: 1px solid ${baseStyle.mainColor};
       background: ${baseStyle.mainColor};
       margin-left: 100px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 40px 20px 20px;
+    & div {
+      flex-wrap: wrap;
+
+      &.titleLine {
+        margin-top: 30px;
+
+        & label {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        & input {
+          width: 300px;
+          margin-left: 0;
+          margin-right: 16px;
+        }
+      }
+
+      &.contentsLine {
+        margin-top: 30px;
+
+        & label {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        & textarea {
+          margin-left: 0;
+          width: 460px;
+        }
+      }
     }
   }
 `;

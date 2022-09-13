@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import CheckPeople from '../components/CheckPeople';
+import CheckRooms from '../components/CheckRooms';
 import DateRangePick from '../components/DateRangePick';
 import ReservationRooms from '../components/ReservationRooms';
 import baseStyle from '../styles/baseStyle';
@@ -16,6 +17,23 @@ const Reservation = () => {
   const [date, setDate] = useState({ startDate: '', endDate: '' });
   const [roomInfo, setRoomInfo] = useState(roomID ? roomID : '');
   const [roomContent, setRoomContent] = useState({});
+
+  const [windowSize, setWindowSize] = useState(window.innerWidth);
+  const [availableRooms, setAvailableRooms] = useState([]);
+
+  const handleWindowSize = () => {
+    // 반응형을 위한 브라우저 사이즈값 저장
+    setWindowSize(window.innerWidth);
+  };
+
+  // 반응형을 위한 브라우저 사이즈값 저장
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSize);
+    return () => {
+      // cleanUp
+      window.removeEventListener('resize', handleWindowSize);
+    };
+  }, []);
 
   useEffect(() => {
     async function getData() {
@@ -81,10 +99,18 @@ const Reservation = () => {
         />
         <DateRangePick setDate={setDate} roomID={roomID} />
       </Container>
-      {roomID && (
+      {roomID ? (
         <SelectedRoomName>
           <h6>선택하신 객실은 : {roomContent.name} 입니다.</h6>
         </SelectedRoomName>
+      ) : (
+        <RoomContainer>
+          <CheckRooms
+            setRoomInfo={setRoomInfo}
+            availableRooms={availableRooms}
+            roomInfo={roomInfo}
+          />
+        </RoomContainer>
       )}
       {!roomID && (
         <MapContainer>
@@ -93,6 +119,9 @@ const Reservation = () => {
             setRoomInfo={setRoomInfo}
             selectedDate={date}
             people={people}
+            setAvailableRooms={setAvailableRooms}
+            windowSize={windowSize}
+            roomInfo={roomInfo}
           />
         </MapContainer>
       )}
@@ -118,13 +147,23 @@ const Container = styled.div`
       border-bottom: 2px solid black;
     }
   }
+
+  @media (max-width: 768px) {
+    margin: ${(props) => (props.roomID ? '157px auto 0' : '0 auto 60px')};
+  }
 `;
 
 const MapContainer = styled.div`
   width: 65rem;
   height: 50rem;
-  margin: 50px auto auto;
+  margin: 0 auto 30px;
   position: relative;
+
+  @media (max-width: 768px) {
+    width: 560px;
+    height: 400px;
+    margin: 20px auto 40px;
+  }
 `;
 
 const MapImg = styled.img`
@@ -152,4 +191,15 @@ const SelectedRoomName = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const RoomContainer = styled.div`
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 30px;
+
+  @media (max-width: 768px) {
+    visibility: visible;
+  }
 `;

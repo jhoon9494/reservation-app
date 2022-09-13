@@ -18,6 +18,7 @@ const MypageReservationCheck = () => {
   const [checkPassed, setCheckPassed] = useState([]);
 
   const [bookingListRefresh, setBookingListRefresh] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // 페이징네이션
   const [totalPage, setTotalPage] = useState(0);
@@ -33,11 +34,29 @@ const MypageReservationCheck = () => {
     room: '',
   });
 
+  // 디바운싱 기법으로 사이즈 바꾸어도 0.3초마다 구현
+  let timer;
+  const handleResize = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      setWindowWidth(window.innerWidth);
+    }, 300);
+  };
+
   useEffect(() => {
-    // 예약 리스트 요청
+    //브라우저 윈도우 사이즈감시
+    window.addEventListener('resize', handleResize);
+
+    //브라우저 윈도우 사이즈 호출
     async function fetchBooking() {
       try {
-        const urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=10`;
+        let urlBookingList;
+        // 반응형 768px 브라우저 화면 너비일때 4개씩 보인다.
+        if (windowWidth <= 768) {
+          urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=4`;
+        } else {
+          urlBookingList = `${process.env.REACT_APP_BACKEND_SERVER_URL}/api/booking/user?page=${currPage}&perPage=10`;
+        }
         const res = await axios.get(urlBookingList, withCredentials);
         setGetBooking(res.data.bookingInfos);
         setCheckPassed(res.data.checkPassed);
@@ -48,7 +67,12 @@ const MypageReservationCheck = () => {
     }
 
     fetchBooking();
-  }, [currPage, bookingListRefresh]);
+
+    //이벤트 리스너 삭제
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [currPage, bookingListRefresh, windowWidth]);
 
   // '예약 상태'에 따라 '예약 취소' 버튼을 활성화 시킨다
   const checkingStatus = (status, startDate) => {
@@ -142,7 +166,7 @@ const MypageReservationCheck = () => {
                       10
                     )} ~ ${list.endDate.substring(0, 10)}`}</BookListSpan>
                     <BookListSpan>{list.roomID.name}</BookListSpan>
-                    <BookListSpan>{list.peopleNumber}</BookListSpan>
+                    <BookListSpan>{list.peopleNumber} 명</BookListSpan>
                     <BookListSpan>
                       {list.price.toLocaleString()} 원
                     </BookListSpan>
@@ -154,6 +178,7 @@ const MypageReservationCheck = () => {
                         onClick={handlButton}
                         data-room={list.roomID.name}
                         data-bookingid={list._id}
+                        data-status={list.status}
                         disabled={checkingStatus(list.status, list.startDate)}
                       >
                         예약 취소
@@ -231,9 +256,17 @@ export default MypageReservationCheck;
 const ReservationCheckContainer = styled.div`
   margin: 100px auto;
   width: 1110px;
+
+  @media screen and (max-width: 768px) {
+    margin: 0 auto;
+  }
 `;
 
-const BookBarContainerDiv = styled.div``;
+const BookBarContainerDiv = styled.div`
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`;
 const BookBarUnderlineDiv = styled.div`
   border-bottom: 1px solid #000;
   display: grid;
@@ -257,6 +290,12 @@ const BookListsUl = styled.ul`
   margin-top: 15px;
   margin-bottom: 50px;
   padding-left: 0;
+
+  @media screen and (max-width: 768px) {
+    transform: translateX(25%);
+    margin-top: 30px;
+    margin-bottom: 45px;
+  }
 `;
 
 const BookListLi = styled.li`
@@ -264,6 +303,19 @@ const BookListLi = styled.li`
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   padding-bottom: 20px;
+
+  @media screen and (max-width: 768px) {
+    width: 560px;
+    height: 150px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    margin-bottom: 30px;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+    padding: 30px;
+  }
 `;
 
 const BookListSpan = styled.span`
@@ -275,6 +327,45 @@ const BookListSpan = styled.span`
 
   margin: auto;
   & + & {
+  }
+
+  @media screen and (max-width: 768px) {
+    margin: 0;
+    &:nth-child(1) {
+      order: 1;
+      width: 50%;
+    }
+    &:nth-child(2) {
+      order: 3;
+      width: 25%;
+    }
+    &:nth-child(3) {
+      order: 4;
+      width: 25%;
+    }
+    &:nth-child(4) {
+      order: 5;
+      width: 50%;
+      text-align: right;
+    }
+    &:nth-child(5) {
+      order: 2;
+      width: 50%;
+      text-align: right;
+    }
+    &:nth-child(6) {
+      order: 7;
+      text-align: right;
+      margin-right: 0;
+      margin-left: auto;
+    }
+    &:nth-child(7) {
+      order: 6;
+      text-align: right;
+      margin-right: 0;
+      margin-left: auto;
+      width: 100%;
+    }
   }
 `;
 
@@ -295,6 +386,14 @@ const BookStateBtn = styled.button`
     border: 1px solid transparent;
     background-color: transparent;
   }
+
+  @media screen and (max-width: 768px) {
+    display: ${(props) => {
+      if (props['data-status'] === '예약 취소 요청') return 'block';
+      if (props.disabled) return 'none';
+    }};
+    border-radius: 5px;
+  }
 `;
 
 const ReviewWriteBtn = styled.button`
@@ -302,6 +401,7 @@ const ReviewWriteBtn = styled.button`
     display: inline-block;
   }
   display: none;
+  width: 0;
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 400;
@@ -323,6 +423,10 @@ const ReviewWriteBtn = styled.button`
   border: 1px solid ${baseStyle.mainColor};
   width: 100px;
   height: 30px;
+
+  @media screen and (max-width: 768px) {
+    border-radius: 5px;
+  }
 `;
 
 const ButtonContainer = styled.div`
