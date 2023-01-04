@@ -12,21 +12,21 @@
   
 </div>
 <br />
-<br />
-<br />
 
 ## :memo: 기획 의도 & 목적
 
-기존 사이트는 객실 위치를 이미지로 확인할 수밖에 없었고, 예약을 하려면 예약 페이지로 이동한 후에 글로만 예약하기 때문에 사용자가 예약하고도 객실위치를 직관적으로 확인을 하기 어려웠습니다.<br />
-그래서 저희는 이러한 불편함을 개선하는 것을 목표로 하였습니다.<br />
-저희가 기획한 서비스는 사용자가 지도를 통해 직접 예약위치를 확인하고, 선택하여 바로 예약할 수 있어, 일관된 흐름으로 사용자의 불편함을 개선했습니다.<br /><br /><br />
+기존 캠핑장 예약 사이트는 특정 객실 위치를 별도의 이미지로 안내하고 있습니다. <br /><br />
+그리고 예약을 하려면 예약 페이지로 이동한 후에 안내된 객실명만 가지고 예약을 진행하게 됩니다. <br /><br />
+이렇게 되면 사용자가 예약하면서도 객실 위치를 직관적으로 확인을 하기 어렵다는 불편함이 있습니다.<br /><br />
+그래서 저희는 이러한 불편함을 개선하는 것을 목표로 하였습니다.<br /><br />
+저희가 기획한 서비스는 사용자가 지도를 통해 직접 예약 위치를 확인한 후 객실을 바로 예약할 수 있어서 일관된 흐름으로 사용자의 불편함을 개선했습니다.<br /><br /><br />
 
 
 ## :mag: 웹 서비스의 주제와 기능 소개
-- <font size="4">주제 : 캠핑 예약 사이트</font>
+- <font size="4">주제 : 직관적인 캠핑 예약 사이트</font>
 - <font size="3">메인 기능</font>
   <details>
-  <summary> 1.  예약 기능</summary>  
+  <summary> 1. 객실 예약 기능</summary>  
       <ul>
           <li>예약 하기</li>
           <li>예약 취소</li>
@@ -69,15 +69,13 @@
 
 - <font size="3">서브 기능</font>
   1.  카카오 로그인 기능
-  2.  구글 맵 API
-  3.  캘린더
-  4.  페이지네이션
-  5.  리뷰
-  6.  이미지 캐러셀
-  7.  모달
-  8.  객실 UX
-  9.  refresh token을 통한 자동 로그인
-  10. redis저장소를 이용한 패스워드 찾기
+  2.  About 페이지 내 구글 맵 API 이용하여 캠핑장 지도 표시
+  3.  캘린더를 활용하여 예약 날짜 확인 구현
+  4.  관리자 및 유저의 예약 조회 페이지 내 페이지네이션
+  5.  다녀온 객실에 대한 후기 작성
+  6.  객실 이미지 캐러셀
+  7.  refresh token을 통한 자동 로그인
+  8.  redis저장소를 이용한 패스워드 찾기
 
 
 <br /><br />
@@ -141,27 +139,35 @@
 ## 🎥 데모 영상
 <br />
 
-### 회원가입, 로그인, 로그아웃
+### 회원가입, 로그인(카카오 로그인)
 
-&nbsp;&nbsp;&nbsp;&nbsp;![회원가입,로그인,로그아웃](https://user-images.githubusercontent.com/82688516/183544154-96ec79f2-382f-4322-9260-91ad16286405.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![회원가입 및 로그인](https://user-images.githubusercontent.com/82688516/210493152-64108bb3-e9d0-41c2-bedf-e962dfc9242d.gif)
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;![카카오 로그인](https://user-images.githubusercontent.com/82688516/210493149-f308bd60-0be0-45d6-98e1-bf7a2a15fc36.gif)
+
 ### 유저 이메일 찾기, 패스워드 찾기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![유저이메일,패스워드찾기](https://user-images.githubusercontent.com/82688516/183544280-3a4dba7e-8c2b-46ec-81ec-e82a981494f1.gif)
-### 객실 상세 보기
+&nbsp;&nbsp;&nbsp;&nbsp;![이메일, 비밀번호 찾기](https://user-images.githubusercontent.com/82688516/210493148-e23e1b32-175e-46bb-a3c4-a0e967112eaf.gif)
 
-&nbsp;&nbsp;&nbsp;&nbsp;![객실상세보기](https://user-images.githubusercontent.com/82688516/183544400-e4edb462-6fa3-4227-9255-cb7a2dc96257.gif)
-### 객실 예약 하기
+### 지도에서 객실 예약하기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![객실예약하기](https://user-images.githubusercontent.com/82688516/183544473-e20993ce-272d-42b4-9892-d013cf088506.gif)
-### 유저 예약 조회
+&nbsp;&nbsp;&nbsp;&nbsp;![객식 둘러보기 및 예약](https://user-images.githubusercontent.com/82688516/210493131-a891797e-2af8-4134-a99f-82272349eede.gif)
 
-&nbsp;&nbsp;&nbsp;&nbsp;![유저예약조회](https://user-images.githubusercontent.com/82688516/183544646-7334fed1-7c71-4e96-a9c6-af6c800969de.gif)
-### 유저 정보 조회
+### 캘린더를 이용하여 객실 예약 하기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![유저정보조회](https://user-images.githubusercontent.com/82688516/183544574-fa00e23f-7d73-46ac-b086-3711eef41760.gif)
-### 관리자 페이지
+&nbsp;&nbsp;&nbsp;&nbsp;![예약페이지에서 바로 예약](https://user-images.githubusercontent.com/82688516/210493145-6705b793-ec44-4eef-84ed-6c463115fbad.gif)
 
-&nbsp;&nbsp;&nbsp;&nbsp;![관리자페이지](https://user-images.githubusercontent.com/82688516/183544705-85bd1f13-061a-4ca2-981f-b14d4e193ca7.gif)
+### 유저 예약 조회, 후기 및 예약 취소
+
+&nbsp;&nbsp;&nbsp;&nbsp;![예약조회, 후기 및 예약취소](https://user-images.githubusercontent.com/82688516/210493140-b64e2d1a-921b-413e-b4bf-31607606677d.gif)
+
+### 유저 정보 조회 및 탈퇴
+
+&nbsp;&nbsp;&nbsp;&nbsp;![회원정보 수정 및 탈퇴](https://user-images.githubusercontent.com/82688516/210493158-3d99159f-2c3a-4a96-ad7f-40e53f9ac2a8.gif)
+
+### 관리자 페이지 (예약 취소 및 취소확인)
+
+&nbsp;&nbsp;&nbsp;&nbsp;![관리자 예약취소 및 확인](https://user-images.githubusercontent.com/82688516/210493138-69fffd6c-ae3a-4884-b40a-71f9a31a5350.gif)
 
 
 
