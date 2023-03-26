@@ -2,7 +2,9 @@
   <br />
   <img src="https://i.imgur.com/iLXcSkF.png?1" title="source: imgur.com" alt="logo" width="550px" height="300px"/>
   <br />
-  <h1>:tent: <a href="http://ec2-52-79-70-218.ap-northeast-2.compute.amazonaws.com/">딩굴딩굴 - 캠핑장</a></h1>
+  <!-- 서버 비용 문제로 배포 중단 -->
+  <!-- <h1>:tent: <a href="http://ec2-52-79-70-218.ap-northeast-2.compute.amazonaws.com/">딩굴딩굴 - 캠핑장</a></h1> -->
+  <h1>:tent: 딩굴딩굴 - 캠핑장</h1>
   
   <div style="font-size: 16px">
   엘리스 소프트웨어 트랙 2기 부산 3팀의 두번째 웹 프로젝트 입니다.<br />
